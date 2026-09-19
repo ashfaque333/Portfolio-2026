@@ -85,7 +85,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 /* CV box: closed lid image, opens on hover */
 .cv { height: calc(58 * var(--u)); z-index: 2; }
-.cv__closed { position: absolute; left: calc(3 / 176 * 100%); top: calc(3 / 58 * 100%); width: calc(170 / 176 * 100%); height: auto; transition: opacity .12s; }
+.cv__closed { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: fill; transition: opacity .12s; }
 .cv__open, .cv__pressed { position: absolute; left: 0; top: 0; opacity: 0; transition: opacity .15s, transform .2s; transform-origin: 50% 100%; }
 @media (hover: hover) {
   .cv:hover .cv__closed { opacity: 0; }
@@ -182,6 +182,17 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   rotate: calc(var(--p) * 50deg);      /* scrolling nudges it round faster */
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* palms: cut out of the scene, bend gently from the trunk base. Same parallax/zoom as the scene layer, so --ox/--oy is
+   the scene's zoom origin (720, 757) expressed inside each palm's own box. */
+.palm { --d: .35s; --fy: 90; transform-origin: calc(var(--ox) * var(--hu)) calc(var(--oy) * var(--hu)); }
+.palm img { animation: palmsway 6.5s ease-in-out infinite alternate; }
+.palm--l img { transform-origin: 87.5% 100%; }
+.palm--r img { transform-origin: 17.8% 100%; animation-duration: 7.4s; animation-delay: -3s; }
+@keyframes palmsway {
+  from { transform: rotate(-1.3deg) skewX(1deg); }
+  to   { transform: rotate(1.3deg)  skewX(-1deg); }
+}
 
 /* front grass sways in the breeze */
 .grass img { animation: breeze 5.5s ease-in-out infinite alternate; transform-origin: 50% 100%; }
