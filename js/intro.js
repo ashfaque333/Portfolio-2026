@@ -9,7 +9,7 @@
   const banner  = document.getElementById('introBanner');
   const frames  = [...intro.querySelectorAll('.intro__frames img')];
   const skip    = document.getElementById('introSkip');
-  const HOLD = 800;                         // ms each greeting stays up
+  const HOLD = 520;                         // ms each greeting stays up
   let opened = false, timer = 0;
 
   const finish = () => {
@@ -24,14 +24,15 @@
     if (opened) return; opened = true; clearTimeout(timer);
     skip.hidden = true;
     const roll = shutter.animate(
-      [{ transform: 'translateY(0)' }, { transform: 'translateY(-101%)' }],
-      { duration: 2600, easing: 'cubic-bezier(.08,.62,.2,1)', fill: 'forwards' });          // quick start, long gentle stop
+      [{ transform: 'translateY(0)' }, { transform: 'translateY(-' + (shutter.offsetHeight + 8) + 'px)' }],   // whole artwork height, so no strip is left under the board
+      { duration: 1500, easing: 'cubic-bezier(.08,.62,.2,1)', fill: 'forwards' });          // quick start, long gentle stop
     // the site's own entrance starts just as the shutter lifts, so the scene builds up behind it
-    setTimeout(() => document.dispatchEvent(new Event('introopen')), 250);
+    setTimeout(() => document.dispatchEvent(new Event('introopen')), 150);
     roll.finished.then(() => {
+      shutter.style.visibility = 'hidden';   // gone completely before the board lifts
       const lift = banner.animate(
         [{ transform: 'translateY(0)' }, { transform: 'translateY(-101%)' }],
-        { duration: 900, delay: 150, easing: 'cubic-bezier(.6,0,.35,1)', fill: 'forwards' });
+        { duration: 600, delay: 0, easing: 'cubic-bezier(.6,0,.35,1)', fill: 'forwards' });
       return lift.finished;
     }).then(finish, finish);
   };
