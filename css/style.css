@@ -166,7 +166,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .boat--l { --d: .35s; --fy: 20; }
 .boat--r { --d: .5s;  --fy: 20; }
 .arc   { --d: .55s; --fy: 30; }
-.ring { --d: .7s; }
+.arcmask { --d: .7s; }
 .scene { --d: .35s; --fy: 90; }
 .grass { --d: .6s;  --fy: 60; }
 
@@ -179,7 +179,22 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   to   { transform: translateY(calc( 2.5 * var(--hu))) rotate(.5deg); }
 }
 
-/* skills ring: static, sits behind the truck like in the Figma frame */
+/* skills ring: centred on the arch and rotating. The letters sit on the middle of the cream band,
+   and the ring is masked by the arch so letters only show while they are inside the band. */
+.arcmask .in {
+  -webkit-mask: url("../assets/hero/arc.webp") 0 0 / 100% 100% no-repeat;
+          mask: url("../assets/hero/arc.webp") 0 0 / 100% 100% no-repeat;
+}
+.arcmask .ring {                       /* .arcmask prefix beats the generic ".l img" sizing */
+  position: absolute; max-width: none;
+  left: calc(var(--rx) * var(--hu)); top: calc(var(--ry) * var(--hu));
+  width: calc(var(--rw) * var(--hu)); height: calc(var(--rw) * var(--hu));
+  transform-origin: 50% 50%;
+  animation: spin 90s linear infinite;
+  rotate: calc(var(--p) * 50deg);      /* scrolling nudges it round faster */
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* front grass sways in the breeze */
 .grass img { animation: breeze 5.5s ease-in-out infinite alternate; transform-origin: 50% 100%; }
 @keyframes breeze { from { transform: skewX(-.5deg) scaleY(1); } to { transform: skewX(.6deg) scaleY(1.012); } }
@@ -258,7 +273,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 /* ============================ REDUCED MOTION ============================ */
 @media (prefers-reduced-motion: reduce) {
-  .boat img, .grass img, .mirror { animation: none !important; }
+  .ring, .boat img, .grass img, .mirror { animation: none !important; }
   .js .nav, .js:not(.is-ready) .in { transition: none !important; transform: none; opacity: 1; }
   .l { translate: none; }
 }
