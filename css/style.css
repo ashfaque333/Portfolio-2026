@@ -85,7 +85,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 /* CV box: closed lid image, opens on hover */
 .cv { height: calc(58 * var(--u)); z-index: 2; }
-.cv__closed { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: fill; transition: opacity .12s; }
+.cv__closed { position: absolute; left: 0; top: 0; width: 100%; height: auto; transition: opacity .12s; }
 .cv__open, .cv__pressed { position: absolute; left: 0; top: 0; opacity: 0; transition: opacity .15s, transform .2s; transform-origin: 50% 100%; }
 @media (hover: hover) {
   .cv:hover .cv__closed { opacity: 0; }
@@ -196,9 +196,17 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   to   { transform: rotate(1.3deg)  skewX(-1deg); }
 }
 
-/* front grass sways in the breeze */
-.grass img { animation: breeze 5.5s ease-in-out infinite alternate; transform-origin: 50% 100%; }
-@keyframes breeze { from { transform: skewX(-.5deg) scaleY(1); } to { transform: skewX(.6deg) scaleY(1.012); } }
+/* front grass: the tall stems + daisies (top) sway from the grass line; the dense grass (base) only breathes */
+.grass .in { position: relative; }
+.grass img { position: absolute; left: 0; max-width: none; width: 100%; }
+.grass .g-top  { top: 0;                      height: calc(200 / 268 * 100%); transform-origin: 50% 100%; animation: flowers 4.8s ease-in-out infinite alternate; }
+.grass .g-base { top: calc(198 / 268 * 100%); height: calc(70 / 268 * 100%);  transform-origin: 50% 100%; animation: breeze 5.5s ease-in-out infinite alternate; }
+@keyframes flowers {
+  0%   { transform: skewX(-3deg) rotate(-.25deg); }
+  50%  { transform: skewX(.6deg)  rotate(.1deg); }
+  100% { transform: skewX(3deg)   rotate(.3deg); }
+}
+@keyframes breeze { from { transform: skewX(-.4deg); } to { transform: skewX(.5deg); } } to { transform: skewX(.6deg) scaleY(1.012); } }
 
 /* ============================ BUMPER ============================ */
 .bumper {
