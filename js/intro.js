@@ -37,11 +37,17 @@
     }).then(finish, finish);
   };
 
+  // spin through the languages several times, fast at first, easing down until it settles on English (frame 0)
   const cycle = () => {
-    let i = 0;
+    const STEPS = frames.length * 4 + 1;          // 4 full loops + landing back on English
+    const FIRST = 55, LAST = 520;                 // ms per frame at the start / at the end
+    const k = Math.pow(LAST / FIRST, 1 / (STEPS - 1));
+    let n = 0;
     const step = () => {
-      frames.forEach((f, n) => f.classList.toggle('is-on', n === i));
-      if (++i < frames.length) timer = setTimeout(step, HOLD); else timer = setTimeout(open, HOLD);
+      const i = n % frames.length;
+      frames.forEach((f, j) => f.classList.toggle('is-on', j === i));
+      const d = FIRST * Math.pow(k, n);
+      if (++n < STEPS) timer = setTimeout(step, d); else timer = setTimeout(open, HOLD + 200);
     };
     step();
   };
