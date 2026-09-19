@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ashfaque Salahudeen — Design Portfolio</title>
+  <meta name="description" content="Portfolio of Ashfaque Salahudeen — branding, type, architecture, print, illustration, motion, communication, art direction, video and photography.">
+  <meta name="theme-color" content="#1f56c4">
+  <meta property="og:title" content="Ashfaque Salahudeen — Design Portfolio">
+  <meta property="og:description" content="Driven by curiosity, loaded with ideas.">
+  <link rel="icon" type="image/webp" href="assets/nav/tv.webp">
+  <link rel="preload" as="image" href="assets/hero/scene-1x.webp" imagesrcset="assets/hero/scene-1x.webp 1440w, assets/hero/scene-2x.webp 2880w" imagesizes="100vw">
+  <link rel="stylesheet" href="css/style.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- ============ DASHBOARD NAV ============ -->
+  <header class="nav" id="nav">
+    <div class="nav__canvas">
+      <img class="nav__bg" src="assets/nav/bar-bg.webp" alt="" decoding="async">
+
+      <a class="nav__item cv" href="#cv" style="--x:47;--y:9;--w:176" aria-label="CV box — open my CV">
+        <span class="cv__closed" aria-hidden="true"><i>CV BOX</i><b></b></span>
+        <img class="cv__open" src="assets/nav/cv-open.webp" alt="" decoding="async">
+        <img class="cv__pressed" src="assets/nav/cv-pressed.webp" alt="" decoding="async">
+      </a>
+
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="navlinks" aria-label="Menu"><span></span></button>
+
+      <nav class="nav__links" id="navlinks" aria-label="Primary">
+        <a class="nav__item btn" href="#about"    style="--x:275;--y:19;--w:140"><img src="assets/nav/about.webp"    alt="About me"><img class="h" src="assets/nav/about-hover.webp"    alt=""><img class="p" src="assets/nav/about-pressed.webp"    alt=""></a>
+        <a class="nav__item btn" href="#projects" style="--x:466;--y:19;--w:140"><img src="assets/nav/projects.webp" alt="Projects"><img class="h" src="assets/nav/projects-hover.webp" alt=""><img class="p" src="assets/nav/projects-pressed.webp" alt=""></a>
+        <a class="nav__item btn" href="#studio"   style="--x:836;--y:19;--w:140"><img src="assets/nav/studio.webp"   alt="My studio"><img class="h" src="assets/nav/studio-hover.webp"   alt=""><img class="p" src="assets/nav/studio-pressed.webp"   alt=""></a>
+        <a class="nav__item btn" href="#contact"  style="--x:1026;--y:19;--w:140"><img src="assets/nav/contact.webp"  alt="Contact"><img class="h" src="assets/nav/contact-hover.webp"  alt=""><img class="p" src="assets/nav/contact-pressed.webp"  alt=""></a>
+      </nav>
+
+      <a class="nav__item tv" href="#top" style="--x:676;--y:1;--w:88" aria-label="Home">
+        <img src="assets/nav/tv.webp" alt=""><img class="h" src="assets/nav/tv-hover.webp" alt=""><img class="p" src="assets/nav/tv-pressed.webp" alt="">
+      </a>
+
+      <div class="nav__item mirror" style="--x:1186;--y:1;--w:233" aria-hidden="true">
+        <img src="assets/nav/mirror.webp" alt="">
+        <img class="mirror__text" src="assets/nav/mirror-text.webp" alt="">
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ LANDING / HERO ============ -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <h1 class="sr" id="hero-title">Ashfaque Salahudeen — designer</h1>
+      <p class="sr">Branding, type, architecture, print, illustration, motion, communication, art direction, video, photography.</p>
+
+      <div class="hero__canvas">
+        <!-- sky & water: drop assets/hero/sky.webp and water.webp in to replace the gradients -->
+        <div class="l px sky"   style="--x:0;--y:-213;--w:1440;--h:721;--par:150"><div class="in"></div></div>
+        <div class="l px water" style="--x:0;--y:466;--w:1440;--h:254;--par:110"><div class="in"></div></div>
+        <div class="l px haze"  style="--x:0;--y:330;--w:1440;--h:260;--par:100"><div class="in"></div></div>
+
+        <div class="l px boat boat--l" style="--x:64;--y:315;--w:522;--h:232;--par:90;--fx:-140">
+          <div class="in"><img src="assets/hero/boat.webp" alt="" decoding="async"></div>
+        </div>
+        <div class="l px boat boat--r" style="--x:858;--y:315;--w:518;--h:222;--par:90;--fx:140">
+          <!-- prefers assets/hero/boat-1.webp if you add it; otherwise mirrors the first boat -->
+          <div class="in"><img class="flip" src="assets/hero/boat-1.webp" alt="" decoding="async" onerror="this.onerror=null;this.src='assets/hero/boat.webp';this.classList.add('mirrored')"></div>
+        </div>
+
+        <div class="l px arc" style="--x:243;--y:160;--w:955;--h:479;--par:70">
+          <div class="in"><img src="assets/hero/arc.webp" alt="" decoding="async"></div>
+        </div>
+        <div class="l px arcmask" style="--x:243;--y:160;--w:955;--h:479;--par:70" aria-hidden="true">
+          <div class="in">
+            <img class="ring" src="assets/hero/ring.webp" alt="" decoding="async" style="--rx:60;--ry:59;--rw:834">
+          </div>
+        </div>
+
+        <div class="l px scene" style="--x:0;--y:140;--w:1440;--h:726;--par:28">
+          <div class="in">
+            <img src="assets/hero/scene-1x.webp"
+                 srcset="assets/hero/scene-1x.webp 1440w, assets/hero/scene-2x.webp 2880w"
+                 sizes="(max-width: 900px) 1000px, 100vw"
+                 alt="Ashfaque sitting on the bonnet of a hand-painted Indian truck, with palms, a banner reading “I design like I mean it” and a signpost pointing to Lakshadweep, Kerala, Bhopal, Guwahati and Next?"
+                 fetchpriority="high" decoding="async" id="scene-img">
+          </div>
+        </div>
+
+        <div class="l px grass" style="--x:0;--y:598;--w:1440;--h:268;--par:-14">
+          <div class="in"><img src="assets/hero/front-grass.webp" alt="" decoding="async"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BUMPER DIVIDER ============ -->
+    <div class="bumper" role="separator">
+      <img src="assets/hero/bumper.webp" alt="Driven by curiosity, loaded with ideas" decoding="async" loading="lazy">
+    </div>
+
+    <!-- ============ NEXT SECTIONS (placeholders so nav anchors work) ============ -->
+    <section class="stub" id="showreel"><h2>Showreel</h2><p>Next scene: the cab interior + retro TV.</p></section>
+    <section class="stub" id="projects"><h2>Projects</h2><p>Next scene: the truck bed with the hay crates.</p></section>
+    <section class="stub" id="about"><h2>About me</h2></section>
+    <section class="stub" id="studio"><h2>My studio</h2></section>
+    <section class="stub" id="contact"><h2>Contact</h2></section>
+    <span id="cv"></span>
+  </main>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>
