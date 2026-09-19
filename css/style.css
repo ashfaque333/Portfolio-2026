@@ -101,9 +101,11 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .tv { z-index: 1; }
 
 /* windscreen mirror: sways a little, like it's hanging off the dash */
-.mirror { pointer-events: none; transform-origin: 50% 0; }
-.nav__item .mirror__text { position: absolute; left: calc(22 / 233 * 100%); top: calc(1 / 93 * 100%); width: calc(184 / 233 * 100%); }
+.mirror { transform-origin: 50% 0; cursor: default; }
+.nav__item .mirror__text { opacity: 0; transition: opacity .25s ease; pointer-events: none; position: absolute; left: calc(22 / 233 * 100%); top: calc(1 / 93 * 100%); width: calc(184 / 233 * 100%); }
 .mirror { animation: sway 5s ease-in-out infinite alternate; }
+/* the message only shows while the mirror is hovered (or focused) */
+.mirror:hover .mirror__text, .mirror:focus-visible .mirror__text { opacity: 1; }
 @keyframes sway { from { transform: rotate(-.35deg); } to { transform: rotate(.35deg); } }
 
 .nav__toggle { display: none; }
