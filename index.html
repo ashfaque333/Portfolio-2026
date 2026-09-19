@@ -58,10 +58,9 @@
       <p class="sr">Branding, type, architecture, print, illustration, motion, communication, art direction, video, photography.</p>
 
       <div class="hero__canvas">
-        <!-- sky.png holds the sky AND the sea; it is shown at 1.5x so the horizon lands where the Figma frame has it.
-             If you export the separate WATER layer, save it as assets/hero/water.webp and it will draw on top. -->
-        <div class="l px sky"   style="--zoom:.05;--o:50% 60%;--x:0;--y:-213;--w:1440;--h:933;--par:150"><div class="in"></div></div>
-        <div class="l px water" style="--zoom:.08;--o:50% 0%;--x:0;--y:466;--w:1440;--h:254;--par:110"><div class="in"></div></div>
+        <!-- sky + sea: one painting cut at the horizon so each half can move on its own (clouds drift, sea ripples) -->
+        <div class="l px sky" style="--x:0;--y:-253;--w:1440;--h:701;--par:120;--zoom:.05;--o:50% 100%"><div class="in"><img src="assets/hero/sky-top.webp" alt="" decoding="async"></div></div>
+        <div class="l px sea" style="--x:0;--y:448;--w:1440;--h:383;--par:120;--zoom:.05;--o:50% 0%"><div class="in"><img src="assets/hero/sea.webp" alt="" decoding="async"></div></div>
         <div class="l px haze"  style="--zoom:.05;--x:0;--y:330;--w:1440;--h:260;--par:100"><div class="in"></div></div>
 
         <div class="l px boat boat--l" style="--dx:-260;--zoom:.12;--o:50% 100%;--x:64;--y:315;--w:522;--h:232;--par:90;--fx:-140">
