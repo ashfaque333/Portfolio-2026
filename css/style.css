@@ -409,9 +409,8 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 /* hover targets: soft glow ring, a lifted object and a label chip */
 .hot { height: calc(var(--h) * var(--pu)); background: transparent; border: 0; padding: 0; cursor: pointer; border-radius: calc(16 * var(--pu)); z-index: 3;
-  transition: box-shadow .25s ease, background-color .25s ease; -webkit-tap-highlight-color: transparent; }
-.hot:hover, .hot:focus-visible { outline: none; background: rgba(255,244,205,.16);
-  box-shadow: 0 0 0 calc(3 * var(--pu)) rgba(226,66,45,.85), 0 0 calc(36 * var(--pu)) rgba(255,214,120,.65); }
+  -webkit-tap-highlight-color: transparent; }
+.hot:hover, .hot:focus-visible { outline: none; }   /* no box: the object itself lights up (see .it.obj below) */
 .hot__chip { position: absolute; left: 50%; bottom: calc(10 * var(--pu)); translate: -50% calc(8 * var(--pu)); opacity: 0; transition: opacity .2s, translate .2s;
   padding: calc(6 * var(--pu)) calc(14 * var(--pu)); border-radius: 999px; background: #4a2f12; color: #fbe9bd; white-space: nowrap;
   font: 600 max(11px, calc(13 * var(--pu)))/1 Oswald, system-ui, sans-serif; letter-spacing: .12em; }
@@ -420,7 +419,12 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .it.obj { transition: transform .3s cubic-bezier(.2,.8,.2,1), filter .3s; transform-origin: 50% 100%; }
 .ss--room:has(.hot:nth-of-type(1):hover) .it.obj:nth-of-type(1), .ss--room:has(.hot:nth-of-type(1):focus-visible) .it.obj:nth-of-type(1),
 .ss--room:has(.hot:nth-of-type(2):hover) .it.obj:nth-of-type(2), .ss--room:has(.hot:nth-of-type(2):focus-visible) .it.obj:nth-of-type(2),
-.ss--room:has(.hot:nth-of-type(3):hover) .it.obj:nth-of-type(3), .ss--room:has(.hot:nth-of-type(3):focus-visible) .it.obj:nth-of-type(3) { transform: translateY(calc(-8 * var(--pu))) scale(1.04); filter: drop-shadow(0 calc(10 * var(--pu)) calc(14 * var(--pu)) rgba(0,0,0,.35)); }
+.ss--room:has(.hot:nth-of-type(3):hover) .it.obj:nth-of-type(3), .ss--room:has(.hot:nth-of-type(3):focus-visible) .it.obj:nth-of-type(3),
+.ss--intro:has(.h-peg:hover) .o-peg, .ss--intro:has(.h-peg:focus-visible) .o-peg,
+.ss--intro:has(.h-org:hover) .o-org, .ss--intro:has(.h-org:focus-visible) .o-org,
+.ss--intro:has(.h-coc:hover) .o-coc, .ss--intro:has(.h-coc:focus-visible) .o-coc {
+  transform: translateY(calc(-6 * var(--pu))) scale(1.04);
+  filter: drop-shadow(0 0 calc(3 * var(--pu)) rgba(255,236,170,.95)) drop-shadow(0 0 calc(16 * var(--pu)) rgba(255,196,84,.8)) drop-shadow(0 calc(10 * var(--pu)) calc(14 * var(--pu)) rgba(0,0,0,.3)); }
 
 @media (max-width: 720px) {
   /* scenes: scale as one picture to the screen width */
