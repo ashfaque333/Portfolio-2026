@@ -23,7 +23,7 @@
       <img class="nav__bg" src="assets/nav/bar-bg.webp" alt="" decoding="async">
 
       <a class="nav__item cv" href="#cv" style="--x:47;--y:9;--w:176" aria-label="CV box — open my CV">
-        <span class="cv__closed" aria-hidden="true"><i>CV BOX</i><b></b></span>
+        <img class="cv__closed" src="assets/nav/cv-closed.webp" alt="" decoding="async">
         <img class="cv__open" src="assets/nav/cv-open.webp" alt="" decoding="async">
         <img class="cv__pressed" src="assets/nav/cv-pressed.webp" alt="" decoding="async">
       </a>
@@ -60,30 +60,30 @@
       <div class="hero__canvas">
         <!-- sky.png holds the sky AND the sea; it is shown at 1.5x so the horizon lands where the Figma frame has it.
              If you export the separate WATER layer, save it as assets/hero/water.webp and it will draw on top. -->
-        <div class="l px sky"   style="--x:0;--y:-213;--w:1440;--h:933;--par:150"><div class="in"></div></div>
-        <div class="l px water" style="--x:0;--y:466;--w:1440;--h:254;--par:110"><div class="in"></div></div>
-        <div class="l px haze"  style="--x:0;--y:330;--w:1440;--h:260;--par:100"><div class="in"></div></div>
+        <div class="l px sky"   style="--zoom:.05;--o:50% 60%;--x:0;--y:-213;--w:1440;--h:933;--par:150"><div class="in"></div></div>
+        <div class="l px water" style="--zoom:.08;--o:50% 0%;--x:0;--y:466;--w:1440;--h:254;--par:110"><div class="in"></div></div>
+        <div class="l px haze"  style="--zoom:.05;--x:0;--y:330;--w:1440;--h:260;--par:100"><div class="in"></div></div>
 
-        <div class="l px boat boat--l" style="--x:64;--y:315;--w:522;--h:232;--par:90;--fx:-140">
+        <div class="l px boat boat--l" style="--dx:230;--zoom:.12;--o:50% 100%;--x:64;--y:315;--w:522;--h:232;--par:90;--fx:-140">
           <div class="in"><img src="assets/hero/boat.webp" alt="" decoding="async"></div>
         </div>
-        <div class="l px boat boat--r" style="--x:858;--y:315;--w:518;--h:222;--par:90;--fx:140">
+        <div class="l px boat boat--r" style="--dx:200;--zoom:.12;--o:50% 100%;--x:858;--y:315;--w:518;--h:222;--par:90;--fx:140">
           <!-- prefers assets/hero/boat-1.webp if you add it; otherwise mirrors the first boat -->
           <div class="in"><img class="flip" src="assets/hero/boat-1.webp" alt="" decoding="async" onerror="this.onerror=null;this.src='assets/hero/boat.webp';this.classList.add('mirrored')"></div>
         </div>
 
-        <div class="l px arc" style="--x:243;--y:160;--w:955;--h:479;--par:70">
+        <div class="l px arc" style="--zoom:.04;--o:50% 100%;--x:243;--y:160;--w:955;--h:479;--par:70">
           <div class="in"><img src="assets/hero/arc.webp" alt="" decoding="async"></div>
         </div>
         <!-- skills ring: centred on the arch (centre 720.5, 638.5) with the letters on the middle of the band,
              rotating slowly; masked by the arch so it only shows inside the band -->
-        <div class="l px arcmask" style="--x:243;--y:160;--w:955;--h:479;--par:70" aria-hidden="true">
+        <div class="l px arcmask" style="--zoom:.04;--o:50% 100%;--x:243;--y:160;--w:955;--h:479;--par:70" aria-hidden="true">
           <div class="in">
             <img class="ring" src="assets/hero/ring.webp" alt="" decoding="async" style="--rx:29.4;--ry:30.4;--rw:896.2">
           </div>
         </div>
 
-        <div class="l px scene" style="--x:0;--y:140;--w:1440;--h:726;--par:28">
+        <div class="l px scene" style="--zoom:.09;--o:50% 85%;--x:0;--y:140;--w:1440;--h:726;--par:28">
           <div class="in">
             <img src="assets/hero/scene-1x.webp"
                  srcset="assets/hero/scene-1x.webp 1440w, assets/hero/scene-2x.webp 2880w"
@@ -93,7 +93,7 @@
           </div>
         </div>
 
-        <div class="l px grass" style="--x:0;--y:598;--w:1440;--h:268;--par:-14">
+        <div class="l px grass" style="--zoom:.4;--o:50% 100%;--x:0;--y:598;--w:1440;--h:268;--par:-70">
           <div class="in"><img src="assets/hero/front-grass.webp" alt="" decoding="async"></div>
         </div>
       </div>
