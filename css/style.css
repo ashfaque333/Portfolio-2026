@@ -271,9 +271,12 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   .hero { --p: 0; }
 }
 
-/* ============================ REDUCED MOTION ============================ */
+/* ============================ REDUCED MOTION ============================
+   When the OS asks for less motion (on Windows: Settings > Accessibility > Visual effects > Animation effects
+   off, which battery saver can also flip) we drop the big movements — intro slide-in and scroll parallax.
+   The slow, small ambient loops (ring, boats, grass, charms) keep running so the scene doesn't look dead. */
 @media (prefers-reduced-motion: reduce) {
-  .ring, .boat img, .grass img, .mirror { animation: none !important; }
   .js .nav, .js:not(.is-ready) .in { transition: none !important; transform: none; opacity: 1; }
   .l { translate: none; }
+  .arcmask .ring { rotate: none; }
 }
