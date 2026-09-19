@@ -417,9 +417,9 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .hot:hover .hot__chip, .hot:focus-visible .hot__chip { opacity: 1; translate: -50% 0; }
 .roomhot { z-index: 3; }
 .it.obj { transition: transform .3s cubic-bezier(.2,.8,.2,1), filter .3s; transform-origin: 50% 50%; }
-.ss--room:has(.hot:nth-of-type(1):hover) .it.obj:nth-of-type(1), .ss--room:has(.hot:nth-of-type(1):focus-visible) .it.obj:nth-of-type(1),
-.ss--room:has(.hot:nth-of-type(2):hover) .it.obj:nth-of-type(2), .ss--room:has(.hot:nth-of-type(2):focus-visible) .it.obj:nth-of-type(2),
-.ss--room:has(.hot:nth-of-type(3):hover) .it.obj:nth-of-type(3), .ss--room:has(.hot:nth-of-type(3):focus-visible) .it.obj:nth-of-type(3),
+.ss--room:has(.h-mb:hover) .o-mb, .ss--room:has(.h-mb:focus-visible) .o-mb,
+.ss--room:has(.h-ts:hover) .o-ts, .ss--room:has(.h-ts:focus-visible) .o-ts,
+.ss--room:has(.h-eg:hover) .o-eg, .ss--room:has(.h-eg:focus-visible) .o-eg,
 .ss--intro:has(.h-peg:hover) .o-peg, .ss--intro:has(.h-peg:focus-visible) .o-peg,
 .ss--intro:has(.h-org:hover) .o-org, .ss--intro:has(.h-org:focus-visible) .o-org,
 .ss--intro:has(.h-coc:hover) .o-coc, .ss--intro:has(.h-coc:focus-visible) .o-coc {
