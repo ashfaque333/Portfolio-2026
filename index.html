@@ -37,6 +37,9 @@
         <a class="nav__item btn" href="#contact"  style="--x:1026;--y:19;--w:140"><img src="assets/nav/contact.webp"  alt="Contact"><img class="h" src="assets/nav/contact-hover.webp"  alt=""><img class="p" src="assets/nav/contact-pressed.webp"  alt=""></a>
       </nav>
 
+      <img class="nav__item nimbu" src="assets/nav/nimbu-2.webp" alt="" style="--x:614;--y:0;--w:65" aria-hidden="true">
+      <img class="nav__item nimbu" src="assets/nav/nimbu-1.webp" alt="" style="--x:761;--y:0;--w:65" aria-hidden="true">
+
       <a class="nav__item tv" href="#top" style="--x:676;--y:1;--w:88" aria-label="Home">
         <img src="assets/nav/tv.webp" alt=""><img class="h" src="assets/nav/tv-hover.webp" alt=""><img class="p" src="assets/nav/tv-pressed.webp" alt="">
       </a>
@@ -55,8 +58,9 @@
       <p class="sr">Branding, type, architecture, print, illustration, motion, communication, art direction, video, photography.</p>
 
       <div class="hero__canvas">
-        <!-- sky & water: drop assets/hero/sky.webp and water.webp in to replace the gradients -->
-        <div class="l px sky"   style="--x:0;--y:-213;--w:1440;--h:721;--par:150"><div class="in"></div></div>
+        <!-- sky.png holds the sky AND the sea; it is shown at 1.5x so the horizon lands where the Figma frame has it.
+             If you export the separate WATER layer, save it as assets/hero/water.webp and it will draw on top. -->
+        <div class="l px sky"   style="--x:0;--y:-213;--w:1440;--h:933;--par:150"><div class="in"></div></div>
         <div class="l px water" style="--x:0;--y:466;--w:1440;--h:254;--par:110"><div class="in"></div></div>
         <div class="l px haze"  style="--x:0;--y:330;--w:1440;--h:260;--par:100"><div class="in"></div></div>
 
@@ -71,10 +75,9 @@
         <div class="l px arc" style="--x:243;--y:160;--w:955;--h:479;--par:70">
           <div class="in"><img src="assets/hero/arc.webp" alt="" decoding="async"></div>
         </div>
-        <div class="l px arcmask" style="--x:243;--y:160;--w:955;--h:479;--par:70" aria-hidden="true">
-          <div class="in">
-            <img class="ring" src="assets/hero/ring.webp" alt="" decoding="async" style="--rx:60;--ry:59;--rw:834">
-          </div>
+        <!-- skills ring: static, exactly where it sits in the Figma frame (303,219 · 834×834) -->
+        <div class="l px ring" style="--x:303;--y:219;--w:834;--h:834;--par:70" aria-hidden="true">
+          <div class="in"><img src="assets/hero/ring.webp" alt="" decoding="async"></div>
         </div>
 
         <div class="l px scene" style="--x:0;--y:140;--w:1440;--h:726;--par:28">

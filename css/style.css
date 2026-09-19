@@ -24,7 +24,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; }   /* no smooth scrolling: nav links jump straight to their section */
 body {
   margin: 0;
   background: #3f8f2a;            /* grass green so nothing flashes white under the hero */
@@ -110,6 +110,11 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .cv:active .cv__pressed { opacity: 1; }
 .cv:active .cv__closed { opacity: 0; }
 
+/* lemon + chilli charms hanging either side of the TV */
+.nimbu { z-index: 0; pointer-events: none; height: auto; transform-origin: 50% 0; animation: sway 4.2s ease-in-out infinite alternate; }
+.nimbu:nth-of-type(even) { animation-delay: -1.7s; }
+.tv { z-index: 1; }
+
 /* windscreen mirror: sways a little, like it's hanging off the dash */
 .mirror { pointer-events: none; transform-origin: 50% 0; }
 .nav__item .mirror__text { position: absolute; left: calc(22 / 233 * 100%); top: calc(1 / 93 * 100%); width: calc(184 / 233 * 100%); }
@@ -152,15 +157,16 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .in { transition: opacity 1.1s ease var(--d, 0s), transform 1.4s cubic-bezier(.2,.8,.2,1) var(--d, 0s); }
 .js:not(.is-ready) .in { opacity: 0; transform: translate(calc(var(--fx, 0) * var(--hu)), calc(var(--fy, 0) * var(--hu))); }
 
-.sky   .in { background: url("../assets/hero/sky.webp") center bottom / 100% 100% no-repeat, var(--sky-fallback); }
-.water .in { background: url("../assets/hero/water.webp") center / 100% 100% no-repeat, var(--water-fallback); }
+/* sky.png is 2:1 (sky + sea, horizon at 61%). Shown at 1.5x, top-aligned to the frame: horizon lands at ~y 448 like the design */
+.sky   .in { background: url("../assets/hero/sky.webp") 50% 0 / 150.6% auto no-repeat, var(--sky-fallback); }
+.water .in { background: url("../assets/hero/water.webp") center / 100% 100% no-repeat; }
 .haze  .in { background: radial-gradient(60% 55% at 50% 60%, rgba(255,255,255,.55), rgba(255,255,255,0) 70%); }
 .sky   { --d: 0s; }
 .water { --d: .1s; }
 .boat--l { --d: .35s; --fy: 20; }
 .boat--r { --d: .5s;  --fy: 20; }
 .arc   { --d: .55s; --fy: 30; }
-.arcmask { --d: .7s; }
+.ring { --d: .7s; }
 .scene { --d: .35s; --fy: 90; }
 .grass { --d: .6s;  --fy: 60; }
 
@@ -173,21 +179,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   to   { transform: translateY(calc( 2.5 * var(--hu))) rotate(.5deg); }
 }
 
-/* cream arch + the ring of skills that slides along it.
-   The ring is masked by the arch silhouette so letters only show while inside the band. */
-.arcmask .in {
-  -webkit-mask: url("../assets/hero/arc.webp") 0 0 / 100% 100% no-repeat;
-          mask: url("../assets/hero/arc.webp") 0 0 / 100% 100% no-repeat;
-}
-.ring {
-  position: absolute;
-  left: calc(var(--rx) * var(--hu)); top: calc(var(--ry) * var(--hu));
-  width: calc(var(--rw) * var(--hu)); height: calc(var(--rw) * var(--hu));
-  animation: spin 140s linear infinite;
-  rotate: calc(var(--p) * 60deg);                  /* scrolling nudges it round faster */
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
+/* skills ring: static, sits behind the truck like in the Figma frame */
 /* front grass sways in the breeze */
 .grass img { animation: breeze 5.5s ease-in-out infinite alternate; transform-origin: 50% 100%; }
 @keyframes breeze { from { transform: skewX(-.5deg) scaleY(1); } to { transform: skewX(.6deg) scaleY(1.012); } }
@@ -224,7 +216,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
     padding: 0 14px; background: url("../assets/nav/bar-bg.webp") left top / auto 100% repeat-x;
     box-shadow: 0 2px 0 #1f56c4;
   }
-  .nav__bg, .mirror { display: none; }
+  .nav__bg, .mirror, .nimbu { display: none; }
   .nav__item { position: relative; left: auto; top: auto; width: auto; }
 
   .cv { width: 92px; height: 32px; order: 1; }
@@ -266,8 +258,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 /* ============================ REDUCED MOTION ============================ */
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .ring, .boat img, .grass img, .mirror { animation: none !important; }
+  .boat img, .grass img, .mirror { animation: none !important; }
   .js .nav, .js:not(.is-ready) .in { transition: none !important; transform: none; opacity: 1; }
   .l { translate: none; }
 }
