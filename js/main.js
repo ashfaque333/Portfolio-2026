@@ -55,4 +55,19 @@
     dlg.addEventListener('close', () => { frame.innerHTML = ''; });
     dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('.reel__x')) dlg.close(); });
   }
+
+  /* ---- 5. about page: truck drives in as you scroll ---- */
+  const about = document.querySelector('.about');
+  if (about && !reduce) {
+    let t = false;
+    const upd = () => {
+      t = false;
+      const room = about.offsetHeight - innerHeight || 1;
+      const p = Math.min(Math.max(-about.getBoundingClientRect().top / room, 0), 1);
+      about.style.setProperty('--ap', (1 - Math.pow(1 - p, 2)).toFixed(4));
+    };
+    addEventListener('scroll', () => { if (!t) { t = true; requestAnimationFrame(upd); } }, { passive: true });
+    addEventListener('resize', upd);
+    upd();
+  }
 })();

@@ -326,9 +326,9 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .tv-screen__txt { opacity: .75; }
 
 /* clouds + road + truck */
-.drive { height: calc(3401 * var(--pu)); z-index: 1; background: linear-gradient(#d3e8f8 0 calc(420 * var(--pu)), #2f7a1f calc(420 * var(--pu))); }
-.road { position: absolute; left: 0; top: calc(60 * var(--pu)); width: 100%; height: calc(3341 * var(--pu)); background: url("../assets/projects/road.webp") 0 0 / 100% 100% no-repeat; }
-.clouds { position: absolute; z-index: 5; left: calc(-357 * var(--pu)); top: calc(-135 * var(--pu)); width: calc(2085 * var(--pu)); height: auto; pointer-events: none; animation: drift 26s ease-in-out infinite alternate; }
+.drive { height: calc(3401 * var(--pu)); z-index: 1; background: #5b5f66; }
+.road { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: url("../assets/projects/road.webp") 0 0 / 100% 100% no-repeat; }
+.clouds { position: absolute; z-index: 5; left: calc(-357 * var(--pu)); top: calc(-360 * var(--pu)); width: calc(2085 * var(--pu)); height: auto; pointer-events: none; animation: drift 26s ease-in-out infinite alternate; }
 @keyframes drift { from { translate: calc(-24 * var(--pu)) 0; } to { translate: calc(24 * var(--pu)) 0; } }
 .truck { position: absolute; z-index: 2; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); height: calc(var(--h) * var(--pu)); }
 .truck__body { width: 100%; height: 100%; }
@@ -359,19 +359,16 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 @media (prefers-reduced-motion: reduce) { .clouds { animation: none; } }
 
 /* ============================ ABOUT PAGE ============================ */
-.about { position: relative; min-height: max(100svh, 620px); overflow: hidden; background: #2b6f9e; display: flex; align-items: flex-end; }
+.about { --ap: 0; position: relative; height: 240svh; background: #2b6f9e; }
+.about__sticky { position: sticky; top: 0; height: 100svh; min-height: 620px; overflow: hidden; display: flex; align-items: flex-end; }
 .about__bg { position: absolute; inset: 0; background: url("../assets/about/bg.webp") 50% 100% / cover no-repeat; animation: pan 60s linear infinite alternate; }
 @keyframes pan { from { background-position: 30% 100%; } to { background-position: 70% 100%; } }
-.about__road { position: relative; width: 100%; padding-bottom: 11svh; padding-top: calc(var(--nav-h) + 20px); }
-.about__truck { width: min(100vw, 1900px); margin: 0 auto; }
-.about__truck img { width: 100%; height: auto; animation: drive-in 1.4s cubic-bezier(.2,.8,.2,1) both, jiggle 1.2s ease-in-out 1.4s infinite alternate; }
-@keyframes drive-in { from { transform: translateX(-70%); } to { transform: none; } }
+.about__road { position: relative; width: 100%; padding-bottom: 11svh; padding-top: calc(var(--nav-h) + 20px); overflow: hidden; }
+.about__truck { width: min(100vw, 1900px); margin: 0 auto; translate: calc((1 - var(--ap)) * -105%) 0; will-change: translate; }
+.about__truck img { width: 100%; height: auto; animation: jiggle 1.2s ease-in-out infinite alternate; }
 @keyframes jiggle { from { translate: 0 0; } to { translate: 0 2px; } }
-@media (max-width: 900px) {
-  .about__road { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-top: calc(var(--nav-h) + 12px); }
-  .about__truck { width: 980px; }
-}
-@media (prefers-reduced-motion: reduce) { .about__bg, .about__truck img { animation: none; } }
+@media (max-width: 900px) { .about__truck { width: 980px; margin: 0; } }
+@media (prefers-reduced-motion: reduce) { .about { --ap: 1 !important; height: auto; } .about__sticky { position: relative; } .about__bg, .about__truck img { animation: none; } }
 
 /* ============================ STUDIO PAGE ============================ */
 .page-studio { background: #d9c9a4; color: #4a2f12; }
