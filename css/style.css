@@ -416,15 +416,14 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   font: 600 max(11px, calc(13 * var(--pu)))/1 Oswald, system-ui, sans-serif; letter-spacing: .12em; }
 .hot:hover .hot__chip, .hot:focus-visible .hot__chip { opacity: 1; translate: -50% 0; }
 .roomhot { z-index: 3; }
-.it.obj { transition: transform .3s cubic-bezier(.2,.8,.2,1), filter .3s; transform-origin: 50% 100%; }
+.it.obj { transition: transform .3s cubic-bezier(.2,.8,.2,1), filter .3s; transform-origin: 50% 50%; }
 .ss--room:has(.hot:nth-of-type(1):hover) .it.obj:nth-of-type(1), .ss--room:has(.hot:nth-of-type(1):focus-visible) .it.obj:nth-of-type(1),
 .ss--room:has(.hot:nth-of-type(2):hover) .it.obj:nth-of-type(2), .ss--room:has(.hot:nth-of-type(2):focus-visible) .it.obj:nth-of-type(2),
 .ss--room:has(.hot:nth-of-type(3):hover) .it.obj:nth-of-type(3), .ss--room:has(.hot:nth-of-type(3):focus-visible) .it.obj:nth-of-type(3),
 .ss--intro:has(.h-peg:hover) .o-peg, .ss--intro:has(.h-peg:focus-visible) .o-peg,
 .ss--intro:has(.h-org:hover) .o-org, .ss--intro:has(.h-org:focus-visible) .o-org,
 .ss--intro:has(.h-coc:hover) .o-coc, .ss--intro:has(.h-coc:focus-visible) .o-coc {
-  transform: translateY(calc(-6 * var(--pu))) scale(1.04);
-  filter: drop-shadow(0 0 calc(3 * var(--pu)) rgba(255,236,170,.95)) drop-shadow(0 0 calc(16 * var(--pu)) rgba(255,196,84,.8)) drop-shadow(0 calc(10 * var(--pu)) calc(14 * var(--pu)) rgba(0,0,0,.3)); }
+  transform: scale(1.06); filter: brightness(1.12); }
 
 @media (max-width: 720px) {
   /* scenes: scale as one picture to the screen width */
