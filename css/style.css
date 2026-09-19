@@ -364,11 +364,18 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .about__bg { position: absolute; inset: 0; background: url("../assets/about/bg.webp") 50% 100% / cover no-repeat; animation: pan 60s linear infinite alternate; }
 @keyframes pan { from { background-position: 30% 100%; } to { background-position: 70% 100%; } }
 .about__road { position: relative; width: 100%; padding-bottom: 11svh; padding-top: calc(var(--nav-h) + 20px); overflow: hidden; }
-.about__truck { width: min(100vw, 1900px); margin: 0 auto; translate: calc((1 - var(--ap)) * -105%) 0; will-change: translate; }
-.about__truck img { width: 100%; height: auto; animation: jiggle 1.2s ease-in-out infinite alternate; }
+/* truck: starts with just its cab on the right edge, drives left to its final spot (Figma start/end frames).
+   --tw = truck width; final left edge = -0.155 tw; start left edge = 70vw */
+.about__road { --tw: min(116vw, 2300px); }
+.about__truck { width: var(--tw); margin-left: calc(-0.155 * var(--tw)); translate: calc((1 - var(--ap)) * (70vw + 0.155 * var(--tw))) 0; will-change: translate; }
+.truckbox { position: relative; animation: jiggle 1.2s ease-in-out infinite alternate; }
+.truckbox__body { width: 100%; height: auto; display: block; }
+.wheel { position: absolute; height: auto; aspect-ratio: 1; border-radius: 50%; rotate: calc(var(--ap) * -1500deg); }
+.wheel--f { left: 13.583%; top: 72.136%; width: 6.333%; }
+.wheel--r { left: 69.333%; top: 72.239%; width: 6.25%; }
 @keyframes jiggle { from { translate: 0 0; } to { translate: 0 2px; } }
-@media (max-width: 900px) { .about__truck { width: 980px; margin: 0; } }
-@media (prefers-reduced-motion: reduce) { .about { --ap: 1 !important; height: auto; } .about__sticky { position: relative; } .about__bg, .about__truck img { animation: none; } }
+@media (max-width: 900px) { .about__road { --tw: 980px; } }
+@media (prefers-reduced-motion: reduce) { .about { --ap: 1 !important; height: auto; } .about__sticky { position: relative; } .about__bg, .truckbox { animation: none; } }
 
 /* ============================ STUDIO PAGE ============================ */
 .page-studio { background: #d9c9a4; color: #4a2f12; }
