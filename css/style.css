@@ -366,8 +366,8 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .about__road { position: relative; width: 100%; padding-bottom: 11svh; padding-top: calc(var(--nav-h) + 20px); overflow: hidden; }
 /* truck: starts with just its cab on the right edge, drives left to its final spot (Figma start/end frames).
    --tw = truck width; final left edge = -0.155 tw; start left edge = 70vw */
-.about__road { --tw: min(116vw, 2300px, calc((89svh - var(--nav-h) - 30px) * 2.477)); }
-.about__truck { width: var(--tw); margin-left: calc(-0.155 * var(--tw)); translate: calc((1 - var(--ap)) * (70vw + 0.155 * var(--tw))) 0; will-change: translate; }
+.about__road { --tw: min(87.5vw, 2000px, calc((100svh - var(--nav-h) - 4svh) * 2.477)); --ml: calc(0.0829 * var(--tw)); padding-bottom: 6svh; }
+.about__truck { width: var(--tw); margin-left: var(--ml); translate: calc((1 - var(--ap)) * (70vw - var(--ml))) 0; will-change: translate; }
 .truckbox { position: relative; animation: jiggle 1.2s ease-in-out infinite alternate; }
 .truckbox__body { width: 100%; height: auto; display: block; }
 .wheel { position: absolute; height: auto; aspect-ratio: 1; border-radius: 50%; rotate: calc(var(--ap) * -1500deg); }
