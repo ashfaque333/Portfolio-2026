@@ -40,4 +40,19 @@
     nav.addEventListener('click', e => { if (e.target.closest('.nav__links a')) set(false); });
     addEventListener('keydown', e => { if (e.key === 'Escape') set(false); });
   }
+
+  /* ---- 4. showreel dialog ---- */
+  const dlg = document.getElementById('reel');
+  const tv = document.querySelector('.tv-screen');
+  if (dlg && tv) {
+    const frame = dlg.querySelector('.reel__frame');
+    tv.addEventListener('click', () => {
+      const src = tv.dataset.video;
+      if (!src) { tv.querySelector('.tv-screen__txt').textContent = 'COMING SOON'; return; }
+      frame.innerHTML = '<iframe src="' + src + (src.includes('?') ? '&' : '?') + 'autoplay=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Showreel"></iframe>';
+      dlg.showModal();
+    });
+    dlg.addEventListener('close', () => { frame.innerHTML = ''; });
+    dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('.reel__x')) dlg.close(); });
+  }
 })();

@@ -75,9 +75,12 @@
         <div class="l px arc" style="--x:243;--y:160;--w:955;--h:479;--par:70">
           <div class="in"><img src="assets/hero/arc.webp" alt="" decoding="async"></div>
         </div>
-        <!-- skills ring: static, exactly where it sits in the Figma frame (303,219 · 834×834) -->
-        <div class="l px ring" style="--x:303;--y:219;--w:834;--h:834;--par:70" aria-hidden="true">
-          <div class="in"><img src="assets/hero/ring.webp" alt="" decoding="async"></div>
+        <!-- skills ring: centred on the arch (centre 720.5, 638.5) with the letters on the middle of the band,
+             rotating slowly; masked by the arch so it only shows inside the band -->
+        <div class="l px arcmask" style="--x:243;--y:160;--w:955;--h:479;--par:70" aria-hidden="true">
+          <div class="in">
+            <img class="ring" src="assets/hero/ring.webp" alt="" decoding="async" style="--rx:29.4;--ry:30.4;--rw:896.2">
+          </div>
         </div>
 
         <div class="l px scene" style="--x:0;--y:140;--w:1440;--h:726;--par:28">
@@ -101,15 +104,61 @@
       <img src="assets/hero/bumper.webp" alt="Driven by curiosity, loaded with ideas" decoding="async" loading="lazy">
     </div>
 
-    <!-- ============ NEXT SECTIONS (placeholders so nav anchors work) ============ -->
-    <section class="stub" id="showreel"><h2>Showreel</h2><p>Next scene: the cab interior + retro TV.</p></section>
-    <section class="stub" id="projects"><h2>Projects</h2><p>Next scene: the truck bed with the hay crates.</p></section>
-    <section class="stub" id="about"><h2>About me</h2></section>
-    <section class="stub" id="studio"><h2>My studio</h2></section>
-    <section class="stub" id="contact"><h2>Contact</h2></section>
+    <div class="journey">
+    <!-- ============ SHOWREEL (cab interior + TV) ============ -->
+    <section class="sec showreel" id="showreel" aria-label="Showreel">
+      <div class="stage">
+        <img class="showreel__bg" src="assets/showreel/showreel.webp" alt="Inside a hand-painted truck cab with a retro TV and the word SHOWREEL on the windscreen" width="1440" height="1110" loading="lazy" decoding="async">
+        <!-- Set data-video to a YouTube/Vimeo embed URL (e.g. https://www.youtube.com/embed/XXXX) to play the reel on the TV -->
+        <button class="tv-screen" type="button" data-video="" aria-label="Play showreel"><span class="tv-screen__play"></span><span class="tv-screen__txt">PLAY REEL</span></button>
+      </div>
+    </section>
+
+    <!-- ============ CLOUDS + ROAD + PROJECTS TRUCK ============ -->
+    <section class="sec drive" id="projects" aria-label="Projects">
+      <div class="stage">
+        <img class="clouds" src="assets/showreel/clouds.webp" alt="" width="2880" height="1344" loading="lazy" decoding="async">
+        <div class="road" aria-hidden="true"></div>
+        <div class="truck" style="--x:215;--y:530;--w:1022;--h:2633">
+          <img class="truck__body" src="assets/projects/truck.webp" alt="Top view of the truck bed. Sign reads Projects." width="1303" height="3359" loading="lazy" decoding="async">
+          <a class="crate" href="https://www.behance.net/ashfaqusalahud" target="_blank" rel="noopener" style="--x:104;--y:784;--w:641" aria-label="Naddus Fried Chicken — brand identity">
+            <img src="assets/projects/box1-normal.webp" alt="" loading="lazy" decoding="async"><img class="h" src="assets/projects/box1-hover.webp" alt="" loading="lazy" decoding="async">
+          </a>
+          <a class="crate" href="https://www.behance.net/ashfaqusalahud" target="_blank" rel="noopener" style="--x:154;--y:1278;--w:689" aria-label="Kala Dhara Cultural Centre, Kerala">
+            <img src="assets/projects/box2-normal.webp" alt="" loading="lazy" decoding="async"><img class="h" src="assets/projects/box2-hover.webp" alt="" loading="lazy" decoding="async">
+          </a>
+          <a class="crate" href="https://www.behance.net/ashfaqusalahud" target="_blank" rel="noopener" style="--x:175;--y:1696;--w:636" aria-label="Ishanya 2026 — event identity">
+            <img src="assets/projects/box3-normal.webp" alt="" loading="lazy" decoding="async"><img class="h" src="assets/projects/box3-hover.webp" alt="" loading="lazy" decoding="async">
+          </a>
+          <a class="crate" href="https://www.behance.net/ashfaqusalahud" target="_blank" rel="noopener" style="--x:186;--y:2169;--w:275" aria-label="Logofolio">
+            <img src="assets/projects/logofolio-normal.webp" alt="" loading="lazy" decoding="async"><img class="h" src="assets/projects/logofolio-hover.webp" alt="" loading="lazy" decoding="async">
+          </a>
+          <a class="crate" href="https://www.behance.net/ashfaqusalahud" target="_blank" rel="noopener" style="--x:503;--y:2131;--w:296" aria-label="More projects on Behance">
+            <img src="assets/projects/more-normal.webp" alt="" loading="lazy" decoding="async"><img class="h" src="assets/projects/more-hover.webp" alt="" loading="lazy" decoding="async">
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER / CONTACT ============ -->
+    <footer class="sec foot" id="contact" aria-label="Contact">
+      <img class="foot__bg" src="assets/footer/bg.webp" alt="" width="1672" height="941" loading="lazy" decoding="async">
+      <div class="stage">
+        <div class="foot__truck" style="--x:216;--y:103;--w:1007;--h:672">
+          <img src="assets/footer/truck-back.webp" alt="Back of the truck: “Dekho magar pyaar se — HIRE PLEASE OK”, with contact details" width="1536" height="1024" loading="lazy" decoding="async">
+          <a class="fi" href="https://www.instagram.com/faque.it/" target="_blank" rel="noopener" style="--x:449.7;--y:354;--w:29.8" aria-label="Instagram"><img src="assets/footer/insta.webp" alt=""><img class="h" src="assets/footer/insta-hover.webp" alt=""></a>
+          <a class="fi" href="https://www.behance.net/ashfaqusalahud" target="_blank" rel="noopener" style="--x:488.8;--y:354;--w:30.9" aria-label="Behance"><img src="assets/footer/behance.webp" alt=""><img class="h" src="assets/footer/behance-hover.webp" alt=""></a>
+          <a class="fi" href="https://www.linkedin.com/in/ashfaquesalahudeen" target="_blank" rel="noopener" style="--x:529;--y:354;--w:29.8" aria-label="LinkedIn"><img src="assets/footer/linkedin.webp" alt=""><img class="h" src="assets/footer/linkedin-hover.webp" alt=""></a>
+          <a class="fi" href="mailto:ashfaquesalahudeen333@gmail.com" style="--x:407.5;--y:419.9;--w:192.4" aria-label="Email me"><img src="assets/footer/email.webp" alt=""><img class="h" src="assets/footer/email-hover.webp" alt=""></a>
+          <a class="fi" href="#top" style="--x:433.2;--y:500.1;--w:142" aria-label="Back to top"><img src="assets/footer/top.webp" alt=""><img class="h" src="assets/footer/top-hover.webp" alt=""></a>
+        </div>
+      </div>
+    </footer>
+    </div>
     <span id="cv"></span>
   </main>
 
+  <dialog class="reel" id="reel" aria-label="Showreel"><button class="reel__x" type="button" aria-label="Close">×</button><div class="reel__frame"></div></dialog>
   <script src="js/main.js" defer></script>
 </body>
 </html>
