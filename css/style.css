@@ -327,7 +327,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 /* clouds + road + truck */
 .drive { height: calc(3401 * var(--pu)); z-index: 1; background: #5b5f66; }
-.road { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: url("../assets/projects/road.webp") 0 0 / 100% 100% no-repeat; }
+.road { position: absolute; left: 0; top: 0; width: 100%; height: calc(3401 * var(--pu)); background: url("../assets/projects/road.webp") 0 0 / 100% 100% no-repeat; }
 .clouds { position: absolute; z-index: 5; left: calc(-357 * var(--pu)); top: calc(-360 * var(--pu)); width: calc(2085 * var(--pu)); height: auto; pointer-events: none; animation: drift 26s ease-in-out infinite alternate; }
 @keyframes drift { from { translate: calc(-24 * var(--pu)) 0; } to { translate: calc(24 * var(--pu)) 0; } }
 .truck { position: absolute; z-index: 2; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); height: calc(var(--h) * var(--pu)); }
@@ -366,7 +366,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .about__road { position: relative; width: 100%; padding-bottom: 11svh; padding-top: calc(var(--nav-h) + 20px); overflow: hidden; }
 /* truck: starts with just its cab on the right edge, drives left to its final spot (Figma start/end frames).
    --tw = truck width; final left edge = -0.155 tw; start left edge = 70vw */
-.about__road { --tw: min(116vw, 2300px); }
+.about__road { --tw: min(116vw, 2300px, calc((89svh - var(--nav-h) - 30px) * 2.477)); }
 .about__truck { width: var(--tw); margin-left: calc(-0.155 * var(--tw)); translate: calc((1 - var(--ap)) * (70vw + 0.155 * var(--tw))) 0; will-change: translate; }
 .truckbox { position: relative; animation: jiggle 1.2s ease-in-out infinite alternate; }
 .truckbox__body { width: 100%; height: auto; display: block; }
