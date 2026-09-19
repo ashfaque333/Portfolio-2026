@@ -452,6 +452,10 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .intro__skip { position: absolute; right: 18px; bottom: 16px; z-index: 3; padding: 8px 16px; border: 2px solid rgba(255,255,255,.7); border-radius: 999px; background: rgba(0,20,80,.35); color: #fff;
   font: 600 13px/1 system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
 .intro__skip:hover, .intro__skip:focus-visible { background: rgba(0,20,80,.6); outline: none; }
+/* progress bar: fills while the greetings loop, then fades as the shutter rolls up */
+.intro__bar { position: absolute; left: 18px; right: 130px; bottom: 26px; height: 8px; z-index: 3; border: 2px solid rgba(255,255,255,.75); border-radius: 999px; background: rgba(0,20,80,.35); overflow: hidden; transition: opacity .3s; }
+.intro__bar i { display: block; height: 100%; width: 100%; background: #ffd21e; border-radius: 999px; transform-origin: 0 50%; transform: scaleX(0); }
+.intro__bar.is-out { opacity: 0; }
 /* tall/narrow screens: show the whole board instead of cropping it */
 @media (max-aspect-ratio: 6/5) {
   .intro { --iw: 100vw; --ih: calc(100vw * .564); }
