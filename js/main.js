@@ -13,11 +13,17 @@
   /* ---- 1. ready gate ---- */
   let started = false;
   const start = () => { if (started) return; started = true; requestAnimationFrame(() => root.classList.add('is-ready')); };
+  const introOn = root.classList.contains('intro-on');   // the site's own entrance waits for the opening shutter
   const scene = document.getElementById('scene-img');
-  if (scene && !scene.complete) {
-    scene.decode ? scene.decode().then(start, start) : scene.addEventListener('load', start);
-  } else start();
-  setTimeout(start, 3000);                         // never leave the page hidden on a slow connection
+  if (introOn) {
+    document.addEventListener('introopen', start, { once: true });
+    setTimeout(start, 20000);
+  } else {
+    if (scene && !scene.complete) {
+      scene.decode ? scene.decode().then(start, start) : scene.addEventListener('load', start);
+    } else start();
+    setTimeout(start, 3000);
+  }                         // never leave the page hidden on a slow connection
 
   /* ---- 2. parallax ---- */
   if (hero && !reduce) {

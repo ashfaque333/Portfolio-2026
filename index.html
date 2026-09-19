@@ -10,10 +10,32 @@
   <meta property="og:description" content="Driven by curiosity, loaded with ideas.">
   <link rel="icon" type="image/webp" href="assets/nav/tv.webp">
   <link rel="preload" as="image" href="assets/hero/scene-1x.webp" imagesrcset="assets/hero/scene-1x.webp 1440w, assets/hero/scene-2x.webp 2880w" imagesizes="100vw">
+  <link rel="preload" as="image" href="assets/intro/shutter-en.webp">
   <link rel="stylesheet" href="css/style.css">
-  <script>document.documentElement.classList.add('js');</script>
+  <script>
+    document.documentElement.classList.add('js');
+    /* opening shutter plays on the first visit of a browser session (add ?intro to the address to replay it) */
+    try {
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches && (!sessionStorage.getItem('introSeen') || /[?&]intro\b/.test(location.search))) document.documentElement.classList.add('intro-on');
+    } catch (e) {}
+  </script>
 </head>
 <body>
+
+  <!-- ============ OPENING SHUTTER (first visit) ============ -->
+  <div class="intro" id="intro" aria-hidden="true">
+    <div class="intro__shutter" id="introShutter">
+      <div class="intro__frames">
+        <img class="is-on" src="assets/intro/shutter-en.webp" alt="">
+        <img src="assets/intro/shutter-hi.webp" alt="">
+        <img src="assets/intro/shutter-ml.webp" alt="">
+        <img src="assets/intro/shutter-ta.webp" alt="">
+        <img src="assets/intro/shutter-ur.webp" alt="">
+      </div>
+    </div>
+    <div class="intro__banner" id="introBanner"><img src="assets/intro/banner.webp" alt=""></div>
+    <button class="intro__skip" id="introSkip" type="button">Skip</button>
+  </div>
 
   <a class="skip" href="#main">Skip to content</a>
 
@@ -161,6 +183,7 @@
       </main>
 
   <dialog class="reel" id="reel" aria-label="Showreel"><button class="reel__x" type="button" aria-label="Close">×</button><div class="reel__frame"></div></dialog>
+  <script src="js/intro.js" defer></script>
   <script src="js/main.js" defer></script>
 </body>
 </html>

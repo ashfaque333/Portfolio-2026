@@ -433,3 +433,29 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   .ss--gal .tx.h { font-size: 26px; } .ss--gal .tx.cap { font-size: 15px; } .ss--gal .tx.cb { font-size: 13px; } .ss--gal .tx.ct { font-size: 15px; }
 }
 @media (prefers-reduced-motion: reduce) { .hot, .hot__chip, .it.obj { transition: none; } }
+
+
+/* ============================ OPENING SHUTTER ============================
+   Truck-shutter loading screen: greets in five languages, then the shutter rolls up (fast, then easing to a stop)
+   and the yellow "Ashfaque's Portfolio" board lifts away. Runs once per browser session (see js/intro.js). */
+.intro { display: none; position: fixed; inset: 0; z-index: 200; overflow: hidden; pointer-events: auto; --iw: max(100vw, calc(100vh * 1.773)); --ih: max(100vh, calc(100vw * .564)); }
+.intro-on .intro { display: block; animation: introfail 0s 14s forwards; }   /* safety net if the script never runs */
+.intro-on { overflow: hidden; }
+@keyframes introfail { to { visibility: hidden; } }
+.intro__shutter, .intro__banner { position: absolute; left: 0; top: 0; width: 100%; height: 100%; will-change: transform; }
+.intro__shutter { background: #007bfd; }
+.intro__frames, .intro__banner { --w: var(--iw); }
+.intro__frames { position: absolute; left: 50%; top: 0; width: var(--iw); height: var(--ih); translate: -50% 0; }
+.intro__banner img { position: absolute; left: 50%; top: 0; width: var(--iw); height: var(--ih); translate: -50% 0; max-width: none; }
+.intro__frames img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; opacity: 0; }
+.intro__frames img.is-on { opacity: 1; }
+.intro__skip { position: absolute; right: 18px; bottom: 16px; z-index: 3; padding: 8px 16px; border: 2px solid rgba(255,255,255,.7); border-radius: 999px; background: rgba(0,20,80,.35); color: #fff;
+  font: 600 13px/1 system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+.intro__skip:hover, .intro__skip:focus-visible { background: rgba(0,20,80,.6); outline: none; }
+/* tall/narrow screens: show the whole board instead of cropping it */
+@media (max-aspect-ratio: 6/5) {
+  .intro { --iw: 100vw; --ih: calc(100vw * .564); }
+  .intro__frames, .intro__banner img { left: 0; translate: none; }
+}
+.intro.is-done { display: none !important; }
+.intro-on .hero, .intro-on body { background: linear-gradient(#5b97e0, #cfe6f6 55%, #3f8f2a 55%); }   /* what shows through the rising shutter before the scene fades in */
