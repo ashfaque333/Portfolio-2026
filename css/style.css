@@ -96,7 +96,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .cv:active .cv__closed { opacity: 0; }
 
 /* lemon + chilli charms hanging either side of the TV */
-.nimbu { z-index: 0; pointer-events: auto; height: auto; transform-origin: 50% 0; will-change: rotate; cursor: default; }   /* swing is driven by js/main.js (hover impulse + damped pendulum) */
+.nimbu { z-index: 2; pointer-events: auto; height: auto; transform-origin: 50% 14%; will-change: rotate; cursor: default; }   /* swing is driven by js/main.js (hover impulse + damped pendulum) */
 .tv { z-index: 1; }
 
 /* windscreen mirror: sways a little, like it's hanging off the dash */
@@ -105,10 +105,15 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .mirror { animation: sway 5s ease-in-out infinite alternate; }
 /* the message only shows while the mirror is hovered (or focused) */
 .mirror:hover .mirror__text, .mirror:focus-visible .mirror__text { opacity: 1; animation: mpop .55s cubic-bezier(.2,.9,.3,1) both; }
-@keyframes mpop { 0% { opacity: 0; transform: translateY(35%) scale(.7); } 45% { opacity: 1; transform: translateY(-9%) scale(1.09); } 70% { transform: translateY(3%) scale(.97); } 100% { transform: none; } }
+@keyframes mpop { 0% { opacity: 0; transform: translateY(16%) scale(.88); } 55% { opacity: 1; transform: translateY(-2%) scale(1.02); } 80% { transform: translateY(.6%) scale(.995); } 100% { transform: none; } }   /* gentle pop: the text stays inside the mirror surface */
 @keyframes sway { from { transform: rotate(-.35deg); } to { transform: rotate(.35deg); } }
 
 .nav__toggle { display: none; }
+
+/* tassels on the bar: swing like real ones (physics in js/main.js) */
+.tassel { position: absolute; z-index: 0; left: calc(var(--x) * var(--u)); top: calc(77.5 * var(--u)); width: calc(23 * var(--u)); transform-origin: 50% 0; will-change: rotate; pointer-events: auto; cursor: default; }
+.tassel img { display: block; width: 100%; height: auto; pointer-events: none; }
+.tassel::before { content: ""; position: absolute; inset: 0 calc(-9 * var(--u)) calc(-3 * var(--u)); }   /* generous invisible hit area so a quick sweep always catches it */
 
 /* nav intro */
 .js .nav { transform: translateY(-101%); transition: transform .9s cubic-bezier(.2,.8,.2,1) .15s; }
@@ -255,7 +260,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
     /* only the orange pattern part of the bar (the blue line + tassels sit lower in the artwork, so they are cropped away) */
     background: url("../assets/nav/bar-bg.webp") left top / auto 108px repeat-x;
   }
-  .nav__bg, .mirror, .nimbu { display: none; }
+  .nav__bg, .mirror, .nimbu, .tassel { display: none; }
   .nav__item { position: relative; left: auto; top: auto; width: auto; }
 
   /* CV box: a little larger, but always inside the bar and vertically centred */

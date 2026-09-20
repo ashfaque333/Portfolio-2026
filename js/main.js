@@ -85,21 +85,22 @@
   }
 
   /* ---- 6. lemon + chilli charms: hover gives them a push, then they swing like they hang on a thread and slowly settle ---- */
-  const charms = [...document.querySelectorAll('.nimbu')];
+  const charms = [...document.querySelectorAll('.nimbu, .tassel')];
   if (charms.length && !reduce) {
-    const K = 19, C = 0.55, MAX = 0.85;            // stiffness (period ~1.4s), damping (rings for a few seconds), max angle (rad)
-    const st = charms.map(el => ({ el, a: 0, w: 0, lx: null, lt: 0 }));
+    // per object: stiffness K (period), damping C, max angle MAX (rad). Lemon/chilli hang on a short thread so they swing a little; tassels are lighter and quicker.
+    const st = charms.map(el => { const t = el.classList.contains('tassel'); return { el, a: 0, w: 0, lx: null, lt: 0, K: t ? 30 : 22, C: t ? 0.8 : 0.7, MAX: t ? 0.75 : 0.36, lift: t ? 3 : 0, push: t ? 0.7 : 0.4 }; });
     let raf = 0, last = 0;
     const tick = t => {
       const dt = Math.min((t - last) / 1000 || 0.016, 0.033); last = t;
       let moving = false;
       for (const s of st) {
-        s.w += (-K * s.a - C * s.w) * dt;         // damped pendulum
+        s.w += (-s.K * s.a - s.C * s.w) * dt;         // damped pendulum
         s.a += s.w * dt;
-        if (s.a > MAX) { s.a = MAX; s.w *= -0.3; } else if (s.a < -MAX) { s.a = -MAX; s.w *= -0.3; }
+        if (s.a > s.MAX) { s.a = s.MAX; s.w *= -0.3; } else if (s.a < -s.MAX) { s.a = -s.MAX; s.w *= -0.3; }
         if (Math.abs(s.a) < 0.0006 && Math.abs(s.w) < 0.004) { s.a = s.w = 0; }
         else moving = true;
         s.el.style.rotate = (s.a * 57.2958).toFixed(3) + 'deg';
+        if (s.lift) s.el.style.translate = '0 ' + (-Math.abs(s.a) * s.lift * 6).toFixed(2) + 'px';   /* tassel lifts a touch as it swings */
       }
       raf = moving ? requestAnimationFrame(tick) : 0;
     };
@@ -110,12 +111,43 @@
         if (s.lx !== null && now > s.lt) {
           const vx = (e.clientX - s.lx) / (now - s.lt) * 1000;             // px/s: how fast the cursor sweeps through
           const push = Math.max(-2.6, Math.min(2.6, vx * -0.0022));          // faster sweep = harder push (moving right swings the bottom right)
-          if (Math.abs(push) > 0.03) { s.w += push * 0.55; kick(); }
+          if (Math.abs(push) > 0.03) { s.w += push * s.push; kick(); }
         }
         s.lx = e.clientX; s.lt = now;
       });
       s.el.addEventListener('pointerleave', () => { s.lx = null; });
       s.el.addEventListener('pointerenter', e => { s.lx = e.clientX; s.lt = performance.now(); });
+    });
+  }
+
+  /* ---- 6b. in-page links (Projects, Contact, Back to top...) glide there quickly instead of jumping ---- */
+  if (!reduce) {
+    const norm = p => p.replace(/index\.html$/, '').replace(/\/$/, '');
+    let raf2 = 0;
+    const stop = () => { if (raf2) { cancelAnimationFrame(raf2); raf2 = 0; } };
+    ['wheel', 'touchstart', 'keydown'].forEach(ev => addEventListener(ev, stop, { passive: true }));
+    document.addEventListener('click', e => {
+      const a = e.target.closest && e.target.closest('a[href]');
+      if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
+      const u = new URL(a.href, location.href);
+      if (!u.hash || norm(u.pathname) !== norm(location.pathname)) return;
+      const id = decodeURIComponent(u.hash.slice(1));
+      const el = id && id !== 'top' ? document.getElementById(id) : null;
+      if (id && id !== 'top' && !el) return;
+      e.preventDefault();
+      const nav = document.getElementById('nav'); if (nav) nav.classList.remove('is-open');
+      const margin = el ? parseFloat(getComputedStyle(el).scrollMarginTop) || 0 : 0;
+      const to = Math.max(0, Math.round(el ? el.getBoundingClientRect().top + scrollY - margin : 0));
+      const from = scrollY, dist = to - from; if (!dist) return;
+      const dur = Math.max(450, Math.min(1000, Math.abs(dist) * 0.16));      // fast: about 0.5 – 1 s however far it is
+      const t0 = performance.now(); stop();
+      const step = t => {
+        const p = Math.min(1, (t - t0) / dur), k = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+        scrollTo(0, from + dist * k);
+        raf2 = p < 1 ? requestAnimationFrame(step) : 0;
+      };
+      raf2 = requestAnimationFrame(step);
+      try { history.replaceState(null, '', u.hash || location.pathname); } catch (_) {}
     });
   }
 
