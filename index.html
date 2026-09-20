@@ -8,7 +8,6 @@
   <meta name="theme-color" content="#1f56c4">
   <meta property="og:title" content="Ashfaque Salahudeen — Design Portfolio">
   <meta property="og:description" content="Driven by curiosity, loaded with ideas.">
-  <link rel="icon" type="image/webp" href="assets/nav/tv.webp">
   <link rel="preload" as="image" href="assets/hero/scene-1x.webp" imagesrcset="assets/hero/scene-1x.webp 1440w, assets/hero/scene-2x.webp 2880w" imagesizes="100vw">
   <link rel="preload" as="image" href="assets/intro/shutter-en.webp">
   <link rel="stylesheet" href="css/style.css">
@@ -19,6 +18,10 @@
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches && (!sessionStorage.getItem('introSeen') || /[?&]intro\b/.test(location.search))) document.documentElement.classList.add('intro-on');
     } catch (e) {}
   </script>
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
 </head>
 <body>
 
@@ -142,18 +145,19 @@
     <!-- ============ CLOUDS + ROAD + PROJECTS TRUCK ============ -->
     <section class="sec drive" id="projects" aria-label="Projects">
       <div class="stage">
-        <img class="clouds" src="assets/showreel/clouds.webp" alt="" width="2880" height="1344" loading="lazy" decoding="async">
+        <div class="clouds" aria-hidden="true"><img src="assets/showreel/clouds-long.webp" alt="" width="5200" height="902" loading="lazy" decoding="async"></div>
+        <p class="clouds__txt">I could tell you what I do, <br>but I’d rather let my work do the talking!</p>
         <div class="road" aria-hidden="true"></div>
         <span class="board-anchor" id="projects-board" aria-hidden="true"></span>
         <div class="truck" style="--x:215;--y:530;--w:1022;--h:2633">
           <img class="truck__body" src="assets/projects/truck.webp" alt="Top view of the truck bed. Sign reads Projects." width="1303" height="3359" loading="lazy" decoding="async">
-          <a class="crate" href="https://www.behance.net/ashfaqusalahud" target="_blank" rel="noopener" style="--x:104;--y:784;--w:641" aria-label="Naddus Fried Chicken — brand identity">
+          <a class="crate" href="https://www.behance.net/gallery/236046557/Brand-Identity-for-Naddus-Fried-Chicken" target="_blank" rel="noopener" style="--x:104;--y:784;--w:641" aria-label="Naddus Fried Chicken — brand identity">
             <img src="assets/projects/box1-normal.webp" alt="" loading="lazy" decoding="async"><img class="h" src="assets/projects/box1-hover.webp" alt="" loading="lazy" decoding="async">
           </a>
-          <a class="crate" href="https://www.behance.net/ashfaqusalahud" target="_blank" rel="noopener" style="--x:154;--y:1278;--w:689" aria-label="Kala Dhara Cultural Centre, Kerala">
+          <a class="crate" href="https://www.behance.net/gallery/255042617/Kala-Dhara-Cultural-Centre-Kerala" target="_blank" rel="noopener" style="--x:154;--y:1278;--w:689" aria-label="Kala Dhara Cultural Centre, Kerala">
             <img src="assets/projects/box2-normal.webp" alt="" loading="lazy" decoding="async"><img class="h" src="assets/projects/box2-hover.webp" alt="" loading="lazy" decoding="async">
           </a>
-          <a class="crate" href="https://www.behance.net/ashfaqusalahud" target="_blank" rel="noopener" style="--x:175;--y:1696;--w:636" aria-label="Ishanya 2026 — event identity">
+          <a class="crate" href="https://www.behance.net/gallery/255136105/Event-Identity-for-Ishanya-2026" target="_blank" rel="noopener" style="--x:175;--y:1696;--w:636" aria-label="Ishanya 2026 — event identity">
             <img src="assets/projects/box3-normal.webp" alt="" loading="lazy" decoding="async"><img class="h" src="assets/projects/box3-hover.webp" alt="" loading="lazy" decoding="async">
           </a>
           <a class="crate" href="https://www.behance.net/ashfaqusalahud" target="_blank" rel="noopener" style="--x:186;--y:2169;--w:275" aria-label="Logofolio">
@@ -176,6 +180,8 @@
           <a class="fi" href="https://www.behance.net/ashfaqusalahud" target="_blank" rel="noopener" style="--x:488.8;--y:354;--w:30.9" aria-label="Behance"><img src="assets/footer/behance.webp" alt=""><img class="h" src="assets/footer/behance-hover.webp" alt=""></a>
           <a class="fi" href="https://www.linkedin.com/in/ashfaquesalahudeen" target="_blank" rel="noopener" style="--x:529;--y:354;--w:29.8" aria-label="LinkedIn"><img src="assets/footer/linkedin.webp" alt=""><img class="h" src="assets/footer/linkedin-hover.webp" alt=""></a>
           <a class="fi" href="mailto:ashfaquesalahudeen333@gmail.com" style="--x:407.5;--y:419.9;--w:192.4" aria-label="Email me"><img src="assets/footer/email.webp" alt=""><img class="h" src="assets/footer/email-hover.webp" alt=""></a>
+          <a class="fs" href="about.html" style="--x:110;--y:424;--w:165" aria-label="About me"><img src="assets/footer/sign-about.webp" alt=""></a>
+          <a class="fs" href="studio.html" style="--x:723;--y:424;--w:165" aria-label="My studio"><img src="assets/footer/sign-studio.webp" alt=""></a>
           <a class="fi" href="#top" style="--x:433.2;--y:500.1;--w:142" aria-label="Back to top"><img src="assets/footer/top.webp" alt=""><img class="h" src="assets/footer/top-hover.webp" alt=""></a>
         </div>
       </div>

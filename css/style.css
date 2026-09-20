@@ -74,6 +74,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 @media (hover: hover) {
   .btn:hover img.h, .tv:hover img.h { opacity: 1; }
   .btn:hover { transform: translateY(calc(-1 * var(--u))); }
+  .btn:hover > img:not(.h):not(.p), .tv:hover > img:not(.h):not(.p) { opacity: 0; }   /* resting art never shows behind the hover art */
 }
 .btn:active img.p, .tv:active img.p { opacity: 1; }
 .btn:active img.h, .tv:active img.h { opacity: 0; }
@@ -250,38 +251,40 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
   .nav__canvas {
     width: 100%; display: flex; align-items: center; justify-content: space-between;
-    padding: 0 14px; background: url("../assets/nav/bar-bg.webp") left top / auto 100% repeat-x;
-    box-shadow: 0 2px 0 #1f56c4;
+    padding: 0 14px;
+    /* only the orange pattern part of the bar (the blue line + tassels sit lower in the artwork, so they are cropped away) */
+    background: url("../assets/nav/bar-bg.webp") left top / auto 108px repeat-x;
   }
   .nav__bg, .mirror, .nimbu { display: none; }
   .nav__item { position: relative; left: auto; top: auto; width: auto; }
 
-  .cv { width: 92px; height: 32px; order: 1; }
-  .cv__open, .cv__pressed { width: 92px; }
+  /* CV box: a little larger, but always inside the bar and vertically centred */
+  .cv { position: relative; width: 118px; height: 35px; order: 1; align-self: center; }
+  .cv__closed, .cv__open, .cv__pressed { width: 118px; height: auto; }
 
-  .tv { width: 54px; order: 2; position: absolute; left: 50%; top: 4px; translate: -50% 0; }
+  .tv { width: 54px; order: 2; position: absolute; left: 50%; top: 50%; translate: -50% -50%; }
   .tv img { width: 54px; }
 
+  /* menu / close button: Ashfaque's artwork; the bars are drawn on top so they can still morph into the cross */
   .nav__toggle {
-    order: 3; display: block; position: relative; width: 48px; height: 32px; padding: 0;
-    border-radius: 8px; border: 3px solid #c58a1a; background: linear-gradient(#fbf0d2, #f0dcaa);
-    box-shadow: 0 2px 3px rgba(80,40,0,.45); cursor: pointer;
+    order: 3; display: block; position: relative; flex: none; width: 56px; height: 37px; padding: 0; border: 0;
+    background: url("../assets/nav/menu-btn.webp") center / 100% 100% no-repeat; cursor: pointer; align-self: center;
+    -webkit-tap-highlight-color: transparent;
   }
   .nav__toggle span, .nav__toggle::before, .nav__toggle::after {
-    content: ""; position: absolute; left: 10px; right: 10px; height: 3px; border-radius: 2px; background: #a1670e;
+    content: ""; position: absolute; left: 27.3%; width: 45.5%; height: 9%; border-radius: 99px; background: #a2650f;
     transition: transform .2s, opacity .2s, top .2s;
   }
-  .nav__toggle::before { top: 6px; } .nav__toggle span { top: 13px; } .nav__toggle::after { top: 20px; }
-  .nav__toggle[aria-expanded="true"]::before { top: 13px; transform: rotate(45deg); }
-  .nav__toggle[aria-expanded="true"]::after  { top: 13px; transform: rotate(-45deg); }
+  .nav__toggle::before { top: 27.4%; } .nav__toggle span { top: 49.8%; } .nav__toggle::after { top: 71.8%; }
+  .nav__toggle[aria-expanded="true"]::before { top: 49.8%; transform: rotate(45deg); }
+  .nav__toggle[aria-expanded="true"]::after  { top: 49.8%; transform: rotate(-45deg); }
   .nav__toggle[aria-expanded="true"] span { opacity: 0; }
 
   .nav__links {
     display: flex; flex-direction: column; align-items: center; gap: 10px;
     position: absolute; left: 0; right: 0; top: 100%;
     padding: 18px 0 22px;
-    background: url("../assets/nav/bar-bg.webp") left top / auto 64px repeat-x, #f4a51c;
-    border-bottom: 3px solid #1f56c4;
+    background: #f4a51c;   /* plain yellow, no second copy of the bar */
     transform: translateY(-8px); opacity: 0; visibility: hidden;
     transition: opacity .2s, transform .2s, visibility 0s .2s;
   }
@@ -327,7 +330,11 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 /* clouds + road + truck */
 .drive { height: calc(3401 * var(--pu)); z-index: 1; background: #5b5f66; }
 .road { position: absolute; left: 0; top: 0; width: 100%; height: calc(3401 * var(--pu)); background: url("../assets/projects/road.webp") 0 0 / 100% 100% no-repeat; }
-.clouds { position: absolute; z-index: 5; left: calc(-357 * var(--pu)); top: calc(-290 * var(--pu)); width: calc(2085 * var(--pu)); height: auto; pointer-events: none; animation: drift 26s ease-in-out infinite alternate; }
+.clouds { position: absolute; z-index: 5; left: calc(-357 * var(--pu)); top: calc(-195 * var(--pu)); width: calc(2085 * var(--pu)); height: calc(671.5 * var(--pu)); overflow: hidden; pointer-events: none; }   /* Figma CLOUDS frame */
+.clouds img { position: absolute; top: 0; left: 50%; height: 100%; width: auto; max-width: none; translate: -50% 0; animation: cdrift 44s ease-in-out infinite alternate; }   /* long artwork: drifts sideways with no zooming, so no pixelation */
+@keyframes cdrift { from { transform: translateX(-19%); } to { transform: translateX(19%); } }
+.clouds__txt { position: absolute; z-index: 6; left: calc(137 * var(--pu)); top: calc(44 * var(--pu)); width: calc(1165 * var(--pu)); margin: 0; text-align: center; pointer-events: none;
+  font: 800 calc(33.026 * var(--pu))/normal "Anek Latin", "Arial Narrow", system-ui, sans-serif; font-stretch: 125%; text-transform: uppercase; color: #002169; }
 @keyframes drift { from { translate: calc(-24 * var(--pu)) 0; } to { translate: calc(24 * var(--pu)) 0; } }
 .truck { position: absolute; z-index: 2; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); height: calc(var(--h) * var(--pu)); }
 .truck__body { width: 100%; height: 100%; }
@@ -345,10 +352,16 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   transform-origin: 50% 100%; translate: 0 0; scale: var(--fk, .9); }   /* a little smaller and lower; js/main.js shrinks it further on short screens so the whole back shows at once */
 .foot__truck > img { width: 100%; height: 100%; }
 .fi { position: absolute; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); display: block; }
-.fi img { width: 100%; height: auto; }
+.fi img { width: 100%; height: auto; transition: opacity .15s; }
 .fi .h { position: absolute; inset: 0; opacity: 0; transition: opacity .15s; }
 .fi:hover .h, .fi:focus-visible .h { opacity: 1; }
+.fi:hover > img:not(.h), .fi:focus-visible > img:not(.h) { opacity: 0; }   /* the resting artwork must not show through behind the hover artwork */
 .fi:hover, .fi:focus-visible { outline: none; }
+/* ABOUT ME / MY STUDIO signs over the two grilles on the truck's back: grow a little on hover, settle back to normal size while pressed */
+.fs { position: absolute; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); display: block; transition: transform .18s cubic-bezier(.2,.8,.2,1); -webkit-tap-highlight-color: transparent; }
+.fs img { display: block; width: 100%; height: auto; }
+.fs:hover, .fs:focus-visible { transform: scale(1.07); outline: none; }
+.fs:active { transform: scale(1); transition-duration: .08s; }
 
 /* showreel dialog */
 .reel { border: 0; padding: 0; background: #000; width: min(92vw, 1100px); aspect-ratio: 16/9; overflow: visible; }
@@ -356,7 +369,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .reel__frame, .reel__frame iframe { width: 100%; height: 100%; border: 0; display: block; }
 .reel__x { position: absolute; right: -6px; top: -42px; background: none; border: 0; color: #fff; font-size: 34px; line-height: 1; cursor: pointer; }
 
-@media (prefers-reduced-motion: reduce) { .clouds { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .clouds img { animation: none; } }
 
 /* ============================ ABOUT PAGE ============================ */
 .about { --ap: 0; position: relative; height: 240svh; background: #2b6f9e; }
@@ -366,7 +379,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .about__road { position: relative; width: 100%; padding-bottom: 11svh; padding-top: calc(var(--nav-h) + 20px); overflow: hidden; }
 /* truck: starts with just its cab on the right edge, drives left to its final spot (Figma start/end frames).
    --tw = truck width; final left edge = -0.155 tw; start left edge = 70vw */
-.about__road { --tw: min(87.5vw, 2000px, calc((100svh - var(--nav-h) - 4svh) * 2.477)); --ml: calc(0.0829 * var(--tw)); padding-bottom: 6svh; }
+.about__road { --tw: min(94vw, 2200px, calc((100svh - var(--nav-h) - 1svh) * 2.477)); --ml: calc(98.5vw - 0.974 * var(--tw)); padding-bottom: 2.5svh; }   /* truck is ~12% bigger; its tail stays just inside the right edge */
 .about__truck { width: var(--tw); margin-left: var(--ml); translate: calc((1 - var(--ap)) * (70vw - var(--ml))) 0; will-change: translate; }
 .truckbox { position: relative; animation: jiggle 1.2s ease-in-out infinite alternate; }
 .truckbox__body { width: 100%; height: auto; display: block; }
@@ -374,7 +387,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .wheel--f { left: 13.583%; top: 72.136%; width: 6.333%; }
 .wheel--r { left: 69.333%; top: 72.239%; width: 6.25%; }
 @keyframes jiggle { from { translate: 0 0; } to { translate: 0 2px; } }
-@media (max-width: 900px) { .about__road { --tw: 980px; } }
+@media (max-width: 900px) { .about__road { --tw: 980px; --ml: calc(0.0829 * var(--tw)); padding-bottom: 6svh; } }
 @media (prefers-reduced-motion: reduce) { .about { --ap: 1 !important; height: auto; } .about__sticky { position: relative; } .about__bg, .truckbox { animation: none; } }
 
 /* ============================ STUDIO PAGE ============================
