@@ -73,12 +73,10 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .btn img, .tv img { transition: none; }   /* states swap instantly */
 @media (hover: hover) {
   .btn:hover img.h, .tv:hover img.h { opacity: 1; }
-  .btn:hover { transform: translateY(calc(-1 * var(--u))); }
   .btn:hover > img:not(.h):not(.p), .tv:hover > img:not(.h):not(.p) { opacity: 0; }   /* resting art never shows behind the hover art */
 }
 .btn:active img.p, .tv:active img.p { opacity: 1; }
 .btn:active img.h, .tv:active img.h { opacity: 0; }
-.btn:active { transform: translateY(calc(1 * var(--u))); }
 .btn:focus-visible, .tv:focus-visible, .cv:focus-visible, .nav__toggle:focus-visible {
   outline: 3px solid #fff; outline-offset: 3px; border-radius: 10px;
 }
@@ -110,10 +108,18 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 .nav__toggle { display: none; }
 
-/* tassels on the bar: swing like real ones (physics in js/main.js) */
-.tassel { position: absolute; z-index: 0; left: calc(var(--x) * var(--u)); top: calc(77.5 * var(--u)); width: calc(23 * var(--u)); transform-origin: 50% 0; will-change: rotate; pointer-events: auto; cursor: default; }
-.tassel img { display: block; width: 100%; height: auto; pointer-events: none; }
-.tassel::before { content: ""; position: absolute; inset: 0 calc(-9 * var(--u)) calc(-3 * var(--u)); }   /* generous invisible hit area so a quick sweep always catches it */
+/* fringe + tassels on the bar: tops stay fixed, only the lower part swings (physics in js/main.js) */
+.fringe { position: absolute; left: 0; top: calc(77 * var(--u)); width: calc(1440 * var(--u)); height: calc(19 * var(--u)); z-index: 0; pointer-events: auto;
+  background: url("../assets/nav/bar-fringe.webp") 0 0 / 100% 100% no-repeat; }
+.fringe.live { background: none; }
+.fringe i { position: absolute; top: 0; height: 100%; left: calc(var(--i) * 8 * var(--u)); width: calc(8.4 * var(--u)); transform-origin: 50% 0; will-change: rotate;
+  background: url("../assets/nav/bar-fringe.webp") calc(var(--i) * -8 * var(--u)) 0 / calc(1440 * var(--u)) 100% no-repeat; }
+.tassel { position: absolute; z-index: 1; left: calc(var(--x) * var(--u)); top: calc(77.5 * var(--u)); width: calc(23 * var(--u)); height: calc(38 * var(--u)); pointer-events: auto; cursor: default; }
+.tassel i { position: absolute; left: 0; width: 100%; display: block; }
+.tassel .tk { top: 0; height: calc(8 * var(--u)); z-index: 2; }
+.tassel .ts { top: calc(7 * var(--u)); height: calc(31 * var(--u)); transform-origin: 50% 0; will-change: rotate; z-index: 1; }
+.tassel img { display: block; width: 100%; height: 100%; pointer-events: none; }
+.tassel::before { content: ""; position: absolute; inset: calc(6 * var(--u)) calc(-10 * var(--u)) calc(-2 * var(--u)); }   /* generous invisible hit area so a quick sweep always catches it */
 
 /* nav intro */
 .js .nav { transform: translateY(-101%); transition: transform .9s cubic-bezier(.2,.8,.2,1) .15s; }
@@ -122,14 +128,15 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 /* ============================ HERO ============================ */
 .hero {
   position: relative; z-index: 1;
-  height: var(--hh);
+  --lift: max(calc(-300 * var(--hu)), min(0px, calc(100svh - 850 * var(--hu))));   /* on tall/wide screens the whole scene rides up so the truck's bumper is inside the first screen */
+  height: calc(var(--hh) + var(--lift));
   overflow: hidden;
   background: #EBD9BA;
   contain: paint;
   --p: 0;                       /* scroll progress 0→1 set by main.js */
 }
 .hero__canvas {
-  position: absolute; left: 50%; top: 0; translate: -50% 0;
+  position: absolute; left: 50%; top: var(--lift); translate: -50% 0;
   width: calc(1440 * var(--hu)); height: calc(853 * var(--hu));
 }
 
@@ -260,7 +267,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
     /* only the orange pattern part of the bar (the blue line + tassels sit lower in the artwork, so they are cropped away) */
     background: url("../assets/nav/bar-bg.webp") left top / auto 108px repeat-x;
   }
-  .nav__bg, .mirror, .nimbu, .tassel { display: none; }
+  .nav__bg, .mirror, .nimbu, .tassel, .fringe { display: none; }
   .nav__item { position: relative; left: auto; top: auto; width: auto; }
 
   /* CV box: a little larger, but always inside the bar and vertically centred */
@@ -334,11 +341,12 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 /* clouds + road + truck */
 .drive { height: calc(3401 * var(--pu)); z-index: 1; background: #5b5f66; }
-.road { position: absolute; left: 0; top: 0; width: 100%; height: calc(3401 * var(--pu)); background: url("../assets/projects/road.webp") 0 0 / 100% 100% no-repeat; }
-.clouds { position: absolute; z-index: 5; left: calc(-357 * var(--pu)); top: calc(-195 * var(--pu)); width: calc(2085 * var(--pu)); height: calc(671.5 * var(--pu)); overflow: hidden; pointer-events: none; }   /* Figma CLOUDS frame */
-.clouds img { position: absolute; top: 0; left: 50%; height: 100%; width: auto; max-width: none; translate: -50% 0; animation: cdrift 44s ease-in-out infinite alternate; }   /* long artwork: drifts sideways with no zooming, so no pixelation */
-@keyframes cdrift { from { transform: translateX(-19%); } to { transform: translateX(19%); } }
-.clouds__txt { position: absolute; z-index: 6; left: calc(137 * var(--pu)); top: calc(44 * var(--pu)); width: calc(1165 * var(--pu)); margin: 0; text-align: center; pointer-events: none;
+.drive .stage { height: 100%; }
+.road { position: sticky; top: 0; width: 100%; height: 100svh; background: url("../assets/projects/road.webp") 0 0 / 100% auto no-repeat; }   /* the road stays put while the truck scrolls forward on it; it moves off with the end of the section */
+.clouds { position: absolute; z-index: 5; left: calc(-480 * var(--pu)); top: calc(-262 * var(--pu)); width: calc(2400 * var(--pu)); height: calc(790 * var(--pu)); overflow: hidden; pointer-events: none; }   /* bigger than before: spans the whole screen, starts over the steering wheel, ends before the truck */
+.clouds img { position: absolute; top: 0; left: 50%; height: 100%; width: auto; max-width: none; translate: -50% 0; animation: cdrift 240s ease-in-out infinite alternate; }   /* very slow, natural drift; no zooming so nothing pixelates */
+@keyframes cdrift { from { transform: translateX(-9%); } to { transform: translateX(9%); } }
+.clouds__txt { position: absolute; z-index: 6; left: calc(137 * var(--pu)); top: calc(40 * var(--pu)); width: calc(1165 * var(--pu)); margin: 0; text-align: center; pointer-events: none;
   font: 800 calc(33.026 * var(--pu))/normal "Anek Latin", "Arial Narrow", system-ui, sans-serif; font-stretch: 125%; text-transform: uppercase; color: #002169; }
 @keyframes drift { from { translate: calc(-24 * var(--pu)) 0; } to { translate: calc(24 * var(--pu)) 0; } }
 .truck { position: absolute; z-index: 2; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); height: calc(var(--h) * var(--pu)); }
@@ -386,14 +394,32 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
    --tw = truck width; final left edge = -0.155 tw; start left edge = 70vw */
 .about__road { --tw: min(94vw, 2200px, calc((100svh - var(--nav-h) - 1svh) * 2.477)); --ml: calc(98.5vw - 0.974 * var(--tw)); padding-bottom: 2.5svh; }   /* truck is ~12% bigger; its tail stays just inside the right edge */
 .about__truck { width: var(--tw); margin-left: var(--ml); translate: calc((1 - var(--ap)) * (70vw - var(--ml))) 0; will-change: translate; }
-.truckbox { position: relative; animation: jiggle 1.2s ease-in-out infinite alternate; }
+.truckbox { --k: calc(var(--tw) / 2400); position: relative; animation: jiggle 1.2s ease-in-out infinite alternate; }
 .truckbox__body { width: 100%; height: auto; display: block; }
 .wheel { position: absolute; height: auto; aspect-ratio: 1; border-radius: 50%; rotate: calc(var(--ap) * -1500deg); }
-.wheel--f { left: 13.583%; top: 72.136%; width: 6.333%; }
-.wheel--r { left: 69.333%; top: 72.239%; width: 6.25%; }
+.wheel--f { left: 13.292%; top: 72.492%; width: 6.75%; }
+.wheel--r { left: 68.98%; top: 72.492%; width: 6.75%; }
+/* driver waves (hand cut out of the painting, pivots at the wrist) */
+.hand { position: absolute; left: 22.25%; top: 32.88%; width: 1.708%; height: auto; transform-origin: 50% 98%; animation: wave 3.4s ease-in-out infinite; pointer-events: none; }
+@keyframes wave { 0%, 52%, 100% { rotate: 0deg; } 8% { rotate: 11deg; } 16% { rotate: -5deg; } 24% { rotate: 10deg; } 32% { rotate: -4deg; } 40% { rotate: 7deg; } 46% { rotate: -1deg; } }
+/* interactive toolbox: brightens on hover and the apps come out and line up beside it */
+.tools { position: absolute; inset: 0; pointer-events: none; }
+.tb { position: absolute; left: 35.14%; top: 66.69%; width: 8.89%; aspect-ratio: 320 / 210; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; -webkit-tap-highlight-color: transparent; border-radius: 4%; }
+.tb img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .25s ease; pointer-events: none; }
+.tools.open .tb img { opacity: 1; }
+.tb:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.ticons { list-style: none; margin: 0; padding: 0; position: absolute; inset: 0; pointer-events: none; }
+.ticons li { position: absolute; left: calc(var(--x) / 24 * 1%); top: calc(var(--y) / 9.67 * 1%); width: calc(60 / 24 * 1%); aspect-ratio: 1; opacity: 0; scale: .35;
+  translate: calc((950 - var(--x)) * var(--k)) calc((690 - var(--y)) * var(--k)); transition: translate .22s ease-in, scale .22s ease-in, opacity .18s ease-in; }
+.tools.open .ticons li { opacity: 1; scale: 1; translate: 0 0; pointer-events: auto; transition: translate .5s cubic-bezier(.2,1.35,.4,1) calc(var(--i) * 32ms), scale .5s cubic-bezier(.2,1.35,.4,1) calc(var(--i) * 32ms), opacity .2s ease calc(var(--i) * 32ms); }
+.ticons img { display: block; width: 100%; height: 100%; object-fit: contain; transition: transform .18s cubic-bezier(.2,.9,.3,1.4); filter: drop-shadow(0 calc(3 * var(--k)) calc(4 * var(--k)) rgba(0,0,0,.45)); }
+.ticons li:hover img { transform: translateY(-7%) scale(1.16); }
+.ticons span { position: absolute; top: calc(100% + 3 * var(--k)); left: 50%; translate: -50% 0; white-space: nowrap; font: 800 max(10px, calc(17 * var(--k)))/1.1 "Anek Latin", "Arial Narrow", system-ui, sans-serif; font-stretch: 125%; color: #fff4d6;
+  text-shadow: 0 1px 2px #000, 0 0 6px rgba(0,0,0,.9); opacity: 0; transform: translateY(-4px) scale(.85); transition: opacity .15s, transform .18s cubic-bezier(.2,.9,.3,1.4); pointer-events: none; }
+.ticons li:hover span { opacity: 1; transform: none; }
 @keyframes jiggle { from { translate: 0 0; } to { translate: 0 2px; } }
 @media (max-width: 900px) { .about__road { --tw: 980px; --ml: calc(0.0829 * var(--tw)); padding-bottom: 6svh; } }
-@media (prefers-reduced-motion: reduce) { .about { --ap: 1 !important; height: auto; } .about__sticky { position: relative; } .about__bg, .truckbox { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .hand { animation: none; } .ticons li, .ticons img { transition: none !important; } .about { --ap: 1 !important; height: auto; } .about__sticky { position: relative; } .about__bg, .truckbox { animation: none; } }
 
 /* ============================ STUDIO PAGE ============================
    Laid out in design pixels from the Figma "Frame 2" (1440 wide). --pu scales everything; each section has its own
@@ -404,7 +430,8 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .ss { position: relative; height: calc(var(--h) * var(--pu)); background: #ecd9b6 url(../assets/studio/paper-bg.webp) center top / 100% auto repeat-y; }
 .ss--room { background: #3a2113 linear-gradient(90deg, #2b170c, #4a2b18 50%, #2b170c); }
 .ss__in { position: absolute; left: 50%; top: 0; width: calc(1440 * var(--pu)); height: 100%; translate: -50% 0; }
-.ss--intro .ss__in { height: 100%; }
+.ss--intro { --sd: max(0px, calc(50svh + var(--nav-h) / 2 - 355 * var(--pu))); height: calc(var(--h) * var(--pu) + var(--sd)); }   /* title board + text sit in the middle of the first screen; everything below moves down with it */
+.ss--intro .ss__in { top: var(--sd); height: calc(var(--h) * var(--pu)); }
 .it, .tx, .hot { position: absolute; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); margin: 0; }
 .it { height: calc(var(--h) * var(--pu)); }
 .it img { width: 100%; height: 100%; object-fit: contain; display: block; max-width: none; }

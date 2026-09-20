@@ -84,40 +84,75 @@
     upd();
   }
 
-  /* ---- 6. lemon + chilli charms: hover gives them a push, then they swing like they hang on a thread and slowly settle ---- */
-  const charms = [...document.querySelectorAll('.nimbu, .tassel')];
-  if (charms.length && !reduce) {
-    // per object: stiffness K (period), damping C, max angle MAX (rad). Lemon/chilli hang on a short thread so they swing a little; tassels are lighter and quicker.
-    const st = charms.map(el => { const t = el.classList.contains('tassel'); return { el, a: 0, w: 0, lx: null, lt: 0, K: t ? 30 : 22, C: t ? 0.8 : 0.7, MAX: t ? 0.75 : 0.36, lift: t ? 3 : 0, push: t ? 0.7 : 0.4 }; });
+  /* ---- 6. things that hang from the nav bar (lemon + chilli, gold tassels, the blue fringe) ----
+     Each one hangs from a fixed point and swings like a damped pendulum when the cursor / a finger sweeps through it.
+     K = stiffness, C = damping, MAX = biggest angle (rad), push = how hard a sweep shoves it. */
+  const swing = [];
+  const add = (el, hit, o) => swing.push(Object.assign({ el, hit, a: 0, w: 0, lx: null, lt: 0, on: false }, o));
+  document.querySelectorAll('.nimbu').forEach(el => add(el, el, { K: 22, C: 0.7, MAX: 0.36, push: 0.4 }));
+  document.querySelectorAll('.tassel').forEach(el => add(el.querySelector('.ts'), el, { K: 30, C: 1.1, MAX: 0.5, push: 0.55 }));
+  const fringe = document.querySelector('.fringe');
+  const strips = [];
+  if (fringe && !reduce) {
+    for (let i = 0; i < 180; i++) { const e = document.createElement('i'); e.style.setProperty('--i', i); fringe.appendChild(e); const o = { K: 40, C: 1.2, MAX: 0.7, push: 1 }; add(e, null, o); strips.push(swing[swing.length - 1]); }
+    fringe.classList.add('live');
+  }
+  if (swing.length && !reduce) {
     let raf = 0, last = 0;
     const tick = t => {
       const dt = Math.min((t - last) / 1000 || 0.016, 0.033); last = t;
       let moving = false;
-      for (const s of st) {
+      for (const s of swing) {
+        if (!s.on) continue;
         s.w += (-s.K * s.a - s.C * s.w) * dt;         // damped pendulum
         s.a += s.w * dt;
         if (s.a > s.MAX) { s.a = s.MAX; s.w *= -0.3; } else if (s.a < -s.MAX) { s.a = -s.MAX; s.w *= -0.3; }
-        if (Math.abs(s.a) < 0.0006 && Math.abs(s.w) < 0.004) { s.a = s.w = 0; }
+        if (Math.abs(s.a) < 0.0006 && Math.abs(s.w) < 0.004) { s.a = s.w = 0; s.on = false; }
         else moving = true;
         s.el.style.rotate = (s.a * 57.2958).toFixed(3) + 'deg';
-        if (s.lift) s.el.style.translate = '0 ' + (-Math.abs(s.a) * s.lift * 6).toFixed(2) + 'px';   /* tassel lifts a touch as it swings */
       }
       raf = moving ? requestAnimationFrame(tick) : 0;
     };
-    const kick = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } };
-    st.forEach(s => {
-      s.el.addEventListener('pointermove', e => {
-        const now = performance.now();
-        if (s.lx !== null && now > s.lt) {
-          const vx = (e.clientX - s.lx) / (now - s.lt) * 1000;             // px/s: how fast the cursor sweeps through
-          const push = Math.max(-2.6, Math.min(2.6, vx * -0.0022));          // faster sweep = harder push (moving right swings the bottom right)
-          if (Math.abs(push) > 0.03) { s.w += push * s.push; kick(); }
-        }
-        s.lx = e.clientX; s.lt = now;
-      });
-      s.el.addEventListener('pointerleave', () => { s.lx = null; });
-      s.el.addEventListener('pointerenter', e => { s.lx = e.clientX; s.lt = performance.now(); });
+    const shove = (s, amt) => { s.w += amt; s.on = true; if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } };
+    const speed = (s, e) => {                          // px/s the cursor sweeps sideways (moving right swings the bottom right)
+      const now = performance.now(); let vx = 0;
+      if (s.lx !== null && now > s.lt) vx = (e.clientX - s.lx) / (now - s.lt) * 1000;
+      s.lx = e.clientX; s.lt = now; return Math.max(-2.6, Math.min(2.6, vx * -0.0022));
+    };
+    swing.forEach(s => {
+      if (!s.hit) return;
+      s.hit.addEventListener('pointermove', e => { const p = speed(s, e); if (Math.abs(p) > 0.03) shove(s, p * s.push); });
+      s.hit.addEventListener('pointerleave', () => { s.lx = null; });
+      s.hit.addEventListener('pointerenter', e => { s.lx = e.clientX; s.lt = performance.now(); });
     });
+    if (strips.length) {
+      const st = { lx: null, lt: 0 };
+      fringe.addEventListener('pointermove', e => {
+        const p = speed(st, e); if (Math.abs(p) < 0.03) return;
+        const r = fringe.getBoundingClientRect(), c = (e.clientX - r.left) / r.width * strips.length;
+        for (let d = -4; d <= 4; d++) { const s = strips[Math.round(c) + d]; if (s) shove(s, p * s.push * Math.exp(-d * d / 6) * 0.8); }
+      });
+      fringe.addEventListener('pointerleave', () => { st.lx = null; });
+      fringe.addEventListener('pointerenter', e => { st.lx = e.clientX; st.lt = performance.now(); });
+    }
+  }
+
+  /* ---- 6a. about page: the toolbox opens on hover / tap and the apps line up beside it ---- */
+  const tools = document.getElementById('tools');
+  if (tools) {
+    const btn = tools.querySelector('.tb'), list = tools.querySelector('.ticons');
+    let timer = 0;
+    const set = on => { tools.classList.toggle('open', on); btn.setAttribute('aria-expanded', String(on)); };
+    const open = () => { clearTimeout(timer); set(true); };
+    const shut = () => { clearTimeout(timer); timer = setTimeout(() => set(false), 320); };
+    btn.addEventListener('pointerenter', e => { if (e.pointerType !== 'touch') open(); });
+    btn.addEventListener('pointerleave', e => { if (e.pointerType !== 'touch') shut(); });
+    list.addEventListener('pointerover', e => { if (e.target.closest('li')) open(); });
+    list.addEventListener('pointerout', e => { if (e.pointerType !== 'touch') shut(); });
+    btn.addEventListener('click', () => { tools.classList.contains('open') ? set(false) : open(); });
+    btn.addEventListener('focus', open);
+    btn.addEventListener('blur', () => { if (!list.matches(':hover')) shut(); });
+    addEventListener('keydown', e => { if (e.key === 'Escape') set(false); });
   }
 
   /* ---- 6b. in-page links (Projects, Contact, Back to top...) glide there quickly instead of jumping ---- */
