@@ -11,7 +11,7 @@
   --cream: #f6e7c1;
 
   /* nav unit: 1 design px, capped so ultra-wide screens don't balloon */
-  --u: calc(min(100vw, 1920px) / 1440);
+  --u: calc(min(var(--vw, 100vw), 1920px) / 1440);
 
   /* hero height: full-width scale on desktop; on narrow screens it stays
      at least 560px tall and the scene is cropped from the sides (truck stays centred) */
@@ -27,7 +27,7 @@
 html { -webkit-text-size-adjust: 100%; }   /* no smooth scrolling: nav links jump straight to their section */
 body {
   margin: 0;
-  background: #3f8f2a;            /* grass green so nothing flashes white under the hero */
+  background: #EBD9BA;            /* warm cream so nothing flashes green or white */
   color: #fff;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   overflow-x: clip;
@@ -70,10 +70,9 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 /* button / logo: 3 stacked states (rest / hover / pressed) */
 .btn, .tv { display: block; }
 .btn img.h, .btn img.p, .tv img.h, .tv img.p { position: absolute; inset: 0; opacity: 0; }
-.btn img, .tv img { transition: opacity .12s linear; }
+.btn img, .tv img { transition: none; }   /* states swap instantly */
 @media (hover: hover) {
   .btn:hover img.h, .tv:hover img.h { opacity: 1; }
-  .btn { transition: transform .15s cubic-bezier(.3,1.6,.5,1); }
   .btn:hover { transform: translateY(calc(-1 * var(--u))); }
 }
 .btn:active img.p, .tv:active img.p { opacity: 1; }
@@ -84,9 +83,9 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 }
 
 /* CV box: closed lid image, opens on hover */
-.cv { height: calc(58 * var(--u)); z-index: 2; }
-.cv__closed { position: absolute; left: 0; top: 0; width: 100%; height: auto; transition: opacity .12s; }
-.cv__open, .cv__pressed { position: absolute; left: 0; top: 0; opacity: 0; transition: opacity .15s, transform .2s; transform-origin: 50% 100%; }
+.cv { height: calc(64.6 * var(--u)); z-index: 2; }
+.cv__closed { position: absolute; left: 0; top: 0; width: 100%; height: auto; }
+.cv__open, .cv__pressed { position: absolute; left: 0; top: 0; opacity: 0; }
 @media (hover: hover) {
   .cv:hover .cv__closed { opacity: 0; }
   .cv:hover .cv__open { opacity: 1; }
@@ -96,16 +95,16 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .cv:active .cv__closed { opacity: 0; }
 
 /* lemon + chilli charms hanging either side of the TV */
-.nimbu { z-index: 0; pointer-events: none; height: auto; transform-origin: 50% 0; animation: sway 4.2s ease-in-out infinite alternate; }
-.nimbu:nth-of-type(even) { animation-delay: -1.7s; }
+.nimbu { z-index: 0; pointer-events: auto; height: auto; transform-origin: 50% 0; will-change: rotate; cursor: default; }   /* swing is driven by js/main.js (hover impulse + damped pendulum) */
 .tv { z-index: 1; }
 
 /* windscreen mirror: sways a little, like it's hanging off the dash */
 .mirror { transform-origin: 50% 0; cursor: default; }
-.nav__item .mirror__text { opacity: 0; transition: opacity .25s ease; pointer-events: none; position: absolute; left: calc(22 / 233 * 100%); top: calc(1 / 93 * 100%); width: calc(184 / 233 * 100%); }
+.nav__item .mirror__text { opacity: 0; transition: opacity .25s ease; transform-origin: 50% 60%; pointer-events: none; position: absolute; left: calc(22 / 233 * 100%); top: calc(1 / 93 * 100%); width: calc(184 / 233 * 100%); }
 .mirror { animation: sway 5s ease-in-out infinite alternate; }
 /* the message only shows while the mirror is hovered (or focused) */
-.mirror:hover .mirror__text, .mirror:focus-visible .mirror__text { opacity: 1; }
+.mirror:hover .mirror__text, .mirror:focus-visible .mirror__text { opacity: 1; animation: mpop .55s cubic-bezier(.2,.9,.3,1) both; }
+@keyframes mpop { 0% { opacity: 0; transform: translateY(35%) scale(.7); } 45% { opacity: 1; transform: translateY(-9%) scale(1.09); } 70% { transform: translateY(3%) scale(.97); } 100% { transform: none; } }
 @keyframes sway { from { transform: rotate(-.35deg); } to { transform: rotate(.35deg); } }
 
 .nav__toggle { display: none; }
@@ -119,7 +118,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   position: relative; z-index: 1;
   height: var(--hh);
   overflow: hidden;
-  background: #3f8f2a;
+  background: #EBD9BA;
   contain: paint;
   --p: 0;                       /* scroll progress 0→1 set by main.js */
 }
@@ -305,7 +304,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 /* ============================ SCENES BELOW THE HERO ============================
    Same idea as the hero: everything is laid out in "design pixels" (Figma 1440-wide frame)
    and scaled by --pu. Below ~720px wide the scene stops shrinking and crops from the sides instead. */
-.journey { --pu: calc(max(min(100vw, 1920px), 720px) / 1440); position: relative; overflow-x: clip; background: #14408f; }
+.journey { --pu: calc(max(min(var(--vw, 100vw), 1920px), 720px) / 1440); position: relative; overflow-x: clip; background: #14408f; }
 .sec { position: relative; }
 .stage { position: relative; width: calc(1440 * var(--pu)); left: 50%; transform: translateX(-50%); }
 .stage img { display: block; max-width: none; }
@@ -328,7 +327,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 /* clouds + road + truck */
 .drive { height: calc(3401 * var(--pu)); z-index: 1; background: #5b5f66; }
 .road { position: absolute; left: 0; top: 0; width: 100%; height: calc(3401 * var(--pu)); background: url("../assets/projects/road.webp") 0 0 / 100% 100% no-repeat; }
-.clouds { position: absolute; z-index: 5; left: calc(-357 * var(--pu)); top: calc(-360 * var(--pu)); width: calc(2085 * var(--pu)); height: auto; pointer-events: none; animation: drift 26s ease-in-out infinite alternate; }
+.clouds { position: absolute; z-index: 5; left: calc(-357 * var(--pu)); top: calc(-290 * var(--pu)); width: calc(2085 * var(--pu)); height: auto; pointer-events: none; animation: drift 26s ease-in-out infinite alternate; }
 @keyframes drift { from { translate: calc(-24 * var(--pu)) 0; } to { translate: calc(24 * var(--pu)) 0; } }
 .truck { position: absolute; z-index: 2; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); height: calc(var(--h) * var(--pu)); }
 .truck__body { width: 100%; height: 100%; }
@@ -342,7 +341,8 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .foot { height: calc(810 * var(--pu)); overflow: hidden; background: #0e2a12; }
 .foot .stage { height: 100%; }
 .foot__bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }
-.foot__truck { position: absolute; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); height: calc(var(--h) * var(--pu)); }
+.foot__truck { position: absolute; left: calc(var(--x) * var(--pu)); top: calc((var(--y) + 26) * var(--pu)); width: calc(var(--w) * var(--pu)); height: calc(var(--h) * var(--pu));
+  transform-origin: 50% 100%; translate: 0 0; scale: var(--fk, .9); }   /* a little smaller and lower; js/main.js shrinks it further on short screens so the whole back shows at once */
 .foot__truck > img { width: 100%; height: 100%; }
 .fi { position: absolute; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); display: block; }
 .fi img { width: 100%; height: auto; }
@@ -381,7 +381,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
    Laid out in design pixels from the Figma "Frame 2" (1440 wide). --pu scales everything; each section has its own
    top (--y0 is baked into each item's --y). On phones the gallery sections restack into a column, and the two
    interactive scenes (desk + room) shrink as whole pictures so their hotspots stay aligned. */
-.page-studio { background: #ecd9b6; color: #4a2f12; --pu: calc(min(100vw, 1920px) / 1440); }
+.page-studio { background: #ecd9b6; color: #4a2f12; --pu: calc(min(var(--vw, 100vw), 1920px) / 1440); }
 .studio2 { position: relative; overflow-x: clip; }
 .ss { position: relative; height: calc(var(--h) * var(--pu)); background: #ecd9b6 url(../assets/studio/paper-bg.webp) center top / 100% auto repeat-y; }
 .ss--room { background: #3a2113 linear-gradient(90deg, #2b170c, #4a2b18 50%, #2b170c); }
@@ -427,9 +427,9 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 @media (max-width: 720px) {
   /* scenes: scale as one picture to the screen width */
-  .ss--intro, .ss--room { --pu: calc(100vw / 1440); }
+  .ss--intro, .ss--room { --pu: calc(var(--vw, 100vw) / 1440); }
   /* galleries: stack in reading order */
-  .ss--gal { height: auto; padding: 56px 16px 40px; --pu: calc(100vw / 720); }
+  .ss--gal { height: auto; padding: 56px 16px 40px; --pu: calc(var(--vw, 100vw) / 720); }
   .ss--gal .ss__in { position: static; width: auto; height: auto; translate: none; display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
   .ss--gal .it, .ss--gal .tx { position: static; width: 100%; height: auto; }
   .ss--gal .it { aspect-ratio: calc(var(--w) / var(--h)); max-width: 420px; }
@@ -458,7 +458,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   .intro__frames, .intro__banner img { left: 0; translate: none; }
 }
 .intro.is-done { display: none !important; }
-.intro-on .hero, .intro-on body { background: linear-gradient(#5b97e0, #cfe6f6 55%, #3f8f2a 55%); }   /* what shows through the rising shutter before the scene fades in */
+.intro-on .hero, .intro-on body { background: #EBD9BA; }
 
 /* ---- video edits carousel: cards keep each video's own aspect ratio; arrows sit either side of the cards ---- */
 .vreel { position: absolute; left: 0; top: calc(150 * var(--pu)); width: 100%; height: calc(700 * var(--pu)); }
@@ -492,7 +492,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 /* photography keeps the picture's own look: cover-crop into the Figma slots */
 .it.ph img { object-fit: cover; border-radius: calc(4 * var(--pu)); }
 @media (max-width: 720px) {
-  .ss--vreel { height: auto; padding: 56px 0 30px; --pu: calc(100vw / 720); }
+  .ss--vreel { height: auto; padding: 56px 0 30px; --pu: calc(var(--vw, 100vw) / 720); }
   .ss--vreel .ss__in { position: static; width: auto; height: auto; translate: none; }
   .ss--vreel .tx.h { position: static; width: auto; font-size: 26px; }
   .vreel { position: relative; top: 0; width: 100%; height: 118vw; margin-top: 24px; }
@@ -501,3 +501,13 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   .it.ph { aspect-ratio: calc(var(--w) / var(--h)); }
 }
 @media (prefers-reduced-motion: reduce) { .vc, .vreel__nav { transition: none; } }
+
+/* ---- showreel: the horn button on the steering wheel is a real button (its pad sinks in on hover / press) ---- */
+.horn { position: absolute; left: calc(1166 * var(--pu)); top: calc(756 * var(--pu)); width: calc(98 * var(--pu)); height: calc(92 * var(--pu)); padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  background: url("../assets/showreel/showreel.webp") calc(-1166 * var(--pu)) calc(-756 * var(--pu)) / calc(1440 * var(--pu)) calc(1110 * var(--pu)) no-repeat; -webkit-tap-highlight-color: transparent; }
+.horn:hover, .horn:focus-visible { transform: scale(.94); filter: brightness(1.12); outline: none; }
+.horn:active, .horn.is-down { transform: scale(.86); filter: brightness(.8); }
+.horn:focus-visible { box-shadow: 0 0 0 calc(3 * var(--pu)) #fff; }
+
+/* ---- projects nav link lands on the PROJECTS board ---- */
+.board-anchor { position: absolute; left: 0; width: 100%; top: calc(780 * var(--pu)); height: calc(420 * var(--pu)); pointer-events: none; scroll-margin-top: calc(var(--nav-h) + 12px); }
