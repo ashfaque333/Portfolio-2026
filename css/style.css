@@ -634,19 +634,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .barri { position: relative; height: 0; z-index: 6; pointer-events: none; }
 .barri img { position: absolute; left: 50%; top: 0; width: min(var(--vw,100vw),1920px); max-width: none; height: auto; transform: translate(-50%,-50%); filter: drop-shadow(0 calc(9*var(--pu)) calc(8*var(--pu)) rgba(0,0,0,.5)); }
 
-/* ---- page transition: the STOP sign zooms out to a red cover, the page swaps, then it shrinks away ---- */
-html.pt-in::after { content: ""; position: fixed; inset: 0; z-index: 9999; background: #c5281c; }
-.pt { position: fixed; inset: 0; z-index: 10000; pointer-events: none; visibility: hidden; }
-.pt.is-on { visibility: visible; }
-.pt__bg { position: absolute; inset: 0; background: #c5281c; clip-path: circle(0 at 50% 50%); }
-.pt__sign { position: absolute; left: 50%; top: 50%; width: min(38vmin, 340px); height: auto; transform: translate(-50%,-50%) scale(0) rotate(-45deg); filter: drop-shadow(0 6px 10px rgba(0,0,0,.35)); }
-.pt.cover .pt__bg { clip-path: circle(85vmax at 50% 50%); transition: clip-path .5s cubic-bezier(.65,0,.3,1); }
-.pt.cover .pt__sign { transform: translate(-50%,-50%) scale(1) rotate(0); transition: transform .55s cubic-bezier(.2,1.45,.4,1) .08s; }
-.pt.hold .pt__bg { clip-path: circle(85vmax at 50% 50%); transition: none; }
-.pt.hold .pt__sign { transform: translate(-50%,-50%) scale(1) rotate(0); transition: none; }
-.pt.reveal .pt__bg { clip-path: circle(0 at 50% 50%); transition: clip-path .55s cubic-bezier(.65,0,.3,1) .12s; }
-.pt.reveal .pt__sign { transform: translate(-50%,-50%) scale(0) rotate(45deg); transition: transform .4s cubic-bezier(.6,-.3,.8,.3); }
-@media (prefers-reduced-motion: reduce) { .pt, html.pt-in::after { display: none; } }
+
 
 /* ---- photography: 3 columns, every picture shown whole; hover dims it and names the place ---- */
 .phcols { position: absolute; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); display: flex; gap: calc(24 * var(--pu)); align-items: flex-start; }

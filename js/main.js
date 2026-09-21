@@ -210,40 +210,4 @@
     };
     fit(); addEventListener('resize', fit);
   }
-
-/* ---- 9. page transition (STOP sign) ---- */
-(() => {
-  const html = document.documentElement;
-  let reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-  const clear = () => { try { sessionStorage.removeItem('pt'); } catch (e) {} html.classList.remove('pt-in'); };
-  if (reduce) { clear(); return; }
-  const el = document.createElement('div');
-  el.className = 'pt'; el.setAttribute('aria-hidden', 'true');
-  el.innerHTML = '<div class="pt__bg"></div><img class="pt__sign" src="assets/stop/sign.webp" alt="" width="312" height="312" decoding="async">';
-  document.body.appendChild(el);
-  /* arriving from another page: start covered, then shrink the sign away */
-  if (html.classList.contains('pt-in')) {
-    el.classList.add('is-on', 'hold'); clear();
-    let go = false;
-    const reveal = () => { if (go) return; go = true; requestAnimationFrame(() => requestAnimationFrame(() => {
-      el.classList.remove('hold'); el.classList.add('reveal');
-      setTimeout(() => { el.className = 'pt'; }, 900);
-    })); };
-    if (document.readyState === 'complete') reveal(); else { addEventListener('load', reveal); setTimeout(reveal, 1800); }
-  }
-  /* leaving: cover, then navigate */
-  document.addEventListener('click', e => {
-    if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    const a = e.target.closest && e.target.closest('a[href]');
-    if (!a || (a.target && a.target !== '_self') || a.hasAttribute('download')) return;
-    let u; try { u = new URL(a.href, location.href); } catch (_) { return; }
-    if (u.origin !== location.origin || !/^https?:$/.test(u.protocol)) return;
-    if (u.pathname === location.pathname && u.search === location.search) return;   /* same page: anchors scroll as usual */
-    e.preventDefault();
-    el.className = 'pt is-on'; void el.offsetWidth; el.classList.add('cover');
-    setTimeout(() => { try { sessionStorage.setItem('pt', '1'); } catch (_) {} location.href = u.href; }, 680);
-  });
-  /* back/forward cache: never leave the cover up */
-  addEventListener('pageshow', e => { if (e.persisted) { el.className = 'pt'; clear(); } });
-})();
 })();
