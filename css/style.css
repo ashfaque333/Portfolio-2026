@@ -398,7 +398,6 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .about__truck { width: var(--tw); margin-left: var(--ml); translate: calc((1 - var(--ap)) * (70vw - var(--ml)) - var(--ep) * (var(--tw) + var(--ml) + 4vw)) 0; will-change: translate; }   /* rolls in from the right, parks, then drives on out of the left edge */
 .truckbox { --k: calc(var(--tw) / 2400); position: relative; }
 .truckbox__body { width: 100%; height: auto; display: block; }
-.truckbox__hand { position: absolute; left: 22%; top: 20.27%; width: 5.125%; height: auto; pointer-events: none; }
 .wheel { position: absolute; height: auto; aspect-ratio: 1; border-radius: 50%; rotate: calc((var(--ap) + var(--ep) * 1.1) * -1500deg); }
 .wheel--f { left: 13.292%; top: 72.492%; width: 6.75%; }
 .wheel--r { left: 68.98%; top: 72.492%; width: 6.75%; }
