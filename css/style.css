@@ -391,7 +391,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .about__sticky { position: sticky; top: 0; height: 100svh; min-height: 620px; overflow: hidden; display: flex; align-items: flex-end; }
 .about__bg { position: absolute; inset: 0; background: url("../assets/about/bg.webp") 50% 100% / cover no-repeat; animation: pan 60s linear infinite alternate; }
 @keyframes pan { from { background-position: 30% 100%; } to { background-position: 70% 100%; } }
-.about__road { position: relative; z-index: 1; width: 100%; padding-bottom: 11svh; padding-top: calc(var(--nav-h) + 20px); overflow: hidden; }
+.about__road { position: relative; z-index: 1; pointer-events: none; width: 100%; padding-bottom: 11svh; padding-top: calc(var(--nav-h) + 20px); overflow: hidden; }
 /* truck: starts with just its cab on the right edge, drives left to its final spot (Figma start/end frames).
    --tw = truck width; final left edge = -0.155 tw; start left edge = 70vw */
 .about__road { --tw: min(94vw, 2200px, calc((100svh - var(--nav-h) - 1svh) * 2.477)); --ml: calc(98.5vw - 0.974 * var(--tw)); padding-bottom: 2.5svh; }   /* truck is ~12% bigger; its tail stays just inside the right edge */
@@ -566,7 +566,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .fs[style*="--hh"] img { height: calc(var(--hh) * var(--pu)); }   /* studio plate stretched a little so it fills its frame and hides the grill */
 
 /* about: roadside board. "Stop name: About me" until the truck has driven over it, then the contact board with the social buttons */
-.cboard { position: absolute; z-index: 0; left: 50%; bottom: 20svh; width: min(34vw, 52svh); translate: -50% 0; container-type: inline-size; pointer-events: none; filter: drop-shadow(0 1.2cqw 1.2cqw rgba(0,0,0,.28)); }
+.cboard { position: absolute; z-index: 0; left: 50%; bottom: 29svh; width: min(34vw, 52svh); translate: -50% 0; container-type: inline-size; pointer-events: none; filter: drop-shadow(0 1.2cqw 1.2cqw rgba(0,0,0,.28)); }
 .cboard__b { display: block; width: 100%; height: auto; }
 .cboard__c, .cboard__links { position: absolute; inset: 0; opacity: 0; transition: opacity .35s ease; }
 .cboard__b--stop { transition: opacity .35s ease; }
@@ -574,7 +574,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .about.passed .cboard__c, .about.passed .cboard__links { opacity: 1; }
 .about.passed .cboard__links { pointer-events: auto; }
 .cboard__links { pointer-events: none; }
-.cboard__t { position: absolute; left: 0; width: 100%; top: 20.5%; translate: 0 -50%; text-align: center; font: 800 5.6cqw/1 "Anek Latin", "Arial Narrow", system-ui, sans-serif; font-stretch: 125%; text-transform: uppercase; color: #3b1f0b; letter-spacing: .02em; }
+.cboard__t { position: absolute; left: 0; width: 100%; top: 20.5%; translate: 0 -50%; text-align: center; font: 800 4.3cqw/1.12 "Anek Latin", "Arial Narrow", system-ui, sans-serif; font-stretch: 125%; text-transform: uppercase; color: #3b1f0b; letter-spacing: .02em; }
 .cb { position: absolute; left: var(--l); top: var(--cy); translate: 0 -50%; width: 22.6%; display: block; -webkit-tap-highlight-color: transparent; transition: transform .15s cubic-bezier(.2,.8,.2,1); }
 .cb--w { width: 35.2%; }
 .cb img { display: block; width: 100%; height: auto; }
@@ -587,7 +587,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 @media (prefers-reduced-motion: reduce) { .cboard__b--stop { opacity: 0; } .cboard__c, .cboard__links { opacity: 1; pointer-events: auto; } }
 
 /* studio: the room scene is stretched to touch both sides and the bottom of its frame; everything on it scales with it */
-.roomfit { position: absolute; inset: 0; transform-origin: calc(62.5 * var(--pu)) calc(131 * var(--pu)); transform: translate(calc(-108.8 * var(--pu)), calc(-32.7 * var(--pu))) scale(1.2117); }
+.roomfit { position: absolute; inset: 0; }
 
 /* studio: the five Gothic sketch sheets sit in a loose pile and fan out side by side on hover / tap */
 .papers { position: absolute; left: calc(50% - 600 * var(--pu)); top: calc(232 * var(--pu)); width: calc(1200 * var(--pu)); height: calc(500 * var(--pu)); cursor: pointer; outline: none; --pq: var(--pu); }
@@ -652,3 +652,6 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   .phcol { gap: 8px; }
   .ph2 figcaption { font-size: 10px; padding: 0 6px; }
 }
+
+.it.lbl { pointer-events: none; z-index: 2; }
+.it.lbl img { object-fit: fill; }
