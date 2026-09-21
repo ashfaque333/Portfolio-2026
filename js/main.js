@@ -77,7 +77,10 @@
       t = false;
       const room = about.offsetHeight - innerHeight || 1;
       const p = Math.min(Math.max(-about.getBoundingClientRect().top / room, 0), 1);
-      about.style.setProperty('--ap', (1 - Math.pow(1 - p, 2)).toFixed(4));
+      const pin = Math.min(p / 0.42, 1), pout = Math.min(Math.max((p - 0.55) / 0.45, 0), 1);   // 0 – 42 %: truck rolls in · 42 – 55 %: parked (reading) · 55 – 100 %: drives on out of the left edge
+      about.style.setProperty('--ap', (1 - Math.pow(1 - pin, 2)).toFixed(4));
+      about.style.setProperty('--ep', (pout * pout * (3 - 2 * pout)).toFixed(4));   // eases in and out
+      about.classList.toggle('passed', p >= 0.5);   // truck is parked in front of the board here, so the swap is hidden behind it
     };
     addEventListener('scroll', () => { if (!t) { t = true; requestAnimationFrame(upd); } }, { passive: true });
     addEventListener('resize', upd);

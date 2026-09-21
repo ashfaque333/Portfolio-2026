@@ -44,7 +44,7 @@
     title.innerHTML = cards[a].dataset.title + '<small>' + cards[a].dataset.dur + '</small>';
   };
 
-  const stopPreview = c => { const v = c.querySelector('video'); if (!c.classList.contains('is-playing')) return; c.classList.remove('is-playing'); v.pause(); };
+  const stopPreview = c => { const v = c.querySelector('video'); v.muted = true; const m = c.querySelector('.vc__mute'); if (m) { m.classList.remove('on'); m.setAttribute('aria-label', 'Unmute preview'); } if (!c.classList.contains('is-playing')) return; c.classList.remove('is-playing'); v.pause(); };
   const startPreview = c => {
     const v = c.querySelector('video');
     if (!v.getAttribute('src')) v.src = c.dataset.src;
@@ -56,6 +56,11 @@
   reel.querySelector('.vreel__nav--prev').addEventListener('click', () => go(a - 1));
   reel.querySelector('.vreel__nav--next').addEventListener('click', () => go(a + 1));
   cards.forEach((c, i) => {
+    const mb = c.querySelector('.vc__mute');
+    if (mb) mb.addEventListener('click', e => {                   // small speaker button: unmute / mute the hover preview without opening the player
+      e.stopPropagation(); const v = c.querySelector('video');
+      v.muted = !v.muted; mb.classList.toggle('on', !v.muted); mb.setAttribute('aria-label', v.muted ? 'Unmute preview' : 'Mute preview');
+    });
     c.addEventListener('click', () => { if (dist(i) !== 0) { go(i); return; } openPlayer(c); });
     c.addEventListener('mouseenter', () => { if (c.classList.contains('is-active')) { clearTimeout(hoverT); hoverT = setTimeout(() => startPreview(c), 150); } });
     c.addEventListener('mouseleave', () => { clearTimeout(hoverT); stopPreview(c); });
@@ -73,7 +78,7 @@
   const openPlayer = c => {
     if (!dlg || !dv) return;
     stopPreview(c); dv.src = c.dataset.src; dv.poster = c.querySelector('img').getAttribute('src');
-    dlg.showModal(); const p = dv.play(); if (p && p.catch) p.catch(() => {});
+    dlg.showModal(); dv.muted = false; const p = dv.play(); if (p && p.catch) p.catch(() => {});
   };
   if (dlg) {
     const close = () => { dv.pause(); dv.removeAttribute('src'); dv.load(); if (dlg.open) dlg.close(); };
@@ -85,4 +90,12 @@
   layout();
   addEventListener('resize', layout);
   if (window.ResizeObserver) new ResizeObserver(layout).observe(stage);
+})();
+
+/* Gothic sketch sheets: a tap toggles the fan-out on touch screens (hover / keyboard focus handle it elsewhere) */
+(() => {
+  const p = document.getElementById('papers');
+  if (!p) return;
+  p.addEventListener('click', () => p.classList.toggle('is-open'));
+  p.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); p.classList.toggle('is-open'); } });
 })();
