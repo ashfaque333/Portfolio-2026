@@ -211,3 +211,32 @@
     fit(); addEventListener('resize', fit);
   }
 })();
+
+  /* ---- 10. showreel: the stereo (333.3 Faque FM) opens a small mp3-style player ---- */
+  (() => {
+    const stereo = document.getElementById('stereo');
+    const player = document.getElementById('player');
+    if (!stereo || !player) return;
+    const audio = document.getElementById('playerAudio');
+    const playBtn = document.getElementById('playerPlay');
+    const seek = document.getElementById('playerSeek');
+    const vol = document.getElementById('playerVol');
+    const cur = document.getElementById('playerCur');
+    const dur = document.getElementById('playerDur');
+    const closeBtn = document.getElementById('playerX');
+    const fmt = s => { s = Math.max(0, s | 0); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+    const open = () => { player.hidden = false; audio.play().catch(() => {}); };
+    const close = () => { player.hidden = true; audio.pause(); };
+    stereo.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    player.addEventListener('click', e => { if (e.target === player) close(); });
+    audio.addEventListener('loadedmetadata', () => { dur.textContent = fmt(audio.duration); });
+    audio.addEventListener('timeupdate', () => { if (audio.duration) { seek.value = (audio.currentTime / audio.duration) * 100; cur.textContent = fmt(audio.currentTime); } });
+    audio.addEventListener('play', () => player.classList.add('is-playing'));
+    audio.addEventListener('pause', () => player.classList.remove('is-playing'));
+    audio.addEventListener('ended', () => player.classList.remove('is-playing'));
+    playBtn.addEventListener('click', () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); });
+    seek.addEventListener('input', () => { if (audio.duration) audio.currentTime = (seek.value / 100) * audio.duration; });
+    vol.addEventListener('input', () => { audio.volume = +vol.value; });
+    audio.volume = +vol.value;
+  })();

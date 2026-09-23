@@ -453,7 +453,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .tx.khenti { color: #5a3a24; transform: skewY(-14deg); transform-origin: 50% 50%; font-size: calc(15 * var(--pu)); white-space: nowrap; letter-spacing: .03em; }   /* sits on the front edge of the floor slab, in perspective */
 
 /* hover targets: soft glow ring, a lifted object and a label chip */
-.hot { height: calc(var(--h) * var(--pu)); background: transparent; border: 0; padding: 0; cursor: pointer; border-radius: calc(16 * var(--pu)); z-index: 3;
+.hot { display: block; height: calc(var(--h) * var(--pu)); background: transparent; border: 0; padding: 0; cursor: pointer; text-decoration: none; border-radius: calc(16 * var(--pu)); z-index: 3;
   -webkit-tap-highlight-color: transparent; }
 .hot:hover, .hot:focus-visible { outline: none; }   /* no box: the object itself lights up (see .it.obj below) */
 .hot__chip { position: absolute; left: 50%; top: 50%; bottom: auto; translate: -50% calc(-50% + 8 * var(--pu)); opacity: 0; transition: opacity .2s, translate .2s;
@@ -655,3 +655,21 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 .it.lbl { pointer-events: none; z-index: 2; }
 .it.lbl img { object-fit: fill; }
+
+/* ---- showreel: the stereo (333.3 Faque FM) is clickable, and opens a small mp3-style player ---- */
+.stereo { position: absolute; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); height: calc(var(--h) * var(--pu)); padding: 0; border: 0; background: transparent; cursor: pointer; border-radius: calc(4 * var(--pu)); transition: filter .2s, transform .2s; transform-origin: 50% 50%; }
+.stereo:hover, .stereo:focus-visible { filter: brightness(1.35) saturate(1.15); transform: scale(1.08); outline: none; box-shadow: 0 0 0 calc(2 * var(--pu)) rgba(150,235,150,.55); }
+.player { position: fixed; inset: 0; z-index: 500; display: grid; place-items: center; background: rgba(10,14,8,.55); }
+.player[hidden] { display: none; }
+.player__panel { position: relative; width: min(360px, 88vw); background: #223a1e; border: 3px solid #0e1b0c; border-radius: 12px; padding: 22px 20px 18px; box-shadow: 0 20px 50px rgba(0,0,0,.5); font-family: "Anek Latin", system-ui, sans-serif; }
+.player__x { position: absolute; right: 8px; top: 6px; width: 30px; height: 30px; border: 0; border-radius: 50%; background: rgba(255,255,255,.12); color: #cdeecb; font-size: 20px; line-height: 1; cursor: pointer; }
+.player__x:hover { background: rgba(255,255,255,.22); }
+.player__title { text-align: center; color: #a8e6a0; font-weight: 800; letter-spacing: .04em; margin-bottom: 14px; font-stretch: 125%; }
+.player__play { display: block; margin: 0 auto 14px; width: 52px; height: 52px; border-radius: 50%; border: 2px solid #a8e6a0; background: #2c4a26; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.player__play:hover { background: #35592d; }
+.player__playicon { width: 0; height: 0; border-style: solid; border-width: 9px 0 9px 15px; border-color: transparent transparent transparent #a8e6a0; margin-left: 3px; }
+.player.is-playing .player__playicon { width: 12px; height: 16px; border: 0; border-left: 4px solid #a8e6a0; border-right: 4px solid #a8e6a0; margin-left: 0; }
+.player__row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.player__time { font: 700 11px/1 ui-monospace, monospace; color: #a8e6a0; min-width: 32px; text-align: center; }
+.player__bar, .player__vol input { flex: 1; accent-color: #a8e6a0; }
+.player__vol { display: flex; align-items: center; gap: 8px; font: 700 10px/1 ui-monospace, monospace; color: #a8e6a0; letter-spacing: .05em; }
