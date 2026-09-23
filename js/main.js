@@ -279,8 +279,11 @@
     function createYTPlayer() {
       loadYTApi(() => {
         ytPlayer = new YT.Player('ytPlayerTarget', {
-          height: '0', width: '0',
-          playerVars: { listType: 'playlist', list: YT_PLAYLIST_ID, autoplay: 0, controls: 0, disablekb: 1 },
+          height: '2', width: '2',
+          playerVars: {
+            listType: 'playlist', list: YT_PLAYLIST_ID, autoplay: 0, controls: 0, disablekb: 1,
+            playsinline: 1, origin: window.location.origin
+          },
           events: {
             onReady: (e) => {
               ytReady = true;
@@ -289,9 +292,13 @@
             },
             onStateChange: (e) => {
               if (source !== 'yt') return;
-              if (e.data === YT.PlayerState.PLAYING) { setPlayingUI(true); updateYTTitle(); }
+              if (e.data === YT.PlayerState.PLAYING) { clearTimeout(window.__ytWatchdog); setPlayingUI(true); updateYTTitle(); }
               else if (e.data === YT.PlayerState.PAUSED) { setPlayingUI(false); }
               else if (e.data === YT.PlayerState.ENDED) { ytPlayer.nextVideo(); }
+            },
+            onError: () => {
+              /* video removed/restricted/not embeddable — skip it rather than getting stuck */
+              if (source === 'yt' && ytPlayer) ytPlayer.nextVideo();
             }
           }
         });
@@ -374,6 +381,22 @@
       titleEl.textContent = 'Loading playlist…';
       artistEl.textContent = 'YouTube playlist';
       if (!ytPlayer) { ytPendingPlay = true; createYTPlayer(); } else { play(); }
+
+      /* watchdog: if the playlist hasn't actually started within 8s, fall back to the intro track
+         instead of leaving the widget stuck on "Loading playlist…" forever */
+      clearTimeout(window.__ytWatchdog);
+      window.__ytWatchdog = setTimeout(() => {
+        if (source === 'yt' && !isPlaying()) {
+          source = 'local';
+          panel.classList.remove('is-state2');
+          panel.classList.add('is-state1');
+          playlistBtn.hidden = false;
+          minBtn.hidden = true;
+          titleEl.textContent = '333.3 Faque FM';
+          artistEl.textContent = 'FM STATION — playlist unavailable';
+          audio.play().catch(() => {});
+        }
+      }, 8000);
     });
 
     playPause.addEventListener('click', toggle);

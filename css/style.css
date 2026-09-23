@@ -668,11 +668,11 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .stereoPlayer[hidden] .stereoPlayer__panel { display: none; }
 
 .stereoPlayer__panel {
-  position: fixed; left: 50%; top: 50%; translate: -50% -50%; scale: 1; opacity: 1;
-  width: min(46vw, 640px); aspect-ratio: 1536/1024;
+  position: fixed; left: 50%; bottom: 5vh; top: auto; translate: -50% 0; scale: 1; opacity: 1;
+  width: min(26vw, 360px); aspect-ratio: 1536/1024; container-type: inline-size;
   background-size: 100% 100%; background-repeat: no-repeat;
   pointer-events: auto; z-index: 61;
-  filter: drop-shadow(0 20px 45px rgba(0,0,0,.45));
+  filter: drop-shadow(0 16px 32px rgba(0,0,0,.45));
   transition: opacity .2s, scale .2s;
 }
 .stereoPlayer__panel.is-popping { opacity: 0; scale: .92; }
@@ -692,8 +692,8 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   background: #16110d; display: grid; place-items: center; font-size: 3.2vw; filter: grayscale(1) brightness(1.4);
 }
 .stereoPlayer__meta { position: absolute; left: 24%; top: 4%; width: 55%; }
-.stereoPlayer__title { margin: 0; font: 800 1.55vw/1.15 "Courier New", monospace; color: #2a2015; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.stereoPlayer__artist { margin: .4vw 0 0; font: 600 1.05vw/1.15 "Courier New", monospace; color: #6b5c46; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stereoPlayer__title { margin: 0; font: 800 1.55cqw/1.15 "Courier New", monospace; color: #2a2015; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stereoPlayer__artist { margin: .4cqw 0 0; font: 600 1.05cqw/1.15 "Courier New", monospace; color: #6b5c46; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .stereoPlayer__eq { position: absolute; right: 0; top: 2%; width: 34%; height: 50%; display: flex; align-items: flex-end; gap: 2.4%; opacity: .55; }
 .stereoPlayer__eq span { flex: 1; background: #2a2015; height: 30%; border-radius: 1px; animation: stereoEq 1.1s ease-in-out infinite; }
 .stereoPlayer__eq span:nth-child(2n) { animation-delay: .15s; }
@@ -710,15 +710,15 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 }
 .stereoPlayer__seek { position: absolute; left: 0; top: 62%; width: 100%; height: 6%; margin: 0; appearance: none; background: transparent; cursor: pointer; z-index: 1; }
 .stereoPlayer__seek::-webkit-slider-runnable-track { height: 3px; background: rgba(42,32,21,.3); border-radius: 2px; }
-.stereoPlayer__seek::-webkit-slider-thumb { appearance: none; width: 1.1vw; height: 1.1vw; border-radius: 50%; background: #2a2015; margin-top: -0.5vw; cursor: pointer; }
+.stereoPlayer__seek::-webkit-slider-thumb { appearance: none; width: 1.1cqw; height: 1.1cqw; border-radius: 50%; background: #2a2015; margin-top: -0.5cqw; cursor: pointer; }
 .stereoPlayer__seek::-moz-range-track { height: 3px; background: rgba(42,32,21,.3); border-radius: 2px; }
-.stereoPlayer__seek::-moz-range-thumb { width: 1.1vw; height: 1.1vw; border: 0; border-radius: 50%; background: #2a2015; cursor: pointer; }
-.stereoPlayer__cur { position: absolute; left: 0; top: 71%; font: 700 1vw/1 "Courier New", monospace; color: #2a2015; z-index: 1; }
-.stereoPlayer__dur { position: absolute; right: 0; top: 71%; font: 700 1vw/1 "Courier New", monospace; color: #2a2015; z-index: 1; }
-.stereoPlayer__volIcon { position: absolute; left: 26.5%; top: 84%; font-size: 1.15vw; z-index: 1; }
+.stereoPlayer__seek::-moz-range-thumb { width: 1.1cqw; height: 1.1cqw; border: 0; border-radius: 50%; background: #2a2015; cursor: pointer; }
+.stereoPlayer__cur { position: absolute; left: 0; top: 71%; font: 700 1cqw/1 "Courier New", monospace; color: #2a2015; z-index: 1; }
+.stereoPlayer__dur { position: absolute; right: 0; top: 71%; font: 700 1cqw/1 "Courier New", monospace; color: #2a2015; z-index: 1; }
+.stereoPlayer__volIcon { position: absolute; left: 26.5%; top: 84%; font-size: 1.15cqw; z-index: 1; }
 .stereoPlayer__vol { position: absolute; left: 32%; top: 85.5%; width: 58%; height: 5%; margin: 0; appearance: none; background: transparent; cursor: pointer; z-index: 1; }
 .stereoPlayer__vol::-webkit-slider-runnable-track { height: 3px; background: rgba(42,32,21,.35); border-radius: 2px; }
-.stereoPlayer__vol::-webkit-slider-thumb { appearance: none; width: 1vw; height: 1vw; border-radius: 50%; background: #2a2015; margin-top: -0.42vw; cursor: pointer; }
+.stereoPlayer__vol::-webkit-slider-thumb { appearance: none; width: 1cqw; height: 1cqw; border-radius: 50%; background: #2a2015; margin-top: -0.42cqw; cursor: pointer; }
 .stereoPlayer__vol::-moz-range-track { height: 3px; background: rgba(42,32,21,.35); border-radius: 2px; }
 .stereoPlayer__vol::-moz-range-thumb { width: 1vw; height: 1vw; border: 0; border-radius: 50%; background: #2a2015; cursor: pointer; }
 
@@ -754,9 +754,5 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .stereoMin__close { left: 23.1%; top: 71.8%; width: 52.7%; height: 15.1%; z-index: 2; }
 
 @media (max-width: 760px) {
-  .stereoPlayer__panel { width: min(90vw, 640px); }
-  .stereoPlayer__title { font-size: 3.4vw; }
-  .stereoPlayer__artist { font-size: 2.3vw; }
-  .stereoPlayer__cur, .stereoPlayer__dur { font-size: 2.2vw; }
-  .stereoPlayer__foot { font-size: 2.4vw; }
+  .stereoPlayer__panel { width: min(78vw, 360px); bottom: 3vh; }
 }
