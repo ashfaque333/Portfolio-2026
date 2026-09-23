@@ -128,7 +128,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 /* ============================ HERO ============================ */
 .hero {
   position: relative; z-index: 1;
-  --lift: max(calc(-110 * var(--hu)), min(0px, calc((100svh - 850 * var(--hu)) * .45)));   /* on tall/wide screens the whole scene rides up so the truck's bumper is inside the first screen */
+  --lift: max(calc(-88 * var(--hu)), min(0px, calc((100svh - 850 * var(--hu)) * .45)));   /* on tall/wide screens the whole scene rides up so the truck's bumper is inside the first screen */
   height: calc(var(--hh) + var(--lift));
   overflow: hidden;
   background: #EBD9BA;
