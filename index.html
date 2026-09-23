@@ -153,24 +153,8 @@
         <!-- Set data-video to a YouTube/Vimeo embed URL (e.g. https://www.youtube.com/embed/XXXX) to play the reel on the TV -->
         <button class="tv-screen" type="button" data-video="" aria-label="Play showreel"><span class="tv-screen__play"></span><span class="tv-screen__txt">PLAY REEL</span></button>
         <button class="horn" type="button" id="horn" aria-label="Honk the horn"></button>
-        <button class="stereo" type="button" id="stereo" aria-label="Play 333.3 Faque FM" style="--x:697;--y:762;--w:86;--h:74"></button>
-        <div class="player" id="player" hidden>
-          <div class="player__panel">
-            <button class="player__x" type="button" id="playerX" aria-label="Close player">&times;</button>
-            <div class="player__title">333.3 FAQUE FM</div>
-            <button class="player__play" type="button" id="playerPlay" aria-label="Play/Pause"><span class="player__playicon"></span></button>
-            <div class="player__row">
-              <span class="player__time" id="playerCur">0:00</span>
-              <input class="player__bar" id="playerSeek" type="range" min="0" max="100" value="0" step="0.1">
-              <span class="player__time" id="playerDur">0:00</span>
-            </div>
-            <div class="player__vol">
-              <span aria-hidden="true">VOL</span>
-              <input id="playerVol" type="range" min="0" max="1" value="0.9" step="0.01">
-            </div>
-            <audio id="playerAudio" src="assets/showreel/faque-fm.mp3" preload="metadata"></audio>
-          </div>
-        </div>
+        <button class="stereo" type="button" id="stereo" aria-label="Play or pause 333.3 Faque FM" style="--x:681;--y:797;--w:97;--h:72"></button>
+        <audio id="stereoAudio" src="assets/showreel/faque-fm.mp3" preload="none" loop></audio>
       </div>
     </section>
 
