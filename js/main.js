@@ -212,14 +212,100 @@
   }
 })();
 
-  /* ---- 10. showreel: click the stereo (333.3 Faque FM) to play/pause ---- */
+  /* ---- 10. showreel: click the stereo (333.3 Faque FM) to open the mp3 player ---- */
   (() => {
     const stereo = document.getElementById('stereo');
     const audio = document.getElementById('stereoAudio');
-    if (!stereo || !audio) return;
-    stereo.addEventListener('click', () => {
+    const wrap = document.getElementById('stereoPlayer');
+    const panel = document.getElementById('stereoPanel');
+    const xBtn = document.getElementById('stereoX');
+    const backBtn = document.getElementById('stereoBackBtn');
+    const playlistBtn = document.getElementById('stereoPlaylistBtn');
+    const minBtn = document.getElementById('stereoMinBtn');
+    const mini = document.getElementById('stereoMini');
+    const miniIcon = document.getElementById('stereoMiniIcon');
+    const playPause = document.getElementById('stereoPlayPause');
+    const prevBtn = document.getElementById('stereoPrev');
+    const nextBtn = document.getElementById('stereoNext');
+    const seek = document.getElementById('stereoSeek');
+    const vol = document.getElementById('stereoVol');
+    const cur = document.getElementById('stereoCur');
+    const dur = document.getElementById('stereoDur');
+    if (!stereo || !audio || !wrap || !panel) return;
+
+    const SPOTIFY_URL = 'https://open.spotify.com/playlist/37i9dQZF1DX24Nux3gigVe?si=62a3581a1e85430d';
+    let seeking = false;
+    const fmt = (s) => { if (!isFinite(s) || s < 0) s = 0; const m = Math.floor(s / 60), r = Math.floor(s % 60); return `${m}:${String(r).padStart(2, '0')}`; };
+
+    audio.volume = 0.7;
+
+    function pop(el) {
+      el.classList.add('is-popping');
+      requestAnimationFrame(() => {
+        void el.offsetWidth;
+        requestAnimationFrame(() => el.classList.remove('is-popping'));
+      });
+    }
+    function openPlayer() {
+      wrap.hidden = false;
+      mini.hidden = true;
+      panel.style.display = '';
+      pop(panel);
+      if (audio.paused) audio.play().catch(() => {});
+    }
+    function closePlayer() {
+      wrap.hidden = true;
+      mini.hidden = true;
+      audio.pause();
+    }
+    function minimize() {
+      panel.style.display = 'none';
+      mini.hidden = false;
+    }
+    function restore() {
+      mini.hidden = true;
+      panel.style.display = '';
+    }
+
+    stereo.addEventListener('click', openPlayer);
+    xBtn.addEventListener('click', closePlayer);
+    backBtn.addEventListener('click', closePlayer);
+    minBtn.addEventListener('click', minimize);
+    mini.addEventListener('click', restore);
+
+    playlistBtn.addEventListener('click', () => {
+      window.open(SPOTIFY_URL, '_blank', 'noopener');
+      panel.classList.remove('is-state1');
+      panel.classList.add('is-state2');
+      playlistBtn.hidden = true;
+      minBtn.hidden = false;
+    });
+
+    playPause.addEventListener('click', () => {
       if (audio.paused) audio.play().catch(() => {}); else audio.pause();
     });
-    audio.addEventListener('play', () => stereo.classList.add('is-playing'));
-    audio.addEventListener('pause', () => stereo.classList.remove('is-playing'));
+    prevBtn.addEventListener('click', () => { audio.currentTime = 0; });
+    nextBtn.addEventListener('click', () => { audio.currentTime = 0; if (audio.paused) audio.play().catch(() => {}); });
+
+    audio.addEventListener('play', () => {
+      stereo.classList.add('is-playing');
+      panel.classList.add('is-playing');
+      mini.classList.remove('is-paused');
+    });
+    audio.addEventListener('pause', () => {
+      stereo.classList.remove('is-playing');
+      panel.classList.remove('is-playing');
+      mini.classList.add('is-paused');
+    });
+
+    audio.addEventListener('loadedmetadata', () => { dur.textContent = fmt(audio.duration); });
+    audio.addEventListener('timeupdate', () => {
+      if (seeking) return;
+      cur.textContent = fmt(audio.currentTime);
+      dur.textContent = fmt(audio.duration);
+      if (audio.duration) seek.value = String((audio.currentTime / audio.duration) * 1000);
+    });
+    seek.addEventListener('input', () => { seeking = true; cur.textContent = fmt((seek.value / 1000) * (audio.duration || 0)); });
+    seek.addEventListener('change', () => { if (audio.duration) audio.currentTime = (seek.value / 1000) * audio.duration; seeking = false; });
+    vol.addEventListener('input', () => { audio.volume = vol.value / 100; });
   })();

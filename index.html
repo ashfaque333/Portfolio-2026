@@ -153,10 +153,40 @@
         <!-- Set data-video to a YouTube/Vimeo embed URL (e.g. https://www.youtube.com/embed/XXXX) to play the reel on the TV -->
         <button class="tv-screen" type="button" data-video="" aria-label="Play showreel"><span class="tv-screen__play"></span><span class="tv-screen__txt">PLAY REEL</span></button>
         <button class="horn" type="button" id="horn" aria-label="Honk the horn"></button>
-        <button class="stereo" type="button" id="stereo" aria-label="Play or pause 333.3 Faque FM" style="--x:681;--y:797;--w:97;--h:72"></button>
+        <button class="stereo" type="button" id="stereo" aria-label="Open 333.3 Faque FM player" style="--x:681;--y:797;--w:97;--h:73"></button>
         <audio id="stereoAudio" src="assets/showreel/faque-fm.mp3" preload="none" loop></audio>
       </div>
     </section>
+
+    <!-- ============ STEREO / MP3 PLAYER (opens from the dashboard screen) ============ -->
+    <div class="stereoPlayer" id="stereoPlayer" hidden>
+      <div class="stereoPlayer__panel is-state1" id="stereoPanel">
+        <button class="stereoPlayer__x" id="stereoX" type="button" aria-label="Close player">✕</button>
+        <div class="stereoPlayer__lcd">
+          <div class="stereoPlayer__art" aria-hidden="true">🎵</div>
+          <div class="stereoPlayer__meta">
+            <p class="stereoPlayer__title" id="stereoTitle">333.3 Faque FM</p>
+            <p class="stereoPlayer__artist" id="stereoArtist">Ashfaque Salahudeen</p>
+          </div>
+          <div class="stereoPlayer__eq" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <input class="stereoPlayer__seek" id="stereoSeek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+          <span class="stereoPlayer__cur" id="stereoCur">0:00</span>
+          <span class="stereoPlayer__dur" id="stereoDur">0:00</span>
+          <span class="stereoPlayer__volIcon" aria-hidden="true">🔊</span>
+          <input class="stereoPlayer__vol" id="stereoVol" type="range" min="0" max="100" value="70" aria-label="Volume">
+        </div>
+        <button class="stereoPlayer__btn stereoPlayer__prev" id="stereoPrev" type="button" aria-label="Previous track"></button>
+        <button class="stereoPlayer__btn stereoPlayer__play" id="stereoPlayPause" type="button" aria-label="Play or pause"></button>
+        <button class="stereoPlayer__btn stereoPlayer__next" id="stereoNext" type="button" aria-label="Next track"></button>
+        <button class="stereoPlayer__foot stereoPlayer__playlist" id="stereoPlaylistBtn" type="button">Listen to playlist</button>
+        <button class="stereoPlayer__foot stereoPlayer__minimize" id="stereoMinBtn" type="button" hidden>Minimize</button>
+        <button class="stereoPlayer__foot stereoPlayer__back" id="stereoBackBtn" type="button">Go back</button>
+      </div>
+      <button class="stereoPlayer__mini" id="stereoMini" type="button" hidden aria-label="Reopen 333.3 Faque FM player">
+        <span class="stereoPlayer__miniPlay" id="stereoMiniIcon"></span>
+        <span class="stereoPlayer__miniTitle">333.3 Faque FM</span>
+      </button>
+    </div>
 
     <!-- ============ CLOUDS + ROAD + PROJECTS TRUCK ============ -->
     <section class="sec drive" id="projects" aria-label="Projects">
