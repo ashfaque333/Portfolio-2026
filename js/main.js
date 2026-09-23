@@ -212,7 +212,7 @@
   }
 })();
 
-  /* ---- 10. showreel: click the stereo (333.3 Faque FM) to open the mp3 player ---- */
+  /* ---- 10. showreel stereo → full mp3 player, with a real YouTube-playlist source ---- */
   (() => {
     const stereo = document.getElementById('stereo');
     const audio = document.getElementById('stereoAudio');
@@ -223,7 +223,12 @@
     const playlistBtn = document.getElementById('stereoPlaylistBtn');
     const minBtn = document.getElementById('stereoMinBtn');
     const mini = document.getElementById('stereoMini');
-    const miniIcon = document.getElementById('stereoMiniIcon');
+    const minRing = document.getElementById('stereoMinRing');
+    const minVol = document.getElementById('stereoMinVol');
+    const minPrev = document.getElementById('stereoMinPrev');
+    const minNext = document.getElementById('stereoMinNext');
+    const minPlay = document.getElementById('stereoMinPlay');
+    const minClose = document.getElementById('stereoMinClose');
     const playPause = document.getElementById('stereoPlayPause');
     const prevBtn = document.getElementById('stereoPrev');
     const nextBtn = document.getElementById('stereoNext');
@@ -231,10 +236,16 @@
     const vol = document.getElementById('stereoVol');
     const cur = document.getElementById('stereoCur');
     const dur = document.getElementById('stereoDur');
+    const titleEl = document.getElementById('stereoTitle');
+    const artistEl = document.getElementById('stereoArtist');
     if (!stereo || !audio || !wrap || !panel) return;
 
-    const SPOTIFY_URL = 'https://open.spotify.com/playlist/37i9dQZF1DX24Nux3gigVe?si=62a3581a1e85430d';
+    const YT_PLAYLIST_ID = 'PLYzZK8-a8cos';
     let seeking = false;
+    let source = 'local';           // 'local' (intro mp3) | 'yt' (playlist)
+    let ytPlayer = null, ytReady = false, ytPendingPlay = false, ytApiRequested = false;
+    let lastVol = 70;
+
     const fmt = (s) => { if (!isFinite(s) || s < 0) s = 0; const m = Math.floor(s / 60), r = Math.floor(s % 60); return `${m}:${String(r).padStart(2, '0')}`; };
 
     audio.volume = 0.7;
@@ -246,66 +257,172 @@
         requestAnimationFrame(() => el.classList.remove('is-popping'));
       });
     }
+
+    function setPlayingUI(playing) {
+      stereo.classList.toggle('is-playing', playing);
+      panel.classList.toggle('is-playing', playing);
+      mini.classList.toggle('is-paused', !playing);
+    }
+
+    /* ---- YouTube IFrame API (loaded lazily, only once the user opts into the playlist) ---- */
+    function loadYTApi(cb) {
+      if (window.YT && window.YT.Player) { cb(); return; }
+      const prevReady = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => { if (prevReady) prevReady(); cb(); };
+      if (!ytApiRequested) {
+        ytApiRequested = true;
+        const s = document.createElement('script');
+        s.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(s);
+      }
+    }
+    function createYTPlayer() {
+      loadYTApi(() => {
+        ytPlayer = new YT.Player('ytPlayerTarget', {
+          height: '0', width: '0',
+          playerVars: { listType: 'playlist', list: YT_PLAYLIST_ID, autoplay: 0, controls: 0, disablekb: 1 },
+          events: {
+            onReady: (e) => {
+              ytReady = true;
+              e.target.setVolume(Number(vol.value));
+              if (ytPendingPlay) { e.target.playVideo(); ytPendingPlay = false; }
+            },
+            onStateChange: (e) => {
+              if (source !== 'yt') return;
+              if (e.data === YT.PlayerState.PLAYING) { setPlayingUI(true); updateYTTitle(); }
+              else if (e.data === YT.PlayerState.PAUSED) { setPlayingUI(false); }
+              else if (e.data === YT.PlayerState.ENDED) { ytPlayer.nextVideo(); }
+            }
+          }
+        });
+      });
+    }
+    function updateYTTitle() {
+      if (!ytPlayer || !ytPlayer.getVideoData) return;
+      try {
+        const d = ytPlayer.getVideoData();
+        const t = (d && d.title) ? d.title : '333.3 Faque FM';
+        titleEl.textContent = t;
+        artistEl.textContent = 'YouTube playlist';
+      } catch (e) {}
+    }
+
+    /* ---- unified transport, dispatched by active source ---- */
+    function isPlaying() {
+      if (source === 'local') return !audio.paused;
+      return !!(ytPlayer && ytReady && ytPlayer.getPlayerState && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING);
+    }
+    function play() {
+      if (source === 'local') { audio.play().catch(() => {}); }
+      else if (ytPlayer && ytReady) { ytPlayer.playVideo(); }
+      else { ytPendingPlay = true; }
+    }
+    function pause() {
+      if (source === 'local') audio.pause();
+      else if (ytPlayer && ytReady) ytPlayer.pauseVideo();
+    }
+    function toggle() { if (isPlaying()) pause(); else play(); }
+    function prev() {
+      if (source === 'local') { audio.currentTime = 0; }
+      else if (ytPlayer && ytReady) ytPlayer.previousVideo();
+    }
+    function next() {
+      if (source === 'local') { audio.currentTime = 0; if (audio.paused) audio.play().catch(() => {}); }
+      else if (ytPlayer && ytReady) ytPlayer.nextVideo();
+    }
+    function setVolume(v) {
+      audio.volume = v / 100;
+      if (ytPlayer && ytReady) ytPlayer.setVolume(Number(v));
+    }
+
     function openPlayer() {
       wrap.hidden = false;
       mini.hidden = true;
       panel.style.display = '';
       pop(panel);
-      if (audio.paused) audio.play().catch(() => {});
+      play();
     }
     function closePlayer() {
       wrap.hidden = true;
       mini.hidden = true;
       audio.pause();
+      if (ytPlayer && ytReady) ytPlayer.pauseVideo();
     }
     function minimize() {
       panel.style.display = 'none';
       mini.hidden = false;
+      pop(mini);
     }
     function restore() {
       mini.hidden = true;
       panel.style.display = '';
+      pop(panel);
     }
 
     stereo.addEventListener('click', openPlayer);
     xBtn.addEventListener('click', closePlayer);
     backBtn.addEventListener('click', closePlayer);
     minBtn.addEventListener('click', minimize);
-    mini.addEventListener('click', restore);
 
     playlistBtn.addEventListener('click', () => {
-      window.open(SPOTIFY_URL, '_blank', 'noopener');
+      audio.pause();
+      source = 'yt';
       panel.classList.remove('is-state1');
       panel.classList.add('is-state2');
       playlistBtn.hidden = true;
       minBtn.hidden = false;
+      titleEl.textContent = 'Loading playlist…';
+      artistEl.textContent = 'YouTube playlist';
+      if (!ytPlayer) { ytPendingPlay = true; createYTPlayer(); } else { play(); }
     });
 
-    playPause.addEventListener('click', () => {
-      if (audio.paused) audio.play().catch(() => {}); else audio.pause();
-    });
-    prevBtn.addEventListener('click', () => { audio.currentTime = 0; });
-    nextBtn.addEventListener('click', () => { audio.currentTime = 0; if (audio.paused) audio.play().catch(() => {}); });
+    playPause.addEventListener('click', toggle);
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
 
-    audio.addEventListener('play', () => {
-      stereo.classList.add('is-playing');
-      panel.classList.add('is-playing');
-      mini.classList.remove('is-paused');
-    });
-    audio.addEventListener('pause', () => {
-      stereo.classList.remove('is-playing');
-      panel.classList.remove('is-playing');
-      mini.classList.add('is-paused');
-    });
-
-    audio.addEventListener('loadedmetadata', () => { dur.textContent = fmt(audio.duration); });
+    audio.addEventListener('play', () => { if (source === 'local') setPlayingUI(true); });
+    audio.addEventListener('pause', () => { if (source === 'local') setPlayingUI(false); });
+    audio.addEventListener('loadedmetadata', () => { if (source === 'local') dur.textContent = fmt(audio.duration); });
     audio.addEventListener('timeupdate', () => {
-      if (seeking) return;
+      if (source !== 'local' || seeking) return;
       cur.textContent = fmt(audio.currentTime);
       dur.textContent = fmt(audio.duration);
       if (audio.duration) seek.value = String((audio.currentTime / audio.duration) * 1000);
     });
-    seek.addEventListener('input', () => { seeking = true; cur.textContent = fmt((seek.value / 1000) * (audio.duration || 0)); });
-    seek.addEventListener('change', () => { if (audio.duration) audio.currentTime = (seek.value / 1000) * audio.duration; seeking = false; });
-    vol.addEventListener('input', () => { audio.volume = vol.value / 100; });
+
+    /* poll for live progress from the YouTube player (no timeupdate event on the IFrame API) */
+    setInterval(() => {
+      if (source !== 'yt' || seeking || !ytPlayer || !ytReady) return;
+      const d = (ytPlayer.getDuration && ytPlayer.getDuration()) || 0;
+      const c = (ytPlayer.getCurrentTime && ytPlayer.getCurrentTime()) || 0;
+      cur.textContent = fmt(c);
+      dur.textContent = fmt(d);
+      if (d) seek.value = String((c / d) * 1000);
+    }, 400);
+
+    seek.addEventListener('input', () => {
+      seeking = true;
+      const d = source === 'local' ? (audio.duration || 0) : ((ytPlayer && ytPlayer.getDuration && ytPlayer.getDuration()) || 0);
+      cur.textContent = fmt((seek.value / 1000) * d);
+    });
+    seek.addEventListener('change', () => {
+      const frac = seek.value / 1000;
+      if (source === 'local') { if (audio.duration) audio.currentTime = frac * audio.duration; }
+      else if (ytPlayer && ytReady) { const d = ytPlayer.getDuration(); if (d) ytPlayer.seekTo(frac * d, true); }
+      seeking = false;
+    });
+    vol.addEventListener('input', () => { lastVol = Number(vol.value); setVolume(vol.value); });
+
+    /* ---- minimized circular remote ---- */
+    minPlay.addEventListener('click', (e) => { e.stopPropagation(); toggle(); });
+    minPrev.addEventListener('click', (e) => { e.stopPropagation(); prev(); });
+    minNext.addEventListener('click', (e) => { e.stopPropagation(); next(); });
+    minClose.addEventListener('click', (e) => { e.stopPropagation(); closePlayer(); });
+    minVol.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (Number(vol.value) > 0) { lastVol = Number(vol.value); vol.value = '0'; }
+      else { vol.value = String(lastVol || 70); }
+      setVolume(vol.value);
+    });
+    minRing.addEventListener('click', restore);
   })();

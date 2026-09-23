@@ -166,7 +166,7 @@
           <div class="stereoPlayer__art" aria-hidden="true">🎵</div>
           <div class="stereoPlayer__meta">
             <p class="stereoPlayer__title" id="stereoTitle">333.3 Faque FM</p>
-            <p class="stereoPlayer__artist" id="stereoArtist">Ashfaque Salahudeen</p>
+            <p class="stereoPlayer__artist" id="stereoArtist">FM STATION</p>
           </div>
           <div class="stereoPlayer__eq" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
           <input class="stereoPlayer__seek" id="stereoSeek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
@@ -182,11 +182,16 @@
         <button class="stereoPlayer__foot stereoPlayer__minimize" id="stereoMinBtn" type="button" hidden>Minimize</button>
         <button class="stereoPlayer__foot stereoPlayer__back" id="stereoBackBtn" type="button">Go back</button>
       </div>
-      <button class="stereoPlayer__mini" id="stereoMini" type="button" hidden aria-label="Reopen 333.3 Faque FM player">
-        <span class="stereoPlayer__miniPlay" id="stereoMiniIcon"></span>
-        <span class="stereoPlayer__miniTitle">333.3 Faque FM</span>
-      </button>
+      <div class="stereoMin" id="stereoMini" hidden aria-label="333.3 Faque FM — minimized player">
+        <button class="stereoMin__vol" id="stereoMinVol" type="button" aria-label="Mute or unmute"></button>
+        <button class="stereoMin__prev" id="stereoMinPrev" type="button" aria-label="Previous track"></button>
+        <button class="stereoMin__play" id="stereoMinPlay" type="button" aria-label="Play or pause"></button>
+        <button class="stereoMin__next" id="stereoMinNext" type="button" aria-label="Next track"></button>
+        <button class="stereoMin__close" id="stereoMinClose" type="button" aria-label="Close player"></button>
+        <button class="stereoMin__ring" id="stereoMinRing" type="button" aria-label="Expand player"></button>
+      </div>
     </div>
+    <div id="ytPlayerTarget" style="position:absolute; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none;"></div>
 
     <!-- ============ CLOUDS + ROAD + PROJECTS TRUCK ============ -->
     <section class="sec drive" id="projects" aria-label="Projects">
