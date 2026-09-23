@@ -240,11 +240,77 @@
     const artistEl = document.getElementById('stereoArtist');
     if (!stereo || !audio || !wrap || !panel) return;
 
-    const YT_PLAYLIST_ID = 'PLYzZK8-a8cos';
+    /* Paste individual YouTube song links here (full URL or bare video ID both work).
+       Ashfaque: only add ones you've actually confirmed play in an embedded player —
+       a playlist auto-imported from Spotify tends to include removed/region-locked/
+       embedding-disabled tracks, which is what was causing the "stuck loading" bug.
+       One is picked at random each time the player opens, and it shuffles through the
+       rest so it isn't replaying the same track, skipping automatically past any single
+       one that fails instead of getting stuck. */
+    const YT_VIDEO_URLS = [
+      'https://www.youtube.com/watch?v=3vp4ddZ-bCI',
+      'https://www.youtube.com/watch?v=A7NpQUkItTM',
+      'https://www.youtube.com/watch?v=QLVwGG1TZHk',
+      'https://www.youtube.com/watch?v=cEP6oU0Qug4',
+      'https://www.youtube.com/watch?v=Q-eI83gXUgc',
+      'https://www.youtube.com/watch?v=E7renNYrmLQ',
+      'https://www.youtube.com/watch?v=tjghhOQNwLg',
+      'https://www.youtube.com/watch?v=24gfxvQCuf0',
+      'https://www.youtube.com/watch?v=oyLX1eVLEj0',
+      'https://www.youtube.com/watch?v=8w_X3-BsRG0',
+      'https://www.youtube.com/watch?v=hALU7lBeZSA',
+      'https://www.youtube.com/watch?v=9ngC804UK3k',
+      'https://www.youtube.com/watch?v=klrTOJyOr5I',
+      'https://www.youtube.com/watch?v=CtcbQ-t2FcU',
+      'https://www.youtube.com/watch?v=WgsaDcJYGg4',
+      'https://www.youtube.com/watch?v=Cj2uiUNwrdY',
+      'https://www.youtube.com/watch?v=wpBNNp8zXkw',
+      'https://www.youtube.com/watch?v=wpQetvjxb_Y',
+      'https://www.youtube.com/watch?v=dxTAn9GBMuM',
+      'https://www.youtube.com/watch?v=CIrbgy1S7MQ',
+      'https://www.youtube.com/watch?v=7MlAgc1tCpo',
+      'https://www.youtube.com/watch?v=h8IR1_EF-k8',
+      'https://www.youtube.com/watch?v=GSCpkYYawKM',
+      'https://www.youtube.com/watch?v=CRa2yWCnNkI',
+      'https://www.youtube.com/watch?v=RHMV2oERwtE',
+      'https://www.youtube.com/watch?v=BDIh37fiCAE',
+      'https://www.youtube.com/watch?v=1sinydrAhVA',
+      'https://www.youtube.com/watch?v=3x4qeKaUCkM',
+      'https://www.youtube.com/watch?v=NtAsTxKcWBo',
+      'https://www.youtube.com/watch?v=4vUuI_mibKc',
+      'https://www.youtube.com/watch?v=omizykFNt6w'
+      // add more as you like — one is picked at random each time
+    ];
+    function extractYTId(url) {
+      const m = String(url).match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+      return m ? m[1] : (/^[a-zA-Z0-9_-]{11}$/.test(url) ? url : null);
+    }
+    const YT_VIDEO_IDS = YT_VIDEO_URLS.map(extractYTId).filter(Boolean);
+
     let seeking = false;
-    let source = 'local';           // 'local' (intro mp3) | 'yt' (playlist, played in-page, muted-video/audio-only)
+    let source = 'local';           // 'local' (intro mp3) | 'yt' (random pick from YT_VIDEO_IDS, played in-page)
     let ytPlayer = null, ytReady = false, ytPendingPlay = false, ytApiRequested = false;
     let lastVol = 70;
+    let playOrder = [], playIdx = -1, ytErrorStreak = 0;
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; }
+      return a;
+    }
+    function reshufflePlayOrder() {
+      playOrder = shuffle(YT_VIDEO_IDS.map((_, i) => i));
+      playIdx = 0;
+    }
+    function currentVideoId() {
+      if (playIdx < 0 || playIdx >= playOrder.length) reshufflePlayOrder();
+      return YT_VIDEO_IDS[playOrder[playIdx]];
+    }
+    function advanceVideo() {
+      playIdx++;
+      if (playIdx >= playOrder.length) reshufflePlayOrder();
+      return currentVideoId();
+    }
 
     const fmt = (s) => { if (!isFinite(s) || s < 0) s = 0; const m = Math.floor(s / 60), r = Math.floor(s % 60); return `${m}:${String(r).padStart(2, '0')}`; };
 
@@ -279,8 +345,9 @@
       loadYTApi(() => {
         ytPlayer = new YT.Player('ytPlayerTarget', {
           height: '2', width: '2',
+          videoId: currentVideoId(),
           playerVars: {
-            listType: 'playlist', list: YT_PLAYLIST_ID, autoplay: 0, controls: 0, disablekb: 1,
+            autoplay: 0, controls: 0, disablekb: 1,
             playsinline: 1, origin: window.location.origin
           },
           events: {
@@ -291,14 +358,20 @@
             },
             onStateChange: (e) => {
               if (source !== 'yt') return;
-              if (e.data === YT.PlayerState.PLAYING) { clearTimeout(window.__ytWatchdog); setPlayingUI(true); updateYTTitle(); }
+              if (e.data === YT.PlayerState.PLAYING) { ytErrorStreak = 0; clearTimeout(window.__ytWatchdog); setPlayingUI(true); updateYTTitle(); }
               else if (e.data === YT.PlayerState.PAUSED) { setPlayingUI(false); }
               else if (e.data === YT.PlayerState.BUFFERING) { titleEl.textContent = 'Buffering…'; }
-              else if (e.data === YT.PlayerState.ENDED) { ytPlayer.nextVideo(); }
+              else if (e.data === YT.PlayerState.ENDED) { ytPlayer.loadVideoById(advanceVideo()); }
             },
             onError: () => {
-              /* video removed/restricted/not embeddable — skip it rather than getting stuck */
-              if (source === 'yt' && ytPlayer) ytPlayer.nextVideo();
+              /* video removed/restricted/not embeddable — skip to another random pick rather
+                 than getting stuck; give up (fall back to local mp3) only if every track in the
+                 list fails in a row, so one or two bad links never break the player */
+              if (source !== 'yt' || !ytPlayer) return;
+              ytErrorStreak++;
+              if (ytErrorStreak >= Math.max(YT_VIDEO_IDS.length, 1)) return; /* let the watchdog fall back */
+              ytPlayer.loadVideoById(advanceVideo());
+              ytPlayer.playVideo();
             }
           }
         });
@@ -331,11 +404,15 @@
     function toggle() { if (isPlaying()) pause(); else play(); }
     function prev() {
       if (source === 'local') { audio.currentTime = 0; }
-      else if (ytPlayer && ytReady) ytPlayer.previousVideo();
+      else if (ytPlayer && ytReady) {
+        playIdx = playIdx > 0 ? playIdx - 1 : 0;
+        ytPlayer.loadVideoById(currentVideoId());
+        ytPlayer.playVideo();
+      }
     }
     function next() {
       if (source === 'local') { audio.currentTime = 0; if (audio.paused) audio.play().catch(() => {}); }
-      else if (ytPlayer && ytReady) ytPlayer.nextVideo();
+      else if (ytPlayer && ytReady) { ytPlayer.loadVideoById(advanceVideo()); ytPlayer.playVideo(); }
     }
     function setVolume(v) {
       audio.volume = v / 100;
@@ -372,15 +449,22 @@
     minBtn.addEventListener('click', minimize);
 
     playlistBtn.addEventListener('click', () => {
+      if (!YT_VIDEO_IDS.length) {
+        /* nothing pasted into YT_VIDEO_URLS yet — nothing to play, so don't even try */
+        titleEl.textContent = '333.3 Faque FM';
+        artistEl.textContent = 'FM STATION — playlist unavailable';
+        return;
+      }
       audio.pause();
       source = 'yt';
+      ytErrorStreak = 0;
       panel.classList.remove('is-state1');
       panel.classList.add('is-state2');
       playlistBtn.hidden = true;
       minBtn.hidden = false;
       titleEl.textContent = 'Loading playlist…';
       artistEl.textContent = 'YouTube playlist';
-      if (!ytPlayer) { ytPendingPlay = true; createYTPlayer(); } else { play(); }
+      if (!ytPlayer) { ytPendingPlay = true; createYTPlayer(); } else { ytPlayer.loadVideoById(currentVideoId()); play(); }
 
       /* watchdog: if the playlist hasn't actually started within 8s (blocked embed, network issue,
          ad-blocker, etc.) fall back to the intro track instead of leaving the widget stuck loading */
