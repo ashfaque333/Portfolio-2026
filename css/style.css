@@ -668,11 +668,11 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .stereoPlayer[hidden] .stereoPlayer__panel { display: none; }
 
 .stereoPlayer__panel {
-  position: fixed; left: 50%; bottom: 5vh; top: auto; translate: -50% 0; scale: 1; opacity: 1;
-  width: min(26vw, 360px); aspect-ratio: 1536/1024; container-type: inline-size;
+  position: fixed; left: 50%; top: 50%; translate: -50% -50%; scale: 1; opacity: 1;
+  width: min(46vw, 640px); aspect-ratio: 1536/1024; container-type: inline-size;
   background-size: 100% 100%; background-repeat: no-repeat;
   pointer-events: auto; z-index: 61;
-  filter: drop-shadow(0 16px 32px rgba(0,0,0,.45));
+  filter: drop-shadow(0 20px 45px rgba(0,0,0,.45));
   transition: opacity .2s, scale .2s;
 }
 .stereoPlayer__panel.is-popping { opacity: 0; scale: .92; }
@@ -754,5 +754,5 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .stereoMin__close { left: 23.1%; top: 71.8%; width: 52.7%; height: 15.1%; z-index: 2; }
 
 @media (max-width: 760px) {
-  .stereoPlayer__panel { width: min(78vw, 360px); bottom: 3vh; }
+  .stereoPlayer__panel { width: min(90vw, 640px); }
 }

@@ -212,7 +212,7 @@
   }
 })();
 
-  /* ---- 10. showreel stereo → full mp3 player, with a real YouTube-playlist source ---- */
+  /* ---- 10. showreel stereo → full mp3 player; "Listen to Playlist" opens the real YouTube playlist ---- */
   (() => {
     const stereo = document.getElementById('stereo');
     const audio = document.getElementById('stereoAudio');
@@ -236,16 +236,11 @@
     const vol = document.getElementById('stereoVol');
     const cur = document.getElementById('stereoCur');
     const dur = document.getElementById('stereoDur');
-    const titleEl = document.getElementById('stereoTitle');
-    const artistEl = document.getElementById('stereoArtist');
     if (!stereo || !audio || !wrap || !panel) return;
 
-    const YT_PLAYLIST_ID = 'PLYzZK8-a8cos';
+    const YT_PLAYLIST_URL = 'https://youtube.com/playlist?list=PLYzZK8-a8cos&si=huQSzVSVf1iVCwdL';
     let seeking = false;
-    let source = 'local';           // 'local' (intro mp3) | 'yt' (playlist)
-    let ytPlayer = null, ytReady = false, ytPendingPlay = false, ytApiRequested = false;
     let lastVol = 70;
-
     const fmt = (s) => { if (!isFinite(s) || s < 0) s = 0; const m = Math.floor(s / 60), r = Math.floor(s % 60); return `${m}:${String(r).padStart(2, '0')}`; };
 
     audio.volume = 0.7;
@@ -257,103 +252,27 @@
         requestAnimationFrame(() => el.classList.remove('is-popping'));
       });
     }
-
     function setPlayingUI(playing) {
       stereo.classList.toggle('is-playing', playing);
       panel.classList.toggle('is-playing', playing);
       mini.classList.toggle('is-paused', !playing);
     }
-
-    /* ---- YouTube IFrame API (loaded lazily, only once the user opts into the playlist) ---- */
-    function loadYTApi(cb) {
-      if (window.YT && window.YT.Player) { cb(); return; }
-      const prevReady = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = () => { if (prevReady) prevReady(); cb(); };
-      if (!ytApiRequested) {
-        ytApiRequested = true;
-        const s = document.createElement('script');
-        s.src = 'https://www.youtube.com/iframe_api';
-        document.head.appendChild(s);
-      }
-    }
-    function createYTPlayer() {
-      loadYTApi(() => {
-        ytPlayer = new YT.Player('ytPlayerTarget', {
-          height: '2', width: '2',
-          playerVars: {
-            listType: 'playlist', list: YT_PLAYLIST_ID, autoplay: 0, controls: 0, disablekb: 1,
-            playsinline: 1, origin: window.location.origin
-          },
-          events: {
-            onReady: (e) => {
-              ytReady = true;
-              e.target.setVolume(Number(vol.value));
-              if (ytPendingPlay) { e.target.playVideo(); ytPendingPlay = false; }
-            },
-            onStateChange: (e) => {
-              if (source !== 'yt') return;
-              if (e.data === YT.PlayerState.PLAYING) { clearTimeout(window.__ytWatchdog); setPlayingUI(true); updateYTTitle(); }
-              else if (e.data === YT.PlayerState.PAUSED) { setPlayingUI(false); }
-              else if (e.data === YT.PlayerState.ENDED) { ytPlayer.nextVideo(); }
-            },
-            onError: () => {
-              /* video removed/restricted/not embeddable — skip it rather than getting stuck */
-              if (source === 'yt' && ytPlayer) ytPlayer.nextVideo();
-            }
-          }
-        });
-      });
-    }
-    function updateYTTitle() {
-      if (!ytPlayer || !ytPlayer.getVideoData) return;
-      try {
-        const d = ytPlayer.getVideoData();
-        const t = (d && d.title) ? d.title : '333.3 Faque FM';
-        titleEl.textContent = t;
-        artistEl.textContent = 'YouTube playlist';
-      } catch (e) {}
-    }
-
-    /* ---- unified transport, dispatched by active source ---- */
-    function isPlaying() {
-      if (source === 'local') return !audio.paused;
-      return !!(ytPlayer && ytReady && ytPlayer.getPlayerState && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING);
-    }
-    function play() {
-      if (source === 'local') { audio.play().catch(() => {}); }
-      else if (ytPlayer && ytReady) { ytPlayer.playVideo(); }
-      else { ytPendingPlay = true; }
-    }
-    function pause() {
-      if (source === 'local') audio.pause();
-      else if (ytPlayer && ytReady) ytPlayer.pauseVideo();
-    }
-    function toggle() { if (isPlaying()) pause(); else play(); }
-    function prev() {
-      if (source === 'local') { audio.currentTime = 0; }
-      else if (ytPlayer && ytReady) ytPlayer.previousVideo();
-    }
-    function next() {
-      if (source === 'local') { audio.currentTime = 0; if (audio.paused) audio.play().catch(() => {}); }
-      else if (ytPlayer && ytReady) ytPlayer.nextVideo();
-    }
-    function setVolume(v) {
-      audio.volume = v / 100;
-      if (ytPlayer && ytReady) ytPlayer.setVolume(Number(v));
-    }
+    function toggle() { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); }
+    function prev() { audio.currentTime = 0; }
+    function next() { audio.currentTime = 0; if (audio.paused) audio.play().catch(() => {}); }
+    function setVolume(v) { audio.volume = v / 100; }
 
     function openPlayer() {
       wrap.hidden = false;
       mini.hidden = true;
       panel.style.display = '';
       pop(panel);
-      play();
+      audio.play().catch(() => {});
     }
     function closePlayer() {
       wrap.hidden = true;
       mini.hidden = true;
       audio.pause();
-      if (ytPlayer && ytReady) ytPlayer.pauseVideo();
     }
     function minimize() {
       panel.style.display = 'none';
@@ -372,68 +291,28 @@
     minBtn.addEventListener('click', minimize);
 
     playlistBtn.addEventListener('click', () => {
-      audio.pause();
-      source = 'yt';
+      window.open(YT_PLAYLIST_URL, '_blank', 'noopener');
       panel.classList.remove('is-state1');
       panel.classList.add('is-state2');
       playlistBtn.hidden = true;
       minBtn.hidden = false;
-      titleEl.textContent = 'Loading playlist…';
-      artistEl.textContent = 'YouTube playlist';
-      if (!ytPlayer) { ytPendingPlay = true; createYTPlayer(); } else { play(); }
-
-      /* watchdog: if the playlist hasn't actually started within 8s, fall back to the intro track
-         instead of leaving the widget stuck on "Loading playlist…" forever */
-      clearTimeout(window.__ytWatchdog);
-      window.__ytWatchdog = setTimeout(() => {
-        if (source === 'yt' && !isPlaying()) {
-          source = 'local';
-          panel.classList.remove('is-state2');
-          panel.classList.add('is-state1');
-          playlistBtn.hidden = false;
-          minBtn.hidden = true;
-          titleEl.textContent = '333.3 Faque FM';
-          artistEl.textContent = 'FM STATION — playlist unavailable';
-          audio.play().catch(() => {});
-        }
-      }, 8000);
     });
 
     playPause.addEventListener('click', toggle);
     prevBtn.addEventListener('click', prev);
     nextBtn.addEventListener('click', next);
 
-    audio.addEventListener('play', () => { if (source === 'local') setPlayingUI(true); });
-    audio.addEventListener('pause', () => { if (source === 'local') setPlayingUI(false); });
-    audio.addEventListener('loadedmetadata', () => { if (source === 'local') dur.textContent = fmt(audio.duration); });
+    audio.addEventListener('play', () => setPlayingUI(true));
+    audio.addEventListener('pause', () => setPlayingUI(false));
+    audio.addEventListener('loadedmetadata', () => { dur.textContent = fmt(audio.duration); });
     audio.addEventListener('timeupdate', () => {
-      if (source !== 'local' || seeking) return;
+      if (seeking) return;
       cur.textContent = fmt(audio.currentTime);
       dur.textContent = fmt(audio.duration);
       if (audio.duration) seek.value = String((audio.currentTime / audio.duration) * 1000);
     });
-
-    /* poll for live progress from the YouTube player (no timeupdate event on the IFrame API) */
-    setInterval(() => {
-      if (source !== 'yt' || seeking || !ytPlayer || !ytReady) return;
-      const d = (ytPlayer.getDuration && ytPlayer.getDuration()) || 0;
-      const c = (ytPlayer.getCurrentTime && ytPlayer.getCurrentTime()) || 0;
-      cur.textContent = fmt(c);
-      dur.textContent = fmt(d);
-      if (d) seek.value = String((c / d) * 1000);
-    }, 400);
-
-    seek.addEventListener('input', () => {
-      seeking = true;
-      const d = source === 'local' ? (audio.duration || 0) : ((ytPlayer && ytPlayer.getDuration && ytPlayer.getDuration()) || 0);
-      cur.textContent = fmt((seek.value / 1000) * d);
-    });
-    seek.addEventListener('change', () => {
-      const frac = seek.value / 1000;
-      if (source === 'local') { if (audio.duration) audio.currentTime = frac * audio.duration; }
-      else if (ytPlayer && ytReady) { const d = ytPlayer.getDuration(); if (d) ytPlayer.seekTo(frac * d, true); }
-      seeking = false;
-    });
+    seek.addEventListener('input', () => { seeking = true; cur.textContent = fmt((seek.value / 1000) * (audio.duration || 0)); });
+    seek.addEventListener('change', () => { if (audio.duration) audio.currentTime = (seek.value / 1000) * audio.duration; seeking = false; });
     vol.addEventListener('input', () => { lastVol = Number(vol.value); setVolume(vol.value); });
 
     /* ---- minimized circular remote ---- */
