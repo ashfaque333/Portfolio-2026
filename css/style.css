@@ -663,13 +663,13 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .stereo.is-playing { box-shadow: 0 0 calc(14 * var(--pu)) rgba(140,235,140,.85) inset, 0 0 calc(10 * var(--pu)) rgba(140,235,140,.55); }
 
 /* ---- stereo / mp3 player: opens from the dashboard screen, matches Ashfaque's mockup art ---- */
-.stereoPlayer { position: fixed; inset: 0; z-index: 60; }
+.stereoPlayer { position: fixed; inset: 0; z-index: 60; pointer-events: none; }
 .stereoPlayer[hidden] { display: block !important; pointer-events: none; }
 .stereoPlayer[hidden] .stereoPlayer__panel { display: none; }
 
 .stereoPlayer__panel {
-  position: fixed; left: 50%; top: 50%; translate: -50% -50%; scale: 1; opacity: 1;
-  width: min(46vw, 640px); aspect-ratio: 1536/1024; container-type: inline-size;
+  position: fixed; left: 50%; bottom: max(20px, 4vh); translate: -50% 0; scale: 1; opacity: 1;
+  width: min(27.6vw, 384px); aspect-ratio: 1536/1024; container-type: inline-size;
   background-size: 100% 100%; background-repeat: no-repeat;
   pointer-events: auto; z-index: 61;
   filter: drop-shadow(0 20px 45px rgba(0,0,0,.45));
@@ -689,11 +689,11 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .stereoPlayer__lcd { position: absolute; left: 6.2%; top: 15.9%; width: 87.6%; height: 39.3%; background: #E6DBC7; border-radius: 2%; box-shadow: inset 0 0 0 1px rgba(42,32,21,.15); }
 .stereoPlayer__art {
   position: absolute; left: 0; top: 0; width: 21%; height: 55%; border-radius: 6%;
-  background: #16110d; display: grid; place-items: center; font-size: 3.2vw; filter: grayscale(1) brightness(1.4);
+  background: #16110d; display: grid; place-items: center; font-size: 9cqw; filter: grayscale(1) brightness(1.4);
 }
 .stereoPlayer__meta { position: absolute; left: 24%; top: 4%; width: 55%; }
-.stereoPlayer__title { margin: 0; font: 800 1.55cqw/1.15 "Courier New", monospace; color: #2a2015; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.stereoPlayer__artist { margin: .4cqw 0 0; font: 600 1.05cqw/1.15 "Courier New", monospace; color: #6b5c46; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stereoPlayer__title { margin: 0; font: 800 2.6cqw/1.15 "Courier New", monospace; color: #2a2015; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stereoPlayer__artist { margin: .67cqw 0 0; font: 600 1.75cqw/1.15 "Courier New", monospace; color: #6b5c46; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .stereoPlayer__eq { position: absolute; right: 0; top: 2%; width: 34%; height: 50%; display: flex; align-items: flex-end; gap: 2.4%; opacity: .55; }
 .stereoPlayer__eq span { flex: 1; background: #2a2015; height: 30%; border-radius: 1px; animation: stereoEq 1.1s ease-in-out infinite; }
 .stereoPlayer__eq span:nth-child(2n) { animation-delay: .15s; }
@@ -710,24 +710,31 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 }
 .stereoPlayer__seek { position: absolute; left: 0; top: 62%; width: 100%; height: 6%; margin: 0; appearance: none; background: transparent; cursor: pointer; z-index: 1; }
 .stereoPlayer__seek::-webkit-slider-runnable-track { height: 3px; background: rgba(42,32,21,.3); border-radius: 2px; }
-.stereoPlayer__seek::-webkit-slider-thumb { appearance: none; width: 1.1cqw; height: 1.1cqw; border-radius: 50%; background: #2a2015; margin-top: -0.5cqw; cursor: pointer; }
+.stereoPlayer__seek::-webkit-slider-thumb { appearance: none; width: 1.85cqw; height: 1.85cqw; border-radius: 50%; background: #2a2015; margin-top: -0.84cqw; cursor: pointer; }
 .stereoPlayer__seek::-moz-range-track { height: 3px; background: rgba(42,32,21,.3); border-radius: 2px; }
-.stereoPlayer__seek::-moz-range-thumb { width: 1.1cqw; height: 1.1cqw; border: 0; border-radius: 50%; background: #2a2015; cursor: pointer; }
-.stereoPlayer__cur { position: absolute; left: 0; top: 71%; font: 700 1cqw/1 "Courier New", monospace; color: #2a2015; z-index: 1; }
-.stereoPlayer__dur { position: absolute; right: 0; top: 71%; font: 700 1cqw/1 "Courier New", monospace; color: #2a2015; z-index: 1; }
-.stereoPlayer__volIcon { position: absolute; left: 26.5%; top: 84%; font-size: 1.15cqw; z-index: 1; }
+.stereoPlayer__seek::-moz-range-thumb { width: 1.85cqw; height: 1.85cqw; border: 0; border-radius: 50%; background: #2a2015; cursor: pointer; }
+.stereoPlayer__cur { position: absolute; left: 0; top: 71%; font: 700 1.7cqw/1 "Courier New", monospace; color: #2a2015; z-index: 1; }
+.stereoPlayer__dur { position: absolute; right: 0; top: 71%; font: 700 1.7cqw/1 "Courier New", monospace; color: #2a2015; z-index: 1; }
+.stereoPlayer__volIcon { position: absolute; left: 26.5%; top: 84%; font-size: 1.9cqw; z-index: 1; }
 .stereoPlayer__vol { position: absolute; left: 32%; top: 85.5%; width: 58%; height: 5%; margin: 0; appearance: none; background: transparent; cursor: pointer; z-index: 1; }
 .stereoPlayer__vol::-webkit-slider-runnable-track { height: 3px; background: rgba(42,32,21,.35); border-radius: 2px; }
-.stereoPlayer__vol::-webkit-slider-thumb { appearance: none; width: 1cqw; height: 1cqw; border-radius: 50%; background: #2a2015; margin-top: -0.42cqw; cursor: pointer; }
+.stereoPlayer__vol::-webkit-slider-thumb { appearance: none; width: 1.7cqw; height: 1.7cqw; border-radius: 50%; background: #2a2015; margin-top: -0.7cqw; cursor: pointer; }
 .stereoPlayer__vol::-moz-range-track { height: 3px; background: rgba(42,32,21,.35); border-radius: 2px; }
-.stereoPlayer__vol::-moz-range-thumb { width: 1vw; height: 1vw; border: 0; border-radius: 50%; background: #2a2015; cursor: pointer; }
+.stereoPlayer__vol::-moz-range-thumb { width: 1.7cqw; height: 1.7cqw; border: 0; border-radius: 50%; background: #2a2015; cursor: pointer; }
 
 .stereoPlayer__btn { position: absolute; top: 60.5%; width: 13.5%; aspect-ratio: 1; border-radius: 50%; background: transparent; border: 0; cursor: pointer; }
 .stereoPlayer__prev { left: 28.7%; }
-.stereoPlayer__play { left: 43.1%; width: 13.8%; }
+.stereoPlayer__play { left: 43.1%; width: 13.8%; display: flex; align-items: center; justify-content: center; color: #2a2015; }
 .stereoPlayer__next { left: 57.4%; }
 .stereoPlayer__btn:hover { filter: brightness(.9); }
 .stereoPlayer__btn:active { transform: scale(.95); }
+
+/* play/pause glyph on the main panel's transport button — driven by .is-playing on the panel,
+   the baked art has no separate state so this overlays the actual icon in sync with real playback */
+.stereoPlayer__playIcon, .stereoPlayer__pauseIcon { width: 44%; height: 44%; pointer-events: none; }
+.stereoPlayer__pauseIcon { display: none; }
+.stereoPlayer__panel.is-playing .stereoPlayer__playIcon { display: none; }
+.stereoPlayer__panel.is-playing .stereoPlayer__pauseIcon { display: block; }
 
 .stereoPlayer__foot { position: absolute; bottom: 6.3%; height: 13.7%; border: 0; background: transparent; cursor: pointer; color: transparent; font-size: 0; }
 .stereoPlayer__playlist, .stereoPlayer__minimize { left: 5.5%; width: 44%; }
@@ -747,12 +754,17 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .stereoMin button { position: absolute; background: transparent; border: 0; color: transparent; font-size: 0; cursor: pointer; }
 .stereoMin button:hover { filter: brightness(.92); }
 .stereoMin__ring { inset: 0; border-radius: 50%; z-index: 1; }
-.stereoMin__vol { left: 23.1%; top: 12%; width: 52.7%; height: 14.3%; z-index: 2; }
+.stereoMin button.stereoMin__max {
+  left: 23.1%; top: 12%; width: 52.7%; height: 14.3%; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(230,219,199,.92); border-radius: 5px; color: #2a2015;
+}
+.stereoMin__max svg { width: 48%; height: 48%; pointer-events: none; }
 .stereoMin__prev { left: 5.2%; top: 26.7%; width: 26.3%; height: 44.7%; z-index: 2; }
 .stereoMin__next { left: 68.2%; top: 26.7%; width: 26.7%; height: 44.7%; z-index: 2; }
 .stereoMin__play { left: 29.5%; top: 29.5%; width: 39.9%; height: 39.5%; border-radius: 50%; z-index: 2; }
 .stereoMin__close { left: 23.1%; top: 71.8%; width: 52.7%; height: 15.1%; z-index: 2; }
 
 @media (max-width: 760px) {
-  .stereoPlayer__panel { width: min(90vw, 640px); }
+  .stereoPlayer__panel { width: min(56vw, 384px); }
 }

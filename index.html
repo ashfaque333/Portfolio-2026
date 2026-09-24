@@ -154,7 +154,7 @@
         <button class="tv-screen" type="button" data-video="" aria-label="Play showreel"><span class="tv-screen__play"></span><span class="tv-screen__txt">PLAY REEL</span></button>
         <button class="horn" type="button" id="horn" aria-label="Honk the horn"></button>
         <button class="stereo" type="button" id="stereo" aria-label="Open 333.3 Faque FM player" style="--x:681;--y:797;--w:97;--h:73"></button>
-        <audio id="stereoAudio" src="assets/showreel/faque-fm.mp3" preload="none" loop></audio>
+        <audio id="stereoAudio" src="assets/showreel/faque-fm.mp3" preload="none"></audio>
       </div>
     </section>
 
@@ -176,14 +176,19 @@
           <input class="stereoPlayer__vol" id="stereoVol" type="range" min="0" max="100" value="70" aria-label="Volume">
         </div>
         <button class="stereoPlayer__btn stereoPlayer__prev" id="stereoPrev" type="button" aria-label="Previous track"></button>
-        <button class="stereoPlayer__btn stereoPlayer__play" id="stereoPlayPause" type="button" aria-label="Play or pause"></button>
+        <button class="stereoPlayer__btn stereoPlayer__play" id="stereoPlayPause" type="button" aria-label="Play or pause">
+          <svg class="stereoPlayer__playIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+          <svg class="stereoPlayer__pauseIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor"/></svg>
+        </button>
         <button class="stereoPlayer__btn stereoPlayer__next" id="stereoNext" type="button" aria-label="Next track"></button>
         <button class="stereoPlayer__foot stereoPlayer__playlist" id="stereoPlaylistBtn" type="button">Listen to playlist</button>
         <button class="stereoPlayer__foot stereoPlayer__minimize" id="stereoMinBtn" type="button" hidden>Minimize</button>
         <button class="stereoPlayer__foot stereoPlayer__back" id="stereoBackBtn" type="button">Go back</button>
       </div>
       <div class="stereoMin" id="stereoMini" hidden aria-label="333.3 Faque FM — minimized player">
-        <button class="stereoMin__vol" id="stereoMinVol" type="button" aria-label="Mute or unmute"></button>
+        <button class="stereoMin__max" id="stereoMinMax" type="button" aria-label="Expand player">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v2H6.4l4.3 4.3-1.4 1.4L5 7.4V10H3V4h1zm16 16h-6v-2h3.6l-4.3-4.3 1.4-1.4L19 16.6V14h2v6h-1z" fill="currentColor"/></svg>
+        </button>
         <button class="stereoMin__prev" id="stereoMinPrev" type="button" aria-label="Previous track"></button>
         <button class="stereoMin__play" id="stereoMinPlay" type="button" aria-label="Play or pause"></button>
         <button class="stereoMin__next" id="stereoMinNext" type="button" aria-label="Next track"></button>

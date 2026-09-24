@@ -224,7 +224,7 @@
     const minBtn = document.getElementById('stereoMinBtn');
     const mini = document.getElementById('stereoMini');
     const minRing = document.getElementById('stereoMinRing');
-    const minVol = document.getElementById('stereoMinVol');
+    const minMax = document.getElementById('stereoMinMax');
     const minPrev = document.getElementById('stereoMinPrev');
     const minNext = document.getElementById('stereoMinNext');
     const minPlay = document.getElementById('stereoMinPlay');
@@ -525,11 +525,6 @@
     minPrev.addEventListener('click', (e) => { e.stopPropagation(); prev(); });
     minNext.addEventListener('click', (e) => { e.stopPropagation(); next(); });
     minClose.addEventListener('click', (e) => { e.stopPropagation(); closePlayer(); });
-    minVol.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (Number(vol.value) > 0) { lastVol = Number(vol.value); vol.value = '0'; }
-      else { vol.value = String(lastVol || 70); }
-      setVolume(vol.value);
-    });
+    minMax.addEventListener('click', (e) => { e.stopPropagation(); restore(); });
     minRing.addEventListener('click', restore);
   })();
