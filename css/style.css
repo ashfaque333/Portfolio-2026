@@ -724,7 +724,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 .stereoPlayer__btn { position: absolute; top: 60.5%; width: 13.5%; aspect-ratio: 1; border-radius: 50%; background: transparent; border: 0; cursor: pointer; }
 .stereoPlayer__prev { left: 28.7%; }
-.stereoPlayer__play { left: 43.1%; width: 13.8%; }
+.stereoPlayer__play { top: 57.974%; left: 44.443%; width: 10.723%; }
 .stereoPlayer__next { left: 57.4%; }
 .stereoPlayer__btn:hover { filter: brightness(.9); }
 .stereoPlayer__btn:active { transform: scale(.95); }
