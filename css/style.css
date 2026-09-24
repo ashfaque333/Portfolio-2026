@@ -726,7 +726,8 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .stereoPlayer__prev { left: 28.7%; }
 .stereoPlayer__play {
   left: 43.1%; width: 13.8%; display: flex; align-items: center; justify-content: center; color: #2a2015;
-  background: #dcd2c3; /* opaque patch matching the sampled dashboard-button color, fully masking the baked icon underneath */
+  /* the baked icon pixels were removed directly from the artwork, so the SVG icon now sits
+     cleanly on the real embossed button — no flat patch needed */
 }
 .stereoPlayer__next { left: 57.4%; }
 .stereoPlayer__btn:hover { filter: brightness(.9); }
@@ -759,9 +760,8 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .stereoMin__ring { inset: 0; border-radius: 50%; z-index: 1; }
 .stereoMin button.stereoMin__max {
   left: 23.1%; top: 12%; width: 52.7%; height: 14.3%; z-index: 2;
-  display: flex; align-items: center; justify-content: center;
-  background: #e6dac4; /* opaque, matches the sampled remote-face cream, fully masking the baked icon underneath */
-  border-radius: 999px; color: #2a2015;
+  display: flex; align-items: center; justify-content: center; color: #2a2015;
+  /* baked icon pixels were removed directly from the artwork — no flat patch needed */
 }
 .stereoMin__max svg { width: 48%; height: 48%; pointer-events: none; }
 .stereoMin__prev { left: 5.2%; top: 26.7%; width: 26.3%; height: 44.7%; z-index: 2; }
