@@ -54,19 +54,38 @@
     addEventListener('keydown', e => { if (e.key === 'Escape') set(false); });
   }
 
-  /* ---- 4. showreel dialog ---- */
-  const dlg = document.getElementById('reel');
+  /* ---- 4. showreel: plays inside the TV. Click = play / pause, corner button = fullscreen,
+         it pauses when scrolled away and goes back to "PLAY REEL" when it ends ---- */
   const tv = document.querySelector('.tv-screen');
-  if (dlg && tv) {
-    const frame = dlg.querySelector('.reel__frame');
+  const tvv = document.getElementById('tvVideo');
+  if (tv && tvv) {
+    const sec = tv.closest('.showreel');
+    const fs = document.getElementById('tvFs');
+    const sync = () => {
+      sec.classList.toggle('is-playing', !tvv.paused);
+      tv.setAttribute('aria-label', tvv.paused ? 'Play showreel' : 'Pause showreel');
+    };
     tv.addEventListener('click', () => {
-      const src = tv.dataset.video;
-      if (!src) { tv.querySelector('.tv-screen__txt').textContent = 'COMING SOON'; return; }
-      frame.innerHTML = '<iframe src="' + src + (src.includes('?') ? '&' : '?') + 'autoplay=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Showreel"></iframe>';
-      dlg.showModal();
+      if (!tvv.getAttribute('src')) tvv.src = tvv.dataset.src;
+      sec.classList.add('has-reel');
+      if (tvv.paused) { document.dispatchEvent(new Event('reelplay')); const p = tvv.play(); if (p && p.catch) p.catch(() => {}); }
+      else tvv.pause();
     });
-    dlg.addEventListener('close', () => { frame.innerHTML = ''; });
-    dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('.reel__x')) dlg.close(); });
+    tvv.addEventListener('play', sync);
+    tvv.addEventListener('pause', sync);
+    tvv.addEventListener('ended', () => { sec.classList.remove('has-reel'); tvv.currentTime = 0; sync(); });
+    if (fs) fs.addEventListener('click', () => {
+      if (!tvv.getAttribute('src')) tvv.src = tvv.dataset.src;
+      sec.classList.add('has-reel');
+      document.dispatchEvent(new Event('reelplay'));
+      const p = tvv.play(); if (p && p.catch) p.catch(() => {});
+      if (tvv.requestFullscreen) tvv.requestFullscreen().catch(() => {});
+      else if (tvv.webkitEnterFullscreen) tvv.webkitEnterFullscreen();      // iPhone
+    });
+    document.addEventListener('fullscreenchange', () => { tvv.controls = document.fullscreenElement === tvv; });
+    if (window.IntersectionObserver) new IntersectionObserver(es => {
+      es.forEach(e => { if (!e.isIntersecting && !tvv.paused && document.fullscreenElement !== tvv) tvv.pause(); });
+    }, { threshold: 0.2 }).observe(tv);
   }
 
   /* ---- 5. about page: truck drives in as you scroll ---- */
@@ -414,6 +433,7 @@
       if (source === 'local') { audio.currentTime = 0; if (audio.paused) audio.play().catch(() => {}); }
       else if (ytPlayer && ytReady) { ytPlayer.loadVideoById(advanceVideo()); ytPlayer.playVideo(); }
     }
+    document.addEventListener('reelplay', () => { if (isPlaying()) pause(); });   // the radio goes quiet when the showreel starts
     function setVolume(v) {
       audio.volume = v / 100;
       if (ytPlayer && ytReady) ytPlayer.setVolume(Number(v));

@@ -150,8 +150,10 @@
     <section class="sec showreel" id="showreel" aria-label="Showreel">
       <div class="stage">
         <img class="showreel__bg" src="assets/showreel/showreel.webp" alt="Inside a hand-painted truck cab with a retro TV and the word SHOWREEL on the windscreen" width="1440" height="1110" loading="lazy" decoding="async">
-        <!-- Set data-video to a YouTube/Vimeo embed URL (e.g. https://www.youtube.com/embed/XXXX) to play the reel on the TV -->
-        <button class="tv-screen" type="button" data-video="" aria-label="Play showreel"><span class="tv-screen__play"></span><span class="tv-screen__txt">PLAY REEL</span></button>
+        <!-- the reel plays right inside the TV; the file only loads on the first click -->
+        <video class="tv-video" id="tvVideo" data-src="assets/showreel/showreel.mp4" poster="assets/showreel/showreel-poster.jpg" preload="none" playsinline aria-hidden="true"></video>
+        <button class="tv-screen" type="button" aria-label="Play showreel"><span class="tv-screen__play"></span><span class="tv-screen__txt">PLAY REEL</span></button>
+        <button class="tv-fs" type="button" id="tvFs" aria-label="Watch the showreel fullscreen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h7v2H5v5H3V3zm11 0h7v7h-2V5h-5V3zM3 14h2v5h5v2H3v-7zm16 0h2v7h-7v-2h5v-5z" fill="currentColor"/></svg></button>
         <button class="horn" type="button" id="horn" aria-label="Honk the horn"></button>
         <button class="stereo" type="button" id="stereo" aria-label="Open 333.3 Faque FM player" style="--x:681;--y:797;--w:97;--h:73"></button>
         <audio id="stereoAudio" src="assets/showreel/faque-fm.mp3" preload="none"></audio>
@@ -251,7 +253,6 @@
     </div>
       </main>
 
-  <dialog class="reel" id="reel" aria-label="Showreel"><button class="reel__x" type="button" aria-label="Close">×</button><div class="reel__frame"></div></dialog>
   <script src="js/intro.js" defer></script>
   <script src="js/main.js" defer></script>
 </body>
