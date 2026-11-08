@@ -329,48 +329,69 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 /* showreel */
 .showreel { height: calc(1110 * var(--pu)); }
 .showreel__bg { width: 100%; height: auto; }
-.tv-screen {
-  position: absolute; left: calc(590 * var(--pu)); top: calc(424 * var(--pu)); width: calc(282 * var(--pu)); height: calc(232 * var(--pu));
-  border: 0; padding: 0; cursor: pointer; border-radius: calc(40 * var(--pu)) / calc(46 * var(--pu));
-  background: radial-gradient(ellipse at 50% 40%, rgba(255,255,255,.0), rgba(0,0,0,.10) 100%);
-  display: grid; place-items: center; align-content: center; gap: calc(10 * var(--pu)); color: #1c2a12; font: 800 calc(16 * var(--pu))/1 system-ui, sans-serif; letter-spacing: .18em;
-  transition: background .25s, box-shadow .25s;
+/* ---- the TV: one framed box on the glass (screensaver GIF -> reel), 4:3 like the reel ---- */
+.tvbox {
+  position: absolute; left: calc(577 * var(--pu)); top: calc(417 * var(--pu)); width: calc(302 * var(--pu)); height: calc(228 * var(--pu));
+  border-radius: calc(15 * var(--pu)); overflow: hidden; background: #0d0905;
 }
-.tv-screen:hover, .tv-screen:focus-visible { background: rgba(255,246,190,.28); box-shadow: 0 0 calc(40 * var(--pu)) rgba(255,232,120,.55) inset; outline: none; }
-.tv-screen__play { width: 0; height: 0; border-style: solid; border-width: calc(20 * var(--pu)) 0 calc(20 * var(--pu)) calc(34 * var(--pu)); border-color: transparent transparent transparent #1c2a12; opacity: .75; transition: transform .2s; }
-.tv-screen:hover .tv-screen__play { transform: scale(1.15); }
-.tv-screen__txt { opacity: .75; }
-/* the reel itself sits on the same glass as the button, hidden until the first play */
-.tv-video {
-  position: absolute; left: calc(590 * var(--pu)); top: calc(424 * var(--pu)); width: calc(282 * var(--pu)); height: calc(232 * var(--pu));
-  border-radius: calc(40 * var(--pu)) / calc(46 * var(--pu)); object-fit: cover; background: #000;
-  opacity: 0; transition: opacity .45s; pointer-events: none;
+/* soft inward vignette, like old CRT glass */
+.tvbox::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1;
+  box-shadow: inset 0 0 calc(28 * var(--pu)) calc(4 * var(--pu)) rgba(0,0,0,.55);
 }
-.tv-video:fullscreen { object-fit: contain; border-radius: 0; }
-.showreel.has-reel .tv-video { opacity: 1; }
-.showreel.has-reel .tv-screen { background: transparent; box-shadow: none; }
-.showreel.has-reel .tv-screen:hover, .showreel.has-reel .tv-screen:focus-visible { background: rgba(0,0,0,.18); }
-.showreel.has-reel .tv-screen__txt { display: none; }
-.showreel.has-reel .tv-screen__play { border-left-color: #fff; opacity: .9; filter: drop-shadow(0 2px 6px rgba(0,0,0,.5)); transition: opacity .25s, transform .2s; }
-.showreel.is-playing .tv-screen__play { opacity: 0; }
-.showreel.is-playing .tv-screen:hover .tv-screen__play { opacity: 0; }
-/* pause bars on hover while playing */
-.showreel.is-playing .tv-screen::after {
-  content: ""; width: calc(26 * var(--pu)); height: calc(34 * var(--pu)); opacity: 0; transition: opacity .2s;
-  background: linear-gradient(90deg, #fff 0 35%, transparent 35% 65%, #fff 65%); filter: drop-shadow(0 2px 6px rgba(0,0,0,.5));
-  grid-area: 1 / 1;
+.tvbox__hit, .tvbox__ctrls { z-index: 2; }
+.tvbox__idle, .tvbox__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.tvbox__video { opacity: 0; transition: opacity .45s; pointer-events: none; background: #000; }
+.tvbox.has-reel .tvbox__video { opacity: 1; }
+.tvbox__video:fullscreen { object-fit: contain; pointer-events: auto; }
+.tvbox__video:-webkit-full-screen { object-fit: contain; pointer-events: auto; }
+
+/* big click area over the whole screen: play / pause */
+.tvbox__hit {
+  position: absolute; inset: 0; border: 0; padding: 0; margin: 0; background: transparent; cursor: pointer;
+  display: grid; place-items: center; filter: drop-shadow(0 2px 8px rgba(0,0,0,.6)); transition: background .25s;
 }
-.showreel.is-playing .tv-screen__play { grid-area: 1 / 1; }
-.showreel.is-playing .tv-screen:hover::after, .showreel.is-playing .tv-screen:focus-visible::after { opacity: .9; }
-.tv-fs {
-  position: absolute; left: calc((590 + 282 - 46) * var(--pu)); top: calc((424 + 232 - 44) * var(--pu)); width: calc(28 * var(--pu)); height: calc(28 * var(--pu));
-  min-width: 26px; min-height: 26px; display: grid; place-items: center; padding: calc(5 * var(--pu));
-  border: 0; border-radius: 6px; background: rgba(0,0,0,.45); color: #fff; cursor: pointer;
-  opacity: 0; pointer-events: none; transition: opacity .25s, background .2s;
+.tvbox__hit:focus-visible { outline: none; }
+.tvbox__icon {
+  width: calc(34 * var(--pu)); height: calc(40 * var(--pu)); background: #fff;
+  clip-path: polygon(8% 0, 100% 50%, 8% 100%); opacity: 0; transform: scale(.85);
+  transition: opacity .25s, transform .25s;
 }
-.tv-fs svg { width: 100%; height: 100%; }
-.showreel.has-reel .tv-fs { opacity: .85; pointer-events: auto; }
-.tv-fs:hover, .tv-fs:focus-visible { opacity: 1; background: rgba(0,0,0,.7); outline: none; }
+/* idle screensaver: play button only on hover */
+.tvbox:hover .tvbox__icon, .tvbox__hit:focus-visible .tvbox__icon { opacity: .95; transform: scale(1); }
+.tvbox:hover .tvbox__hit { background: rgba(0,0,0,.12); }
+/* reel paused: play button stays up */
+.tvbox.has-reel:not(.is-playing) .tvbox__icon { opacity: .95; transform: scale(1); }
+/* reel playing: pause bars, only while hovering */
+.tvbox.is-playing .tvbox__icon {
+  width: calc(28 * var(--pu)); height: calc(36 * var(--pu)); clip-path: none;
+  background: linear-gradient(90deg, #fff 0 34%, transparent 34% 66%, #fff 66%);
+  opacity: 0;
+}
+.tvbox.is-playing:hover .tvbox__icon, .tvbox.is-playing .tvbox__hit:focus-visible .tvbox__icon { opacity: .9; }
+.tvbox.is-playing:not(:hover) .tvbox__hit { background: transparent; }
+
+/* mute + fullscreen, bottom right, only while playing and hovering */
+.tvbox__ctrls {
+  position: absolute; right: calc(10 * var(--pu)); bottom: calc(10 * var(--pu)); display: flex; gap: calc(6 * var(--pu));
+  opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+.tvbox.is-playing:hover .tvbox__ctrls, .tvbox.is-playing:has(:focus-visible) .tvbox__ctrls { opacity: 1; pointer-events: auto; }
+.tvbox__btn {
+  width: calc(28 * var(--pu)); height: calc(28 * var(--pu)); min-width: 24px; min-height: 24px; padding: calc(5 * var(--pu));
+  display: grid; place-items: center; border: 0; border-radius: 6px; background: rgba(0,0,0,.5); color: #fff; cursor: pointer;
+  transition: background .2s;
+}
+.tvbox__btn:hover, .tvbox__btn:focus-visible { background: rgba(0,0,0,.8); outline: none; }
+.tvbox__btn svg { width: 100%; height: 100%; display: block; }
+.tvbox__btn .i-off { display: none; }
+.tvbox.is-muted .tvbox__btn .i-on { display: none; }
+.tvbox.is-muted .tvbox__btn .i-off { display: block; }
+/* touch screens have no hover: keep the play button and controls reachable */
+@media (hover: none) {
+  .tvbox:not(.is-playing) .tvbox__icon { opacity: .95; transform: scale(1); }
+  .tvbox.has-reel .tvbox__ctrls { opacity: 1; pointer-events: auto; }
+}
 
 /* clouds + road + truck */
 .drive { height: calc(3401 * var(--pu)); z-index: 1; background: #5b5f66; }
@@ -689,9 +710,16 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 /* ---- showreel: the stereo (333.3 Faque FM) is clickable, brightens on hover, glows while playing ---- */
 .stereo { position: absolute; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); height: calc(var(--h) * var(--pu)); padding: 0; border: 0; background: transparent; cursor: pointer; border-radius: calc(3 * var(--pu)); transition: filter .2s, transform .2s, box-shadow .2s; transform-origin: 50% 50%; }
-.stereo:hover, .stereo:focus-visible { filter: brightness(1.35) saturate(1.15); transform: scale(1.06); outline: none; }
-.stereo:focus-visible { box-shadow: 0 0 0 calc(2 * var(--pu)) rgba(150,235,150,.7); }
-.stereo.is-playing { box-shadow: 0 0 calc(14 * var(--pu)) rgba(140,235,140,.85) inset, 0 0 calc(10 * var(--pu)) rgba(140,235,140,.55); }
+/* always lit so it reads as a screen you can press; brighter on hover */
+.stereo {
+  box-shadow: inset 0 0 calc(9 * var(--pu)) 0 rgba(175,255,150,.38);
+  background: transparent;
+}
+.stereo:hover, .stereo:focus-visible {
+  transform: scale(1.06); outline: none; background: transparent;
+  box-shadow: inset 0 0 calc(12 * var(--pu)) calc(1 * var(--pu)) rgba(190,255,165,.55);
+}
+.stereo.is-playing { box-shadow: inset 0 0 calc(12 * var(--pu)) calc(1 * var(--pu)) rgba(190,255,165,.55); }
 
 /* ---- stereo / mp3 player: opens from the dashboard screen, matches Ashfaque's mockup art ---- */
 .stereoPlayer { position: fixed; inset: 0; z-index: 60; pointer-events: none; }

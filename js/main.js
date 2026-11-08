@@ -54,38 +54,43 @@
     addEventListener('keydown', e => { if (e.key === 'Escape') set(false); });
   }
 
-  /* ---- 4. showreel: plays inside the TV. Click = play / pause, corner button = fullscreen,
-         it pauses when scrolled away and goes back to "PLAY REEL" when it ends ---- */
-  const tv = document.querySelector('.tv-screen');
+  /* ---- 4. showreel: plays inside the TV. Idle = looping screensaver GIF.
+         Click = play / pause; mute + fullscreen in the corner (fullscreen gets the full native controls);
+         pauses when scrolled away and goes back to the screensaver when it ends ---- */
+  const box = document.getElementById('tvbox');
   const tvv = document.getElementById('tvVideo');
-  if (tv && tvv) {
-    const sec = tv.closest('.showreel');
-    const fs = document.getElementById('tvFs');
+  if (box && tvv) {
+    const hit = document.getElementById('tvHit'), mute = document.getElementById('tvMute'), fs = document.getElementById('tvFs');
+    const load = () => { if (!tvv.getAttribute('src')) tvv.src = tvv.dataset.src; box.classList.add('has-reel'); };
+    const play = () => { load(); document.dispatchEvent(new Event('reelplay')); const p = tvv.play(); if (p && p.catch) p.catch(() => {}); };
     const sync = () => {
-      sec.classList.toggle('is-playing', !tvv.paused);
-      tv.setAttribute('aria-label', tvv.paused ? 'Play showreel' : 'Pause showreel');
+      box.classList.toggle('is-playing', !tvv.paused);
+      box.classList.toggle('is-muted', tvv.muted || tvv.volume === 0);
+      hit.setAttribute('aria-label', tvv.paused ? 'Play showreel' : 'Pause showreel');
+      mute.setAttribute('aria-label', tvv.muted ? 'Unmute' : 'Mute');
     };
-    tv.addEventListener('click', () => {
-      if (!tvv.getAttribute('src')) tvv.src = tvv.dataset.src;
-      sec.classList.add('has-reel');
-      if (tvv.paused) { document.dispatchEvent(new Event('reelplay')); const p = tvv.play(); if (p && p.catch) p.catch(() => {}); }
-      else tvv.pause();
-    });
-    tvv.addEventListener('play', sync);
-    tvv.addEventListener('pause', sync);
-    tvv.addEventListener('ended', () => { sec.classList.remove('has-reel'); tvv.currentTime = 0; sync(); });
-    if (fs) fs.addEventListener('click', () => {
-      if (!tvv.getAttribute('src')) tvv.src = tvv.dataset.src;
-      sec.classList.add('has-reel');
-      document.dispatchEvent(new Event('reelplay'));
-      const p = tvv.play(); if (p && p.catch) p.catch(() => {});
-      if (tvv.requestFullscreen) tvv.requestFullscreen().catch(() => {});
+    hit.addEventListener('click', () => { if (tvv.paused) play(); else tvv.pause(); });
+    mute.addEventListener('click', () => { tvv.muted = !tvv.muted; });
+    fs.addEventListener('click', () => {
+      tvv.controls = true;                                                   // timeline + volume in fullscreen
+      if (tvv.requestFullscreen) tvv.requestFullscreen().catch(() => { tvv.controls = false; });
+      else if (tvv.webkitRequestFullscreen) tvv.webkitRequestFullscreen();
       else if (tvv.webkitEnterFullscreen) tvv.webkitEnterFullscreen();      // iPhone
+      if (tvv.paused) play();
     });
-    document.addEventListener('fullscreenchange', () => { tvv.controls = document.fullscreenElement === tvv; });
+    const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+    const onFs = () => { tvv.controls = fsEl() === tvv; };
+    document.addEventListener('fullscreenchange', onFs);
+    document.addEventListener('webkitfullscreenchange', onFs);
+    tvv.addEventListener('webkitendfullscreen', () => { tvv.controls = false; });
+    ['play', 'pause', 'volumechange'].forEach(ev => tvv.addEventListener(ev, sync));
+    tvv.addEventListener('ended', () => {
+      if (fsEl() === tvv && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+      box.classList.remove('has-reel'); tvv.currentTime = 0; sync();
+    });
     if (window.IntersectionObserver) new IntersectionObserver(es => {
-      es.forEach(e => { if (!e.isIntersecting && !tvv.paused && document.fullscreenElement !== tvv) tvv.pause(); });
-    }, { threshold: 0.2 }).observe(tv);
+      es.forEach(e => { if (!e.isIntersecting && !tvv.paused && fsEl() !== tvv) tvv.pause(); });
+    }, { threshold: 0.2 }).observe(box);
   }
 
   /* ---- 5. about page: truck drives in as you scroll ---- */

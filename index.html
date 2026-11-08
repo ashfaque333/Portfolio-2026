@@ -151,9 +151,18 @@
       <div class="stage">
         <img class="showreel__bg" src="assets/showreel/showreel.webp" alt="Inside a hand-painted truck cab with a retro TV and the word SHOWREEL on the windscreen" width="1440" height="1110" loading="lazy" decoding="async">
         <!-- the reel plays right inside the TV; the file only loads on the first click -->
-        <video class="tv-video" id="tvVideo" data-src="assets/showreel/showreel.mp4" poster="assets/showreel/showreel-poster.jpg" preload="none" playsinline aria-hidden="true"></video>
-        <button class="tv-screen" type="button" aria-label="Play showreel"><span class="tv-screen__play"></span><span class="tv-screen__txt">PLAY REEL</span></button>
-        <button class="tv-fs" type="button" id="tvFs" aria-label="Watch the showreel fullscreen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h7v2H5v5H3V3zm11 0h7v7h-2V5h-5V3zM3 14h2v5h5v2H3v-7zm16 0h2v7h-7v-2h5v-5z" fill="currentColor"/></svg></button>
+        <div class="tvbox" id="tvbox">
+          <img class="tvbox__idle" src="assets/showreel/tv-screensaver.gif" alt="" loading="lazy" decoding="async">
+          <video class="tvbox__video" id="tvVideo" data-src="assets/showreel/showreel.mp4" poster="assets/showreel/showreel-poster.jpg" preload="none" playsinline></video>
+          <button class="tvbox__hit" id="tvHit" type="button" aria-label="Play showreel"><span class="tvbox__icon"></span></button>
+          <div class="tvbox__ctrls">
+            <button class="tvbox__btn" id="tvMute" type="button" aria-label="Mute">
+              <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z" fill="currentColor"/></svg>
+              <svg class="i-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.6 3 2.7-2.7-1.4-1.4-2.7 2.7-2.7-2.7-1.4 1.4 2.7 2.7-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4z" fill="currentColor"/></svg>
+            </button>
+            <button class="tvbox__btn" id="tvFs" type="button" aria-label="Watch fullscreen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h7v2H5v5H3V3zm11 0h7v7h-2V5h-5V3zM3 14h2v5h5v2H3v-7zm16 0h2v7h-7v-2h5v-5z" fill="currentColor"/></svg></button>
+          </div>
+        </div>
         <button class="horn" type="button" id="horn" aria-label="Honk the horn"></button>
         <button class="stereo" type="button" id="stereo" aria-label="Open 333.3 Faque FM player" style="--x:681;--y:797;--w:97;--h:73"></button>
         <audio id="stereoAudio" src="assets/showreel/faque-fm.mp3" preload="none"></audio>
