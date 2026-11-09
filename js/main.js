@@ -93,22 +93,34 @@
     }, { threshold: 0.2 }).observe(box);
   }
 
-  /* ---- 5. about page: truck drives in as you scroll ---- */
+  /* ---- 5. about page: truck drives in as you scroll ----
+     The truck follows the scroll with a little inertia (it glides to where the scroll is instead of snapping),
+     rolls in over 0 – 45 %, parks briefly (45 – 51 %) and then pulls away again over 51 – 100 %. */
   const about = document.querySelector('.about');
   if (about && !reduce) {
-    let t = false;
-    const upd = () => {
-      t = false;
+    const IN = 0.45, OUT = 0.51, FOLLOW = 6;        // FOLLOW: higher = snappier, lower = floatier
+    let target = 0, cur = 0, raf = 0, last = 0;
+    const measure = () => {
       const room = about.offsetHeight - innerHeight || 1;
-      const p = Math.min(Math.max(-about.getBoundingClientRect().top / room, 0), 1);
-      const pin = Math.min(p / 0.42, 1), pout = Math.min(Math.max((p - 0.55) / 0.45, 0), 1);   // 0 – 42 %: truck rolls in · 42 – 55 %: parked (reading) · 55 – 100 %: drives on out of the left edge
-      about.style.setProperty('--ap', (1 - Math.pow(1 - pin, 2)).toFixed(4));
-      about.style.setProperty('--ep', (pout * pout * (3 - 2 * pout)).toFixed(4));   // eases in and out
-      about.classList.toggle('passed', p >= 0.5);   // truck is parked in front of the board here, so the swap is hidden behind it
+      target = Math.min(Math.max(-about.getBoundingClientRect().top / room, 0), 1);
     };
-    addEventListener('scroll', () => { if (!t) { t = true; requestAnimationFrame(upd); } }, { passive: true });
-    addEventListener('resize', upd);
-    upd();
+    const apply = p => {
+      const pin = Math.min(p / IN, 1), pout = Math.min(Math.max((p - OUT) / (1 - OUT), 0), 1);
+      about.style.setProperty('--ap', (1 - Math.pow(1 - pin, 1.6)).toFixed(4));   // gentle slow-down into the stop
+      about.style.setProperty('--ep', Math.pow(pout, 1.5).toFixed(4));            // gentle pull-away, no long dead spot
+      about.classList.toggle('passed', p >= (IN + OUT) / 2);   // truck is parked in front of the board here, so the swap is hidden behind it
+    };
+    const step = t => {
+      const dt = Math.min(Math.max((t - last) / 1000, 0), 0.05); last = t;
+      cur += (target - cur) * (1 - Math.exp(-dt * FOLLOW));
+      if (Math.abs(target - cur) < 0.0004) cur = target;
+      apply(cur);
+      raf = cur !== target ? requestAnimationFrame(step) : 0;
+    };
+    const kick = () => { measure(); if (!raf) { last = performance.now(); raf = requestAnimationFrame(step); } };
+    addEventListener('scroll', kick, { passive: true });
+    addEventListener('resize', kick);
+    measure(); cur = target; apply(cur);      // reloading mid-page: start where the scroll already is
   }
 
   /* ---- 6. things that hang from the nav bar (lemon + chilli, gold tassels, the blue fringe) ----

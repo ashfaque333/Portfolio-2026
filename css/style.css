@@ -451,8 +451,15 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .truckbox { --k: calc(var(--tw) / 2400); position: relative; }
 .truckbox__body { width: 100%; height: auto; display: block; }
 .wheel { position: absolute; height: auto; aspect-ratio: 1; border-radius: 50%; rotate: calc((var(--ap) + var(--ep) * 1.1) * -1500deg); }
-.wheel--f { left: 13.292%; top: 72.492%; width: 6.75%; }
-.wheel--r { left: 68.98%; top: 72.492%; width: 6.75%; }
+/* each alloy image is cut as a circle centred on its hub, and placed on the tyre's hub, so it spins true */
+.wheel--f { left: 13.496%; top: 72.234%; width: 6.25%; }
+.wheel--r { left: 69.158%; top: 72.296%; width: 6.25%; }
+/* whole tyre + alloy turning together (cut from the truck art, centred on the hub).
+   To go back to alloy-only: in about.html use wheel--f / wheel--r with wheel-f.webp / wheel-r.webp */
+.wheel--tf { left: 11.371%; top: 66.960%; width: 10.5%; }
+.wheel--tr { left: 67.033%; top: 67.022%; width: 10.5%; }
+/* the tyre's light & shadow sit on a layer that does NOT turn, so the shine stays put while the tread rolls */
+.wheel-light { position: absolute; height: auto; aspect-ratio: 1; pointer-events: none; }
 /* interactive toolbox: brightens on hover and the apps come out and line up beside it */
 .tools { position: absolute; inset: 0; pointer-events: none; }
 .tb { position: absolute; left: 35.14%; top: 66.69%; width: 8.89%; aspect-ratio: 320 / 210; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; -webkit-tap-highlight-color: transparent; border-radius: 4%; }
@@ -627,14 +634,14 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .about.passed .cboard__links { pointer-events: auto; }
 .cboard__links { pointer-events: none; }
 .cboard__t { position: absolute; left: 0; width: 100%; top: 20.5%; translate: 0 -50%; text-align: center; font: 800 4.3cqw/1.12 "Anek Latin", "Arial Narrow", system-ui, sans-serif; font-stretch: 125%; text-transform: uppercase; color: #3b1f0b; letter-spacing: .02em; }
-.cb { position: absolute; left: var(--l); top: var(--cy); translate: 0 -50%; width: 22.6%; display: block; -webkit-tap-highlight-color: transparent; transition: transform .15s cubic-bezier(.2,.8,.2,1); }
+.cb { position: absolute; left: var(--l); top: var(--cy); translate: 0 -50%; width: 22.8%; display: block; -webkit-tap-highlight-color: transparent; }
 .cb--w { width: 35.2%; }
 .cb img { display: block; width: 100%; height: auto; }
 .cb .h { position: absolute; inset: 0; opacity: 0; }
+.cb img { transition: opacity .15s ease; }
 .cb:hover .h, .cb:focus-visible .h, .cb:active .h { opacity: 1; }
 .cb:hover > img:not(.h), .cb:focus-visible > img:not(.h), .cb:active > img:not(.h) { opacity: 0; }
-.cb:hover, .cb:focus-visible { transform: translateY(-2%) scale(1.04); outline: none; }
-.cb:active { transform: scale(.98); }
+.cb:focus-visible { outline: none; }   /* hover only swaps to the hover artwork: no move, no resize */
 @media (max-width: 900px) { .cboard { width: min(78vw, 52svh); bottom: 24svh; } }
 @media (prefers-reduced-motion: reduce) { .cboard__b--stop { opacity: 0; } .cboard__c, .cboard__links { opacity: 1; pointer-events: auto; } }
 
