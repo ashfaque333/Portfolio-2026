@@ -504,7 +504,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .ss--room .tx.h { color: #f7e7c6; }
 .tx.kick, .tx.kick2 { font-weight: 800; font-size: calc(32 * var(--pu)); line-height: 1.1; }
 .tx.sub { font-size: calc(21 * var(--pu)); line-height: 1.25; }
-.tx.keyarts { font-weight: 500; font-size: calc(17 * var(--pu)); letter-spacing: .14em; white-space: nowrap; color: #8a6446; opacity: .62; left: 50%; translate: -50% 0; width: auto; }
+.tx.keyarts { font-weight: 500; font-size: calc(17 * var(--pu)); letter-spacing: .02em; white-space: nowrap; color: #8a6446; opacity: .62; left: 50%; translate: -50% 0; width: auto; }
 .tx.ct { font-weight: 800; font-size: calc(15 * var(--pu)); line-height: 1.2; }
 .tx.cb { font-size: calc(12 * var(--pu)); }
 .tx.cap { font-size: calc(18 * var(--pu)); }
@@ -647,6 +647,23 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 /* studio: the room scene is stretched to touch both sides and the bottom of its frame; everything on it scales with it */
 .roomfit { position: absolute; inset: 0; }
+/* side quests: the cabin is shown at 80 % (it pixelated when larger), shrunk around the front corner of its base so it
+   still stands on the wooden floor; the plain top of the wall is cropped so the section doesn't get taller */
+.roomfit { transform: scale(.8); transform-origin: calc(720 * var(--pu)) calc(1120 * var(--pu)); }
+.ss--room { overflow: clip; }
+.ss--room .ss__in { top: calc(-200 * var(--pu)); height: calc(100% + 200 * var(--pu)); }
+
+/* studio: posters, Advaya collaterals and the matchboxes lift a little and brighten on hover (no click) */
+.it.hv img { transition: transform .35s cubic-bezier(.2,.8,.2,1), filter .35s ease; }
+.it.hv img:hover { transform: translateY(calc(-8 * var(--pu))); filter: brightness(1.07) contrast(1.08) drop-shadow(0 calc(10 * var(--pu)) calc(14 * var(--pu)) rgba(60,35,15,.22)); }
+/* matchboxes: the empty tray with each box as its own image on top, so each one lifts on its own */
+.it.mbset img.mbset__box { position: absolute; height: auto; transition: transform .35s cubic-bezier(.2,.8,.2,1), filter .35s ease; }
+.it.mbset img.mbset__box:hover { transform: translateY(calc(-8 * var(--pu))); filter: brightness(1.07) contrast(1.08) drop-shadow(0 calc(8 * var(--pu)) calc(10 * var(--pu)) rgba(30,15,5,.35)); }
+
+/* studio: things fade in and rise a little as they scroll into view (js/studio.js adds .rv, then .in) */
+.it.rv > img, .tx.rv, .ph2.rv { opacity: 0; transform: translateY(calc(34 * var(--pu))); }
+.it.rv.in > img, .tx.rv.in, .ph2.rv.in { opacity: 1; transform: none; transition: opacity .9s ease var(--rd, 0ms), transform 1s cubic-bezier(.2,.7,.2,1) var(--rd, 0ms); }
+@media (prefers-reduced-motion: reduce) { .it.rv > img, .tx.rv, .ph2.rv { opacity: 1; transform: none; } .it.hv img { transition: none; } }
 
 /* studio: the five Gothic sketch sheets sit in a loose pile and fan out side by side on hover / tap */
 .papers { position: absolute; left: calc(50% - 600 * var(--pu)); top: calc(232 * var(--pu)); width: calc(1200 * var(--pu)); height: calc(500 * var(--pu)); cursor: pointer; outline: none; --pq: var(--pu); }
@@ -706,7 +723,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .ph2 { position: relative; margin: 0; overflow: hidden; border-radius: calc(4 * var(--pu)); background: rgba(74,47,18,.12); outline: none; }
 .ph2 img { display: block; width: 100%; height: 100%; object-fit: cover; transition: filter .35s ease, transform .6s ease; }
 .ph2 figcaption { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 0 8%; text-align: center; color: #fff; opacity: 0; transition: opacity .35s ease;
-  font: 800 clamp(11px, calc(22 * var(--pu)), 28px)/1.2 "Anek Latin", system-ui, sans-serif; font-stretch: 125%; text-shadow: 0 1px 8px rgba(0,0,0,.55); background: rgba(20,10,4,.42); pointer-events: none; }
+  font: 700 clamp(11px, calc(22 * var(--pu)), 28px)/1.2 "Anek Latin", system-ui, sans-serif; font-stretch: 125%; text-shadow: 0 1px 8px rgba(0,0,0,.55); background: rgba(20,10,4,.42); pointer-events: none; }
 .ph2:hover figcaption, .ph2:focus-visible figcaption, .ph2:focus figcaption { opacity: 1; }
 .ph2:hover img { transform: scale(1.03); }
 @media (max-width: 720px) {

@@ -5,3 +5,5 @@ node_modules/
 
 # original uncompressed exports (too big for GitHub) - the site uses assets/showreel/showreel.mp4
 assets/Showcase/
+assets/matchboxes/
+assets/video edits/

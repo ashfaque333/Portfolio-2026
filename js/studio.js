@@ -99,3 +99,27 @@
   p.addEventListener('click', () => p.classList.toggle('is-open'));
   p.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); p.classList.toggle('is-open'); } });
 })();
+
+/* Studio page: text and pictures fade in with a small rise as they scroll into view.
+   Full-width backgrounds stay put; the matchbox tray and its boxes come in together. */
+(() => {
+  const page = document.querySelector('.studio2');
+  if (!page || !('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const els = [...page.querySelectorAll('.it, .tx, .ph2')].filter(el => {
+    if (el.classList.contains('miss')) return false;
+    const sec = el.closest('.ss__in'); return !(sec && el.offsetWidth >= sec.offsetWidth * .95);   // backgrounds
+  });
+  const done = el => el.classList.remove('rv', 'in');
+  els.forEach(el => el.classList.add('rv'));
+  const io = new IntersectionObserver(entries => {
+    let n = 0;
+    entries.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left).forEach(e => {
+      const el = e.target; io.unobserve(el);
+      const sync = false;
+      el.style.setProperty('--rd', (sync ? 0 : Math.min(n++ * 70, 350)) + 'ms');
+      el.classList.add('in');
+      setTimeout(() => done(el), 1500);                        // hand back to the normal hover transitions
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+  els.forEach(el => io.observe(el));
+})();
