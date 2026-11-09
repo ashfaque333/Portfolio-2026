@@ -250,7 +250,51 @@
 
   /* ---- 10. showreel stereo → full mp3 player, with a real YouTube-playlist source ---- */
   (() => {
+    const FM_KEY = 'faqueFM';
+    let saved = null;
+    try { saved = JSON.parse(sessionStorage.getItem(FM_KEY) || 'null'); } catch (e) {}
+    if (saved && Date.now() - (saved.ts || 0) > 30 * 60 * 1000) saved = null;   // stale (left the site a while ago)
     const stereo = document.getElementById('stereo');
+    /* About / Studio don't have the player in their HTML: if the radio was on, build it from the home page's markup */
+    if (!document.getElementById('stereoPlayer')) {
+      if (!saved) return;
+      document.body.insertAdjacentHTML('beforeend', `<audio id="stereoAudio" src="assets/showreel/faque-fm.mp3" preload="none"></audio>
+    <div class="stereoPlayer" id="stereoPlayer" hidden>
+      <div class="stereoPlayer__panel is-state1" id="stereoPanel">
+        <button class="stereoPlayer__x" id="stereoX" type="button" aria-label="Close player">✕</button>
+        <div class="stereoPlayer__lcd">
+          <div class="stereoPlayer__art" aria-hidden="true">🎵</div>
+          <div class="stereoPlayer__meta">
+            <p class="stereoPlayer__title" id="stereoTitle">333.3 Faque FM</p>
+            <p class="stereoPlayer__artist" id="stereoArtist">FM STATION</p>
+          </div>
+          <div class="stereoPlayer__eq" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <input class="stereoPlayer__seek" id="stereoSeek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+          <span class="stereoPlayer__cur" id="stereoCur">0:00</span>
+          <span class="stereoPlayer__dur" id="stereoDur">0:00</span>
+          <span class="stereoPlayer__volIcon" aria-hidden="true">🔊</span>
+          <input class="stereoPlayer__vol" id="stereoVol" type="range" min="0" max="100" value="70" aria-label="Volume">
+        </div>
+        <button class="stereoPlayer__btn stereoPlayer__prev" id="stereoPrev" type="button" aria-label="Previous track"></button>
+        <button class="stereoPlayer__btn stereoPlayer__play" id="stereoPlayPause" type="button" aria-label="Play or pause"></button>
+        <button class="stereoPlayer__btn stereoPlayer__next" id="stereoNext" type="button" aria-label="Next track"></button>
+        <button class="stereoPlayer__foot stereoPlayer__playlist" id="stereoPlaylistBtn" type="button">Listen to playlist</button>
+        <button class="stereoPlayer__foot stereoPlayer__minimize" id="stereoMinBtn" type="button" hidden>Minimize</button>
+        <button class="stereoPlayer__foot stereoPlayer__back" id="stereoBackBtn" type="button">Go back</button>
+      </div>
+      <div class="stereoMin" id="stereoMini" hidden aria-label="333.3 Faque FM — minimized player">
+        <button class="stereoMin__max" id="stereoMinMax" type="button" aria-label="Expand player">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v2H6.4l4.3 4.3-1.4 1.4L5 7.4V10H3V4h1zm16 16h-6v-2h3.6l-4.3-4.3 1.4-1.4L19 16.6V14h2v6h-1z" fill="currentColor"/></svg>
+        </button>
+        <button class="stereoMin__prev" id="stereoMinPrev" type="button" aria-label="Previous track"></button>
+        <button class="stereoMin__play" id="stereoMinPlay" type="button" aria-label="Play or pause"></button>
+        <button class="stereoMin__next" id="stereoMinNext" type="button" aria-label="Next track"></button>
+        <button class="stereoMin__close" id="stereoMinClose" type="button" aria-label="Close player"></button>
+        <button class="stereoMin__ring" id="stereoMinRing" type="button" aria-label="Expand player"></button>
+      </div>
+    </div>
+    <div id="ytPlayerTarget" style="position:fixed; left:-9999px; top:-9999px; width:2px; height:2px; overflow:hidden; pointer-events:none;"></div>`);
+    }
     const audio = document.getElementById('stereoAudio');
     const wrap = document.getElementById('stereoPlayer');
     const panel = document.getElementById('stereoPanel');
@@ -274,7 +318,7 @@
     const dur = document.getElementById('stereoDur');
     const titleEl = document.getElementById('stereoTitle');
     const artistEl = document.getElementById('stereoArtist');
-    if (!stereo || !audio || !wrap || !panel) return;
+    if (!audio || !wrap || !panel) return;
 
     /* Paste individual YouTube song links here (full URL or bare video ID both work).
        Ashfaque: only add ones you've actually confirmed play in an embedded player —
@@ -326,7 +370,7 @@
     let seeking = false;
     let source = 'local';           // 'local' (intro mp3) | 'yt' (random pick from YT_VIDEO_IDS, played in-page)
     let ytPlayer = null, ytReady = false, ytPendingPlay = false, ytApiRequested = false;
-    let lastVol = 70;
+    let lastVol = 70, resumeAt = 0;
     let playOrder = [], playIdx = -1, ytErrorStreak = 0;
 
     function shuffle(arr) {
@@ -360,7 +404,8 @@
       });
     }
     function setPlayingUI(playing) {
-      stereo.classList.toggle('is-playing', playing);
+      if (stereo) stereo.classList.toggle('is-playing', playing);
+      if (playing) mini.classList.remove('is-blocked');
       panel.classList.toggle('is-playing', playing);
       mini.classList.toggle('is-paused', !playing);
     }
@@ -390,6 +435,7 @@
             onReady: (e) => {
               ytReady = true;
               e.target.setVolume(Number(vol.value));
+              if (resumeAt > 1) { e.target.seekTo(resumeAt, true); resumeAt = 0; }
               if (ytPendingPlay) { e.target.playVideo(); ytPendingPlay = false; }
             },
             onStateChange: (e) => {
@@ -419,7 +465,7 @@
         const d = ytPlayer.getVideoData();
         const t = (d && d.title) ? d.title : '333.3 Faque FM';
         titleEl.textContent = t;
-        artistEl.textContent = 'YouTube playlist';
+        artistEl.textContent = '333.3 Faque FM';
       } catch (e) {}
     }
 
@@ -464,6 +510,7 @@
       play();
     }
     function closePlayer() {
+      try { sessionStorage.removeItem(FM_KEY); } catch (e) {}
       wrap.hidden = true;
       mini.hidden = true;
       audio.pause();
@@ -480,7 +527,7 @@
       pop(panel);
     }
 
-    stereo.addEventListener('click', openPlayer);
+    if (stereo) stereo.addEventListener('click', openPlayer);
     xBtn.addEventListener('click', closePlayer);
     backBtn.addEventListener('click', closePlayer);
     minBtn.addEventListener('click', minimize);
@@ -500,7 +547,7 @@
       playlistBtn.hidden = true;
       minBtn.hidden = false;
       titleEl.textContent = 'Loading playlist…';
-      artistEl.textContent = 'YouTube playlist';
+      artistEl.textContent = '333.3 Faque FM';
       if (!ytPlayer) { ytPendingPlay = true; createYTPlayer(); } else { ytPlayer.loadVideoById(currentVideoId()); play(); }
 
       /* watchdog: if the playlist hasn't actually started within 8s (blocked embed, network issue,
@@ -564,4 +611,43 @@
     minClose.addEventListener('click', (e) => { e.stopPropagation(); closePlayer(); });
     minMax.addEventListener('click', (e) => { e.stopPropagation(); restore(); });
     minRing.addEventListener('click', restore);
+
+    /* ---- carry the radio across pages: remember what's playing, pick it up on the next page ---- */
+    function curTime() {
+      if (source === 'local') return audio.currentTime || 0;
+      return (ytPlayer && ytReady && ytPlayer.getCurrentTime) ? ytPlayer.getCurrentTime() : resumeAt;
+    }
+    function saveState() {
+      if (wrap.hidden) return;
+      const st = { source, order: playOrder, idx: playIdx, t: curTime(), playing: isPlaying() || (saved && saved.playing && !userPaused), vol: Number(vol.value), ts: Date.now() };
+      try { sessionStorage.setItem(FM_KEY, JSON.stringify(st)); } catch (e) {}
+    }
+    let userPaused = false;
+    [playPause, minPlay].forEach(b => b.addEventListener('click', () => { userPaused = isPlaying(); }, true));
+    addEventListener('pagehide', saveState);
+    setInterval(() => { if (!wrap.hidden) saveState(); }, 1500);
+
+    if (saved) {
+      vol.value = saved.vol != null ? saved.vol : 70; lastVol = Number(vol.value); setVolume(vol.value);
+      wrap.hidden = false;
+      if (saved.source === 'yt' && YT_VIDEO_IDS.length) {
+        source = 'yt';
+        if (Array.isArray(saved.order) && saved.order.length === YT_VIDEO_IDS.length) { playOrder = saved.order; playIdx = saved.idx; }
+        panel.classList.remove('is-state1'); panel.classList.add('is-state2');
+        playlistBtn.hidden = true; minBtn.hidden = false;
+        titleEl.textContent = 'Tuning in…'; artistEl.textContent = '333.3 Faque FM';
+      }
+      panel.style.display = 'none'; mini.hidden = false;
+      setPlayingUI(false);
+      if (saved.playing) {
+        resumeAt = saved.t || 0;
+        if (source === 'yt') { ytPendingPlay = true; createYTPlayer(); }
+        else {
+          const go = () => { if (resumeAt) audio.currentTime = resumeAt; audio.play().catch(() => mini.classList.add('is-blocked')); };
+          audio.preload = 'auto'; if (audio.readyState >= 1) go(); else audio.addEventListener('loadedmetadata', go, { once: true }); audio.load();
+        }
+        /* if the browser didn't let it start on its own, show the "tap play" pulse */
+        setTimeout(() => { if (!isPlaying()) { mini.classList.add('is-blocked'); if (source === 'yt') updateYTTitle(); } }, 3500);
+      } else if (source === 'yt') { resumeAt = saved.t || 0; createYTPlayer(); }
+    }
   })();
