@@ -723,7 +723,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .ph2 { position: relative; margin: 0; overflow: hidden; border-radius: calc(4 * var(--pu)); background: rgba(74,47,18,.12); outline: none; }
 .ph2 img { display: block; width: 100%; height: 100%; object-fit: cover; transition: filter .35s ease, transform .6s ease; }
 .ph2 figcaption { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 0 8%; text-align: center; color: #fff; opacity: 0; transition: opacity .35s ease;
-  font: 700 clamp(11px, calc(22 * var(--pu)), 28px)/1.2 "Anek Latin", system-ui, sans-serif; font-stretch: 125%; text-shadow: 0 1px 8px rgba(0,0,0,.55); background: rgba(20,10,4,.42); pointer-events: none; }
+  font: 600 clamp(11px, calc(22 * var(--pu)), 28px)/1.2 "Anek Latin", system-ui, sans-serif; font-stretch: 125%; text-shadow: 0 1px 8px rgba(0,0,0,.55); background: rgba(20,10,4,.42); pointer-events: none; }
 .ph2:hover figcaption, .ph2:focus-visible figcaption, .ph2:focus figcaption { opacity: 1; }
 .ph2:hover img { transform: scale(1.03); }
 @media (max-width: 720px) {
