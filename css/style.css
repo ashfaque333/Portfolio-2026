@@ -659,7 +659,11 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .endbar > img:not(.endbar__shade), .endbar__r { position: relative; }
 .endbar__l { width: calc(336.5 * var(--pu)); height: auto; }
 .endbar__c { position: absolute !important; left: 50%; top: 50%; translate: -50% -50%; width: calc(152.5 * var(--pu)); height: auto; }
-.endbar__r { display: flex; align-items: center; gap: calc(6 * var(--pu)); }
+/* all three groups sit on one baseline (the line under the capitals of END OF SCROLL).
+   The right group is top-aligned so ©, 2026 and the name share one cap line; the © is a touch taller, so it's nudged up to centre on the caps */
+.endbar__l, .endbar__r { translate: 0 calc(1.9 * var(--pu)); }
+.endbar__r { display: flex; align-items: flex-start; gap: calc(9 * var(--pu)); }
+.endbar__r img:nth-child(1) { margin-top: calc(-2 * var(--pu)); }
 .endbar__r img { height: auto; display: block; }
 .endbar__r img:nth-child(1) { width: calc(14.5 * var(--pu)); } .endbar__r img:nth-child(2) { width: calc(37.5 * var(--pu)); } .endbar__r img:nth-child(3) { width: calc(168.5 * var(--pu)); }
 @media (max-width: 720px) {
@@ -667,7 +671,8 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   .journey > .endbar { margin-top: 0; }
   .endbar__shade { display: none; }
   .endbar__l { width: min(336px, 92vw); } .endbar__c { position: relative !important; left: auto; top: auto; translate: none; width: 152px; }
-  .endbar__r img:nth-child(1) { width: 15px; } .endbar__r img:nth-child(2) { width: 38px; } .endbar__r img:nth-child(3) { width: 168px; } .endbar__r { gap: 6px; }
+  .endbar__r img:nth-child(1) { width: 15px; } .endbar__r img:nth-child(2) { width: 38px; } .endbar__r img:nth-child(3) { width: 168px; } .endbar__r { gap: 9px; }
+  .endbar__l, .endbar__r { translate: none; } .endbar__r img:nth-child(1) { margin-top: -2.3px; }
 }
 
 /* studio video carousel: whole section (cards + titles) fits one screen; plain white play icon; muted preview with an unmute button */
