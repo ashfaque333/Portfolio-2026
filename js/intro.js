@@ -22,10 +22,10 @@
   const sfx = window.SFX || { tick() {}, shutter() {}, unlock() {} };
   const open = () => {
     if (opened) return; opened = true; clearTimeout(timer);
-    sfx.shutter(950);
+    sfx.shutter();
     const roll = shutter.animate(
       [{ transform: 'translateY(0)' }, { transform: 'translateY(-' + (shutter.offsetHeight + 8) + 'px)' }],   // whole artwork height, so no strip is left under the board
-      { duration: 950, easing: 'cubic-bezier(.08,.62,.2,1)', fill: 'forwards' });          // quick start, long gentle stop
+      { duration: 2000, easing: 'cubic-bezier(.35,.12,.3,1)', fill: 'forwards' });         // 2 s, matched to the shutter recording: steady roll, easing into the stop
     // the site's own entrance starts just as the shutter lifts, so the scene builds up behind it
     setTimeout(() => document.dispatchEvent(new Event('introopen')), 100);
     roll.finished.then(() => {
