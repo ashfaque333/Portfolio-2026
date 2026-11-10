@@ -33,6 +33,7 @@
       const lift = banner.animate(
         [{ transform: 'translateY(0)' }, { transform: 'translateY(-101%)' }],
         { duration: 400, delay: 0, easing: 'cubic-bezier(.6,0,.35,1)', fill: 'forwards' });
+      setTimeout(() => sfx.latch && sfx.latch(), 330);   // the board clicks into place as it snaps up
       return lift.finished;
     }).then(finish, finish);
   };

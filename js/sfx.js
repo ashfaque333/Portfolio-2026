@@ -9,7 +9,7 @@
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) { window.SFX = { unlock() {}, tick() {}, shutter() {}, ready: () => false }; return; }
 
-  const VOL = { tick: 0.22, shutter: 0.55, engine: 0.05 };   // engine kept low so it never gets in the way
+  const VOL = { tick: 0.22, shutter: 0.55, engine: 0.0125 };   // engine kept very low so it never gets in the way
   const LOOP = { idle: [0.25, 2.7], rev: [0.25, 2.6] };       // loop start / length (s) inside the loop files
   let ctx = null, master = null, noiseBuf = null;
   const buf = {};
@@ -70,6 +70,25 @@
     if (shutterBuf) go(shutterBuf); else load('shutter').then(b => { shutterBuf = b; go(b); });
   }
 
+  /* ---- board snapping up: a quick double metal click + a small knock, as it locks into place ---- */
+  function latch() {
+    if (!ready()) return;
+    const t0 = ctx.currentTime + 0.005;
+    [[0, 1], [0.045, 0.65]].forEach(([dt, s]) => {
+      const t = t0 + dt;
+      const n = noise(), bp = ctx.createBiquadFilter(), g = ctx.createGain();
+      bp.type = 'bandpass'; bp.frequency.value = 2600 + Math.random() * 600; bp.Q.value = 4;
+      n.connect(bp).connect(g).connect(master); env(g, t, 0.001, 0.32 * s, 0.003, 0.035); n.start(t); n.stop(t + 0.06);
+      [1180, 1730, 2470].forEach((f, i) => {                     // short metallic ring
+        const o = ctx.createOscillator(), og = ctx.createGain(); o.type = 'sine'; o.frequency.value = f * (0.98 + Math.random() * 0.04);
+        o.connect(og).connect(master); env(og, t, 0.001, 0.07 * s / (i + 1), 0, 0.09 + 0.04 * i); o.start(t); o.stop(t + 0.2);
+      });
+    });
+    const k = ctx.createOscillator(), kg = ctx.createGain();     // the knock of the board against the frame
+    k.type = 'sine'; k.frequency.setValueAtTime(190, t0); k.frequency.exponentialRampToValueAtTime(80, t0 + 0.08);
+    k.connect(kg).connect(master); env(kg, t0, 0.002, 0.28, 0, 0.1); k.start(t0); k.stop(t0 + 0.15);
+  }
+
   /* ---- truck engine ---- */
   const scenes = [...document.querySelectorAll('.about, #projects')];
   if (scenes.length) {
@@ -87,7 +106,7 @@
     function startEngine() {                      // bring the idle / rev loops in; the ignition only the first time per truck
       const t = ctx.currentTime, scene = [...visible][0];
       const out = ctx.createGain(); out.gain.value = 0; out.connect(master);
-      const gI = ctx.createGain(), gR = ctx.createGain(); gR.gain.value = 0;
+      const gI = ctx.createGain(), gR = ctx.createGain(); gI.gain.value = 0; gR.gain.value = 0;
       gI.connect(out); gR.connect(out);
       const si = loopSrc(B.idle, LOOP.idle), sr = loopSrc(B.rev, LOOP.rev);
       si.connect(gI); sr.connect(gR);
@@ -100,7 +119,7 @@
         at = t + B.start.duration - 0.3;           // loops take over as the ignition settles
       }
       si.start(at, LOOP.idle[0]); sr.start(at, LOOP.rev[0] + Math.random() * 2);
-      out.gain.setValueAtTime(0, t); out.gain.setValueAtTime(0, at); out.gain.linearRampToValueAtTime(1, at + 0.5);
+      out.gain.setValueAtTime(0, t); out.gain.setValueAtTime(0, at); out.gain.linearRampToValueAtTime(1, at + (at > t ? 0.5 : 1.6));   // coming back to a truck: a slow fade in
       eng = { out, gI, gR, si, sr, from: at };
     }
     function stopEngine() {                       // the switch-off clip, then silence
@@ -110,11 +129,23 @@
       eng.out.gain.cancelScheduledValues(t); eng.out.gain.setValueAtTime(eng.out.gain.value, t); eng.out.gain.linearRampToValueAtTime(0, t + 0.35);
       eng.si.stop(t + 0.4); eng.sr.stop(t + 0.4); eng = null;
     }
+    /* how fast the truck is actually moving: on the about page that's the truck's own (smoothed) drive progress,
+       on the home page it's the scroll speed through the projects road */
+    const aboutEl = document.querySelector('.about');
+    let lastP = null, vel = 0;
+    const truckPos = () => { const cs = getComputedStyle(aboutEl); return (parseFloat(cs.getPropertyValue('--ap')) || 0) + (parseFloat(cs.getPropertyValue('--ep')) || 0); };
     function loop(now) {
-      const dt = Math.max(1, now - lastT); lastT = now;
-      const v = Math.abs(scrollY - lastY) / dt * 1000; lastY = scrollY;          // px per second
-      const target = Math.min(1, v / 2200);
-      rev += (target - rev) * (target > rev ? 0.12 : 0.03);                       // revs up quickly, settles slowly
+      const dt = Math.min(0.1, Math.max(0.001, (now - lastT) / 1000)); lastT = now;
+      let speed;
+      if (aboutEl && visible.has(aboutEl)) {
+        const pos = truckPos(); speed = lastP === null ? 0 : Math.abs(pos - lastP) / dt / 0.55; lastP = pos;   // ~0.55 of the drive per second = full revs
+      } else {
+        speed = Math.abs(scrollY - lastY) / dt / 1800; lastP = null;                                         // 1800 px/s = full revs
+      }
+      lastY = scrollY;
+      vel += (Math.min(1, speed) - vel) * (1 - Math.exp(-dt / 0.09));            // smooth out jumpy wheel / touch scrolling
+      const tau = vel > rev ? 0.18 : 0.6;                                         // revs up briskly, winds down gently
+      rev += (vel - rev) * (1 - Math.exp(-dt / tau));
       if (ready() && B) {
         const on = visible.size > 0 && !document.hidden;
         if (on && !eng) startEngine();
@@ -122,8 +153,8 @@
         if (eng) {
           const t = ctx.currentTime, duck = mediaPlaying() ? 0.25 : 1;
           eng.gI.gain.setTargetAtTime(VOL.engine * duck * (1 - 0.75 * rev), t, 0.08);
-          eng.gR.gain.setTargetAtTime(VOL.engine * duck * 1.15 * rev, t, 0.08);
-          const rate = 1 + 0.14 * rev;                                             // a little higher as it revs
+          eng.gR.gain.setTargetAtTime(VOL.engine * duck * 1.6 * rev, t, 0.08);
+          const rate = 1 + 0.2 * rev;                                             // a little higher as it revs
           if (t > eng.from) { eng.si.playbackRate.setTargetAtTime(rate, t, 0.1); eng.sr.playbackRate.setTargetAtTime(rate, t, 0.1); }
         }
       }
@@ -141,5 +172,5 @@
     document.addEventListener('visibilitychange', kick);
   }
 
-  window.SFX = { unlock, tick, shutter, ready };
+  window.SFX = { unlock, tick, shutter, latch, ready };
 })();
