@@ -916,3 +916,24 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   /* matchbox set: keep the boxes on their tray (the set is the frame they're placed in) */
   .ss--gal .it.mbset { width: 100%; max-width: 420px; }
 }
+
+/* ---- round 2 (phones + tablets) ---- */
+/* about: the roadside board stands on the strip of soil between the grass and the road. The backdrop is drawn
+   "cover" from the bottom, and that soil strip is 25% of its height up from the bottom edge (a wide screen draws
+   the backdrop taller than the box, hence the vw term). Anything showing under a see-through browser bar is road-coloured. */
+@media (hover: none) and (pointer: coarse) {
+  .cboard { bottom: max(24.6%, 13.85vw); }
+  .about { background: #34392d; }
+}
+@media (max-width: 600px) {
+  /* "Key arts" credit line: centred under its heading like the other text */
+  .ss--gal .tx.keyarts { translate: none; left: auto; width: 100%; white-space: normal; text-align: center; font-size: 12px; }
+  /* bumper: only its solid bar takes up room; the soft shadow above and below lies over the pictures next to it */
+  .bumper { overflow: visible; height: calc(var(--vw, 100vw) * 188 / 2880); }
+  .bumper img { top: calc(var(--vw, 100vw) * -23 / 2880); height: calc(var(--vw, 100vw) * 242 / 2880); }
+  /* projects: zoomed in so the road and the truck fill the screen (the grass verges go off the sides) */
+  .drive { --pu: calc(var(--vw, 100vw) / 1060); }
+  .clouds__txt { left: 50%; width: calc(var(--vw, 100vw) * .92); translate: -50% 0; }
+  /* footer: zoomed in a little so the truck's back is bigger, still all on screen */
+  .foot { --pu: calc(var(--vw, 100vw) / 980); }
+}
