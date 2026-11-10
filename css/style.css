@@ -960,3 +960,25 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   .nav__toggle { display: none; }
   .nav__links { display: contents; visibility: visible; opacity: 1; transform: none; transition: none; }
 }
+
+/* opening shutter on an upright iPad: the tall phone artwork (sharper than enlarging the wide one) fills the whole
+   screen, pinned to the top so the board shows in full; the locks at the very bottom may be cut off */
+@media (hover: none) and (pointer: coarse) and (min-width: 701px) and (max-aspect-ratio: 4/5) {
+  .intro { --iw: max(100vw, calc(100lvh * .5628)); --ih: max(100lvh, calc(100vw * 1.777)); }
+  .intro__frames, .intro__banner img { left: 50%; translate: -50% 0; }
+}
+
+/* opening shutter: "tap / click to open" sign, hung on the shutter until the visitor opens it */
+.intro__tap {
+  position: absolute; left: 50%; bottom: 13%; translate: -50% 0; z-index: 3;
+  padding: .7em 1.6em; border: 3px solid #0a2f8a; border-radius: 999px; cursor: pointer;
+  background: #ffe9a8; color: #0a2f8a; box-shadow: 0 4px 0 #0a2f8a, 0 10px 24px rgba(0,0,0,.25);
+  font: 800 clamp(13px, 1.4vw, 20px)/1 "Anek Latin", system-ui, sans-serif; font-stretch: 125%; letter-spacing: .06em; text-transform: uppercase;
+  opacity: 0; transition: opacity .4s ease, transform .3s ease;
+}
+.intro.is-waiting .intro__tap { opacity: 1; animation: tapNudge 1.6s ease-in-out infinite .6s; }
+.intro__tap:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.intro__tap.is-gone { opacity: 0 !important; animation: none !important; pointer-events: none; }
+@keyframes tapNudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@media (prefers-reduced-motion: reduce) { .intro.is-waiting .intro__tap { animation: none; } }
+@media (hover: none) and (pointer: coarse) { .intro__tap { font-size: clamp(15px, 2.3vw, 22px); bottom: 15%; } }
