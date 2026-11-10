@@ -100,6 +100,15 @@
   if (about && !reduce) {
     const IN = 0.45, OUT = 0.51, FOLLOW = 6;        // FOLLOW: higher = snappier, lower = floatier
     let target = 0, cur = 0, raf = 0, last = 0;
+    /* phones: the truck is much wider than the screen and parks with the board partly beside its cab, so the board
+       only changes once the truck's front has driven past the board's left edge (it is fully behind the truck then) */
+    const phone = matchMedia('(max-width: 600px)');
+    const truckEl = about.querySelector('.about__truck'), boardEl = document.getElementById('cboard');
+    const covered = () => {
+      if (!truckEl || !boardEl) return true;
+      const t = truckEl.getBoundingClientRect(), bd = boardEl.getBoundingClientRect();
+      return t.left + t.width * 0.05 <= bd.left;
+    };
     const measure = () => {
       const room = about.offsetHeight - innerHeight || 1;
       target = Math.min(Math.max(-about.getBoundingClientRect().top / room, 0), 1);
@@ -108,7 +117,7 @@
       const pin = Math.min(p / IN, 1), pout = Math.min(Math.max((p - OUT) / (1 - OUT), 0), 1);
       about.style.setProperty('--ap', (1 - Math.pow(1 - pin, 1.6)).toFixed(4));   // gentle slow-down into the stop
       about.style.setProperty('--ep', Math.pow(pout, 1.5).toFixed(4));            // gentle pull-away, no long dead spot
-      about.classList.toggle('passed', p >= (IN + OUT) / 2);   // truck is parked in front of the board here, so the swap is hidden behind it
+      about.classList.toggle('passed', p >= (IN + OUT) / 2 && (!phone.matches || covered()));   // truck is in front of the board here, so the swap is hidden behind it
     };
     const step = t => {
       const dt = Math.min(Math.max((t - last) / 1000, 0), 0.05); last = t;

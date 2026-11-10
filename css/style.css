@@ -866,3 +866,53 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 @media (max-width: 760px) {
   .stereoPlayer__panel { width: min(56vw, 384px); }
 }
+
+/* =====================================================================
+   PHONES + TABLETS (Nov 2026). Everything below is gated to touch screens or
+   phone widths, so desktop / monitor layouts are untouched.
+   ===================================================================== */
+
+/* ---- touch screens (phones + iPads): mobile browsers grow the screen when their toolbars slide away,
+   so full-screen backdrops use the LARGE viewport height and nothing underneath peeks out ---- */
+@media (hover: none) and (pointer: coarse) {
+  .road { height: 100lvh; background-size: cover; }
+  .about__sticky { height: 100lvh; }
+  .cboard { bottom: calc(29svh + 100lvh - 100svh); }
+  .about__road { padding-bottom: calc(2.5svh + 100lvh - 100svh); }
+  /* studio: the title board sits just under the nav bar instead of in the middle of a tall screen */
+  .ss--intro { --sd: max(0px, calc(var(--nav-h) + 40px - 113 * var(--pu))); }
+}
+@media (hover: none) and (pointer: coarse) and (max-width: 900px) {
+  .cboard { bottom: calc(24svh + 100lvh - 100svh); }
+  .about__road { padding-bottom: calc(6svh + 100lvh - 100svh); }
+}
+
+/* ---- tablets held upright (iPad portrait): the about truck keeps the same size against the
+   scenery and the board as on a monitor (about 3x the board's width, ~60% of the screen's height),
+   so it is wider than the screen and shows its cab first, then the rest as it drives on ---- */
+@media (hover: none) and (pointer: coarse) and (min-width: 601px) and (max-aspect-ratio: 1/1) {
+  .cboard { width: min(78vw, 52svh); }
+  .about__road { --tw: calc(100svh * 1.5); --ml: calc(3vw - 0.04 * var(--tw)); padding-bottom: calc(6svh + 100lvh - 100svh); }
+}
+
+/* ---- phones: every scene is scaled to the screen's width so nothing is cropped at the sides ---- */
+@media (max-width: 600px) {
+  /* hero: the whole 1440-wide painting fits the width; it starts under the nav bar (the sky carries on behind it) */
+  :root { --hh: calc(853 * var(--u)); }
+  .hero { --top: calc(var(--nav-h) + 26px - 120 * var(--hu)); --lift: 0px; height: calc(var(--top) + 853 * var(--hu)); }
+  .hero__canvas { top: var(--top); }
+  /* bumper strip: shown whole, edge to edge */
+  .bumper { height: calc(var(--vw, 100vw) * 242 / 2880); margin-top: 0; margin-bottom: 0; }
+  .bumper img { width: 100%; height: 100%; min-width: 0; object-fit: fill; }
+
+  /* showreel, projects truck, footer truck: one scale, fitted to the width */
+  .journey { --pu: calc(var(--vw, 100vw) / 1440); }
+  .clouds__txt { left: 4%; width: 92%; font-size: 11px; line-height: 1.3; }
+  .clouds__txt br { display: none; }
+
+  /* studio galleries: headings centred and a size smaller, pictures with a margin either side */
+  .ss--gal .tx.h, .ss--vreel .tx.h { translate: none; left: auto; white-space: normal; font-size: 22px; text-align: center; width: 100%; }
+  .ss--gal .it { position: relative; left: auto; top: auto; width: 84%; max-width: 360px; }
+  /* matchbox set: keep the boxes on their tray (the set is the frame they're placed in) */
+  .ss--gal .it.mbset { width: 100%; max-width: 420px; }
+}
