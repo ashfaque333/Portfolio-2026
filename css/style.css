@@ -204,7 +204,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   left: calc(var(--rx) * var(--hu)); top: calc(var(--ry) * var(--hu));
   width: calc(var(--rw) * var(--hu)); height: calc(var(--rw) * var(--hu));
   transform-origin: 50% 50%;
-  animation: spin 75s linear infinite reverse;   /* anticlockwise */
+  animation: spin 60s linear infinite reverse;   /* anticlockwise */
   rotate: calc(var(--p) * -50deg);     /* scrolling nudges it round faster, same direction */
 }
 @keyframes spin { to { transform: rotate(360deg); } }
