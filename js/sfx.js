@@ -44,7 +44,15 @@
     } catch (e) {}
     return unlocked || Promise.resolve();
   }
-  document.addEventListener('visibilitychange', () => { if (!document.hidden && ctx && ctx.state !== 'running' && unlocked) ctx.resume().catch(() => {}); });
+  /* leaving the tab, switching apps or locking the phone: all site sound stops at once (the page's own timers
+     are frozen in the background, so the engine can't wind itself down), and picks up again on return */
+  let paused = false;
+  const away = () => { if (ctx && ctx.state === 'running') { paused = true; ctx.suspend().catch(() => {}); } };
+  const back = () => { if (paused && ctx && !document.hidden) { paused = false; ctx.resume().catch(() => {}); } };
+  document.addEventListener('visibilitychange', () => document.hidden ? away() : back());
+  addEventListener('pagehide', away);
+  addEventListener('blur', () => { if (document.hidden) away(); });
+  addEventListener('pageshow', back);
   // any real gesture on any page unlocks sound; Chrome may also allow it straight away on later pages of the site
   ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'].forEach(ev => addEventListener(ev, unlock, { capture: true, passive: true }));
   try { init(); ctx.resume().catch(() => {}); } catch (e) {}
@@ -145,7 +153,10 @@
        on the home page it's the scroll speed through the projects road */
     const aboutEl = document.querySelector('.about');
     let lastP = null, vel = 0;
-    const truckPos = () => { const cs = getComputedStyle(aboutEl); return (parseFloat(cs.getPropertyValue('--ap')) || 0) + (parseFloat(cs.getPropertyValue('--ep')) || 0); };
+    // touch screens: wheel turn (deg) is proportional to distance travelled; desktop: drive progress
+    const truckPos = () => { const cs = getComputedStyle(aboutEl), wr = cs.getPropertyValue('--wr');
+      if (aboutEl.classList.contains('evenDrive') && wr) return -parseFloat(wr) / 1000;
+      return (parseFloat(cs.getPropertyValue('--ap')) || 0) + (parseFloat(cs.getPropertyValue('--ep')) || 0); };
     function loop(now) {
       const dt = Math.min(0.1, Math.max(0.001, (now - lastT) / 1000)); lastT = now;
       let speed;

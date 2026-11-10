@@ -98,12 +98,26 @@
      rolls in over 0 – 45 %, parks briefly (45 – 51 %) and then pulls away again over 51 – 100 %. */
   const about = document.querySelector('.about');
   if (about && !reduce) {
-    const IN = 0.45, OUT = 0.51, FOLLOW = 6;        // FOLLOW: higher = snappier, lower = floatier
+    let IN = 0.45, OUT = 0.51;
+    const FOLLOW = 6;                               // FOLLOW: higher = snappier, lower = floatier
     let target = 0, cur = 0, raf = 0, last = 0;
     /* phones: the truck is much wider than the screen and parks with the board partly beside its cab, so the board
        only changes once the truck's front has driven past the board's left edge (it is fully behind the truck then) */
     const phone = matchMedia('(max-width: 600px)');
+    /* touch screens (phones, iPads): the drive in is much shorter than the drive out, so the scroll is shared out in
+       proportion to each distance — the truck keeps one steady speed either side of its stop, and the wheels turn
+       exactly as far as the truck travels */
+    const touch = matchMedia('(hover: none) and (pointer: coarse)');
     const truckEl = about.querySelector('.about__truck'), boardEl = document.getElementById('cboard');
+    let dIn = 1, dOut = 1, circ = 1;
+    const layout = () => {
+      if (!touch.matches || !truckEl) { IN = 0.45; OUT = 0.51; about.classList.remove('evenDrive'); return; }
+      const tw = truckEl.offsetWidth, ml = parseFloat(getComputedStyle(truckEl).marginLeft) || 0, vw = innerWidth / 100;
+      dIn = Math.max(1, 70 * vw - ml); dOut = tw + ml + 4 * vw; circ = Math.PI * 0.105 * tw;
+      const MOVE = 0.93;                            // the rest (7 %) is the short stop in front of the board
+      IN = MOVE * dIn / (dIn + dOut); OUT = IN + (1 - MOVE);
+      about.classList.add('evenDrive');
+    };
     const covered = () => {
       if (!truckEl || !boardEl) return true;
       const t = truckEl.getBoundingClientRect(), bd = boardEl.getBoundingClientRect();
@@ -115,8 +129,17 @@
     };
     const apply = p => {
       const pin = Math.min(p / IN, 1), pout = Math.min(Math.max((p - OUT) / (1 - OUT), 0), 1);
-      about.style.setProperty('--ap', (1 - Math.pow(1 - pin, 1.6)).toFixed(4));   // gentle slow-down into the stop
-      about.style.setProperty('--ep', Math.pow(pout, 1.5).toFixed(4));            // gentle pull-away, no long dead spot
+      if (touch.matches) {
+        // steady speed, with only a short ease right at the stop and at the pull-away
+        const ap = pin >= 1 ? 1 : (pin < 0.85 ? pin / 0.925 : 1 - (1 - pin) * (1 - pin) / (2 * 0.15 * 0.925));
+        const ep = pout <= 0 ? 0 : (pout > 0.15 ? (pout - 0.075) / 0.925 : pout * pout / (2 * 0.15 * 0.925));
+        about.style.setProperty('--ap', ap.toFixed(4));
+        about.style.setProperty('--ep', ep.toFixed(4));
+        about.style.setProperty('--wr', (-(ap * dIn + ep * dOut) / circ * 360).toFixed(1) + 'deg');
+      } else {
+        about.style.setProperty('--ap', (1 - Math.pow(1 - pin, 1.6)).toFixed(4));   // gentle slow-down into the stop
+        about.style.setProperty('--ep', Math.pow(pout, 1.5).toFixed(4));            // gentle pull-away, no long dead spot
+      }
       about.classList.toggle('passed', p >= (IN + OUT) / 2 && (!phone.matches || covered()));   // truck is in front of the board here, so the swap is hidden behind it
     };
     const step = t => {
@@ -128,8 +151,8 @@
     };
     const kick = () => { measure(); if (!raf) { last = performance.now(); raf = requestAnimationFrame(step); } };
     addEventListener('scroll', kick, { passive: true });
-    addEventListener('resize', kick);
-    measure(); cur = target; apply(cur);      // reloading mid-page: start where the scroll already is
+    addEventListener('resize', () => { layout(); kick(); });
+    layout(); measure(); cur = target; apply(cur);      // reloading mid-page: start where the scroll already is
   }
 
   /* ---- 6. things that hang from the nav bar (lemon + chilli, gold tassels, the blue fringe) ----

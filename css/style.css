@@ -987,3 +987,16 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 @media (max-width: 700px) and (max-aspect-ratio: 4/5), (hover: none) and (pointer: coarse) and (max-aspect-ratio: 4/5) {
   .intro__tap { bottom: auto; top: min(calc(var(--ih) * .685), calc(100svh - 70px)); }
 }
+
+/* touch screens: wheels turn exactly as far as the truck travels (worked out in js/main.js) */
+@media (hover: none) and (pointer: coarse) {
+  .about.evenDrive .wheel { rotate: var(--wr, 0deg); }
+}
+/* phones on their side: the scene is only ~400px tall, so it no longer insists on 620px (that cut the bottom off);
+   the truck is sized to fit between the nav bar and the road, and the board stands on the roadside as usual */
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) and (max-height: 520px) {
+  .about__sticky { min-height: 0; }
+  .about__road { --tw: min(94vw, calc((100svh - var(--nav-h) - 10px - 5svh) * 2.477)); --ml: calc(98.5vw - 0.974 * var(--tw));
+                 padding-top: calc(var(--nav-h) + 10px); padding-bottom: calc(3svh + 100lvh - 100svh); }
+  .cboard { width: min(30vw, 44svh); }
+}
