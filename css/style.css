@@ -944,3 +944,19 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 @media (max-width: 900px) {
   .nav__canvas { background-position: -8px top; }
 }
+
+/* iPads held upright (touch, 601–900px wide): there is room for the full dashboard bar, so it uses the
+   desktop bar (all buttons, mirror and charms on the bar, no menu button), scaled to the screen width */
+@media (hover: none) and (pointer: coarse) and (min-width: 601px) and (max-width: 900px) {
+  :root { --nav-h: calc(118 * var(--u)); }
+  .nav { --u: calc(min(var(--vw, 100vw), 1920px) / 1440); }
+  .nav__canvas { width: calc(1440 * var(--u)); display: block; padding: 0; background: none; overflow-x: visible; }
+  .nav__bg, .mirror, .nimbu { display: block; }
+  .nav__item, .nav__links .nav__item { position: absolute; left: calc(var(--x) * var(--u)); top: calc(var(--y) * var(--u)); width: calc(var(--w) * var(--u)); }
+  .cv { width: calc(var(--w) * var(--u)); height: calc(64.6 * var(--u)); order: 0; align-self: auto; }
+  .cv__closed, .cv__open, .cv__pressed { width: 100%; }
+  .tv { translate: none; order: 0; }
+  .tv img { width: 100%; }
+  .nav__toggle { display: none; }
+  .nav__links { display: contents; visibility: visible; opacity: 1; transform: none; transition: none; }
+}
