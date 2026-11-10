@@ -938,3 +938,9 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   /* footer: zoomed in a little so the truck's back is bigger, still all on screen */
   .foot { --pu: calc(var(--vw, 100vw) / 980); }
 }
+
+/* nav bar on phones / upright tablets: the artwork's blue end-strip only showed on the left, so the bar is
+   nudged left until it's just off screen (wide layouts show both ends and stay as they are) */
+@media (max-width: 900px) {
+  .nav__canvas { background-position: -8px top; }
+}
