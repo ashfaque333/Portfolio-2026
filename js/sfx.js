@@ -9,7 +9,7 @@
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) { window.SFX = { unlock() {}, tick() {}, shutter() {}, ready: () => false }; return; }
 
-  const VOL = { tick: 0.22, shutter: 0.55, engine: 0.0125 };   // engine kept very low so it never gets in the way
+  const VOL = { tick: 0.11, shutter: 0.275, engine: 0.0175 };   // engine kept very low so it never gets in the way
   const LOOP = { idle: [0.25, 2.7], rev: [0.25, 2.6] };       // loop start / length (s) inside the loop files
   let ctx = null, master = null, noiseBuf = null;
   const buf = {};
@@ -29,12 +29,24 @@
     if (document.getElementById('intro')) load('shutter');
     if (document.querySelector('.about, #projects')) ['truck-start', 'truck-idle', 'truck-rev', 'truck-off'].forEach(load);
   }
+  /* iPhone / iPad: web sounds normally go through the "ambient" channel, which the silent switch / silent mode mutes.
+     Asking for the "playback" channel makes them behave like the site's music player (Safari 16.4+). */
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
   const ready = () => !!ctx && ctx.state === 'running';
+  let unlocked = null;
   function unlock() {
-    try { init(); if (ctx.state !== 'running') ctx.resume(); } catch (e) {}
+    try {
+      init();
+      // Safari wants a sound started inside the tap itself: play one silent sample, then resume
+      const b = ctx.createBuffer(1, 1, ctx.sampleRate), s = ctx.createBufferSource();
+      s.buffer = b; s.connect(ctx.destination); s.start(0);
+      if (ctx.state !== 'running') unlocked = ctx.resume().catch(() => {});   // also covers Safari's "interrupted" state
+    } catch (e) {}
+    return unlocked || Promise.resolve();
   }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && ctx && ctx.state !== 'running' && unlocked) ctx.resume().catch(() => {}); });
   // any real gesture on any page unlocks sound; Chrome may also allow it straight away on later pages of the site
-  ['pointerdown', 'keydown', 'touchend'].forEach(ev => addEventListener(ev, unlock, { capture: true, passive: true }));
+  ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'].forEach(ev => addEventListener(ev, unlock, { capture: true, passive: true }));
   try { init(); ctx.resume().catch(() => {}); } catch (e) {}
 
   const noise = () => { const s = ctx.createBufferSource(); s.buffer = noiseBuf; s.loop = true; s.loopStart = Math.random(); return s; };

@@ -19,7 +19,7 @@
     if (el) el.scrollIntoView();
   };
 
-  const sfx = window.SFX || { tick() {}, shutter() {}, unlock() {} };
+  const sfx = window.SFX || { tick() {}, shutter() {}, unlock() { return Promise.resolve(); } };
   const open = () => {
     if (opened) return; opened = true; clearTimeout(timer);
     sfx.shutter();
@@ -63,10 +63,12 @@
   let started = false;
   const go = withSound => {
     if (started) return; started = true;
-    if (withSound) sfx.unlock();
+    const unlocking = withSound ? sfx.unlock() : null;
     hint.classList.add('is-gone');
     ['click', 'keydown', 'wheel', 'touchmove'].forEach(ev => removeEventListener(ev, handler, true));
-    setTimeout(cycle, withSound ? 60 : 0);
+    // wait (briefly) for the browser to switch sound on, so the very first clicks aren't lost
+    if (unlocking) Promise.race([unlocking, new Promise(r => setTimeout(r, 400))]).then(() => setTimeout(cycle, 30));
+    else cycle();
   };
   const handler = e => {
     if (e.type === 'keydown' && ['Tab', 'Shift', 'Control', 'Alt', 'Meta'].includes(e.key)) return;
