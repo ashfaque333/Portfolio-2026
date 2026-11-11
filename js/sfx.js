@@ -9,7 +9,7 @@
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) { window.SFX = { unlock() {}, tick() {}, shutter() {}, ready: () => false }; return; }
 
-  const VOL = { tick: 0.11, shutter: 0.275, engine: 0.0175 };   // engine kept very low so it never gets in the way
+  const VOL = { tick: 0.11, shutter: 0.275, board: 0.6, engine: 0.0175 };   // engine kept very low so it never gets in the way
   const LOOP = { idle: [0.25, 2.7], rev: [0.25, 2.6] };       // loop start / length (s) inside the loop files
   let ctx = null, master = null, engBus = null, noiseBuf = null;
   const buf = {};
@@ -32,7 +32,7 @@
     noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);   // white noise for the tick
     const d = noiseBuf.getChannelData(0);
     for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-    if (document.getElementById('intro')) load('shutter');
+    if (document.getElementById('intro')) { load('shutter'); load('board-up'); }
     if (document.querySelector('.about, #projects')) ['truck-start', 'truck-idle', 'truck-rev', 'truck-off'].forEach(load);
   }
   /* iPhone / iPad: web sounds normally go through the "ambient" channel, which the silent switch / silent mode mutes.
@@ -98,23 +98,14 @@
     if (shutterBuf) go(shutterBuf); else load('shutter').then(b => { shutterBuf = b; go(b); });
   }
 
-  /* ---- board snapping up: a quick double metal click + a small knock, as it locks into place ---- */
+  /* ---- board lifting up: recorded shop-board sound (assets/audio/board-up.mp3). The file has ~0.2 s of near-silence
+     before the hit, so it is played from just before the hit — the hit lands as the board starts to move ---- */
+  const BOARD_AT = 0.2;
   function latch() {
     if (!ready()) return;
-    const t0 = ctx.currentTime + 0.005;
-    [[0, 1], [0.045, 0.65]].forEach(([dt, s]) => {
-      const t = t0 + dt;
-      const n = noise(), bp = ctx.createBiquadFilter(), g = ctx.createGain();
-      bp.type = 'bandpass'; bp.frequency.value = 2600 + Math.random() * 600; bp.Q.value = 4;
-      n.connect(bp).connect(g).connect(master); env(g, t, 0.001, 0.32 * s, 0.003, 0.035); n.start(t); n.stop(t + 0.06);
-      [1180, 1730, 2470].forEach((f, i) => {                     // short metallic ring
-        const o = ctx.createOscillator(), og = ctx.createGain(); o.type = 'sine'; o.frequency.value = f * (0.98 + Math.random() * 0.04);
-        o.connect(og).connect(master); env(og, t, 0.001, 0.07 * s / (i + 1), 0, 0.09 + 0.04 * i); o.start(t); o.stop(t + 0.2);
-      });
-    });
-    const k = ctx.createOscillator(), kg = ctx.createGain();     // the knock of the board against the frame
-    k.type = 'sine'; k.frequency.setValueAtTime(190, t0); k.frequency.exponentialRampToValueAtTime(80, t0 + 0.08);
-    k.connect(kg).connect(master); env(kg, t0, 0.002, 0.28, 0, 0.1); k.start(t0); k.stop(t0 + 0.15);
+    load('board-up').then(b => { if (!b) return;
+      const src = ctx.createBufferSource(), g = ctx.createGain();
+      src.buffer = b; g.gain.value = VOL.board; src.connect(g).connect(master); src.start(0, BOARD_AT); });
   }
 
   /* ---- truck engine ---- */
