@@ -11,7 +11,7 @@
 
   const VOL = { tick: 0.11, shutter: 0.275, engine: 0.0175 };   // engine kept very low so it never gets in the way
   const LOOP = { idle: [0.25, 2.7], rev: [0.25, 2.6] };       // loop start / length (s) inside the loop files
-  let ctx = null, master = null, noiseBuf = null;
+  let ctx = null, master = null, engBus = null, noiseBuf = null;
   const buf = {};
 
   function load(name) {
@@ -23,6 +23,12 @@
     if (ctx) return;
     ctx = new AC();
     master = ctx.createGain(); master.gain.value = 1; master.connect(ctx.destination);
+    /* engine tone: small laptop speakers can't play the deep diesel rumble, so the engine is shaped toward the
+       mid 'growl' they can play — less sub-bass, more 1–3 kHz — and trimmed so big speakers stay as loud as before */
+    const f = (type, freq, Q, gain) => { const b = ctx.createBiquadFilter(); b.type = type; b.frequency.value = freq; b.Q.value = Q; b.gain.value = gain; return b; };
+    const trim = ctx.createGain(); trim.gain.value = 0.61;
+    engBus = f('lowshelf', 200, 0.7, -9);
+    engBus.connect(f('peaking', 1200, 0.9, 9)).connect(f('peaking', 3000, 1, 5)).connect(trim).connect(master);
     noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);   // white noise for the tick
     const d = noiseBuf.getChannelData(0);
     for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
@@ -125,7 +131,7 @@
 
     function startEngine() {                      // bring the idle / rev loops in; the ignition only the first time per truck
       const t = ctx.currentTime, scene = [...visible][0];
-      const out = ctx.createGain(); out.gain.value = 0; out.connect(master);
+      const out = ctx.createGain(); out.gain.value = 0; out.connect(engBus);
       const gI = ctx.createGain(), gR = ctx.createGain(); gI.gain.value = 0; gR.gain.value = 0;
       gI.connect(out); gR.connect(out);
       const si = loopSrc(B.idle, LOOP.idle), sr = loopSrc(B.rev, LOOP.rev);
@@ -135,7 +141,7 @@
         markSeen(scene);
         const st = ctx.createBufferSource(), sg = ctx.createGain();
         st.buffer = B.start; sg.gain.value = VOL.engine * (mediaPlaying() ? 0.25 : 1);
-        st.connect(sg).connect(master); st.start(t);
+        st.connect(sg).connect(engBus); st.start(t);
         at = t + B.start.duration - 0.3;           // loops take over as the ignition settles
       }
       si.start(at, LOOP.idle[0]); sr.start(at, LOOP.rev[0] + Math.random() * 2);
@@ -145,7 +151,7 @@
     function stopEngine() {                       // the switch-off clip, then silence
       const t = ctx.currentTime;
       if (B.off) { const s = ctx.createBufferSource(), g = ctx.createGain(); s.buffer = B.off; g.gain.value = VOL.engine * (mediaPlaying() ? 0.25 : 1) * 0.9;
-        s.connect(g).connect(master); s.start(t); }
+        s.connect(g).connect(engBus); s.start(t); }
       eng.out.gain.cancelScheduledValues(t); eng.out.gain.setValueAtTime(eng.out.gain.value, t); eng.out.gain.linearRampToValueAtTime(0, t + 0.35);
       eng.si.stop(t + 0.4); eng.sr.stop(t + 0.4); eng = null;
     }
