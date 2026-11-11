@@ -8,6 +8,10 @@
   <meta name="theme-color" content="#1f56c4">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Inter:wght@400;500&family=Oswald:wght@500;600&display=swap"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Inter:wght@400;500&family=Oswald:wght@500;600&display=swap"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wdth,wght@125,500;125,600&display=swap"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wdth,wght@125,500;125,600&display=swap"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wdth,wght@125,500;125,600&display=swap"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wdth,wght@125,500;125,600;125,800&display=swap"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wdth,wght@125,500;125,600;125,800&display=swap"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wdth,wght@125,500;125,600;125,800&display=swap"><link rel="stylesheet" href="css/style.css">
   <script>document.documentElement.classList.add('js');</script>
+  <link rel="preload" as="image" href="assets/nav/bar-bg.webp">
+  <link rel="preload" as="script" href="js/sfx.js">
+  <link rel="preload" as="script" href="js/main.js">
+  <link rel="preload" as="script" href="js/studio.js">
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
@@ -36,24 +40,24 @@
 
       <a class="nav__item cv" href="assets/CV_Ashfaque_Salahudeen.pdf" target="_blank" rel="noopener" style="--x:28;--y:9;--w:196" aria-label="CV box — open my CV">
         <img class="cv__closed" src="assets/nav/cv-closed.webp" alt="" decoding="async">
-        <img class="cv__open" src="assets/nav/cv-open.webp" alt="" decoding="async">
-        <img class="cv__pressed" src="assets/nav/cv-pressed.webp" alt="" decoding="async">
+        <img fetchpriority="low" class="cv__open" src="assets/nav/cv-open.webp" alt="" decoding="async">
+        <img fetchpriority="low" class="cv__pressed" src="assets/nav/cv-pressed.webp" alt="" decoding="async">
       </a>
 
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="navlinks" aria-label="Menu"><span></span></button>
 
       <nav class="nav__links" id="navlinks" aria-label="Primary">
-        <a class="nav__item btn" href="about.html"    style="--x:275;--y:19;--w:140"><img src="assets/nav/about.webp"    alt="About me"><img class="h" src="assets/nav/about-hover.webp"    alt=""><img class="p" src="assets/nav/about-pressed.webp"    alt=""></a>
-        <a class="nav__item btn" href="index.html#projects-board" style="--x:466;--y:19;--w:140"><img src="assets/nav/projects.webp" alt="Projects"><img class="h" src="assets/nav/projects-hover.webp" alt=""><img class="p" src="assets/nav/projects-pressed.webp" alt=""></a>
-        <a class="nav__item btn" href="studio.html"  style="--x:836;--y:19;--w:140"><img src="assets/nav/studio.webp"   alt="My studio"><img class="h" src="assets/nav/studio-hover.webp"   alt=""><img class="p" src="assets/nav/studio-pressed.webp"   alt=""></a>
-        <a class="nav__item btn" href="index.html#contact" style="--x:1026;--y:19;--w:140"><img src="assets/nav/contact.webp"  alt="Contact"><img class="h" src="assets/nav/contact-hover.webp"  alt=""><img class="p" src="assets/nav/contact-pressed.webp"  alt=""></a>
+        <a class="nav__item btn" href="about.html"    style="--x:275;--y:19;--w:140"><img src="assets/nav/about.webp"    alt="About me"><img fetchpriority="low" class="h" src="assets/nav/about-hover.webp"    alt=""><img fetchpriority="low" class="p" src="assets/nav/about-pressed.webp"    alt=""></a>
+        <a class="nav__item btn" href="index.html#projects-board" style="--x:466;--y:19;--w:140"><img src="assets/nav/projects.webp" alt="Projects"><img fetchpriority="low" class="h" src="assets/nav/projects-hover.webp" alt=""><img fetchpriority="low" class="p" src="assets/nav/projects-pressed.webp" alt=""></a>
+        <a class="nav__item btn" href="studio.html"  style="--x:836;--y:19;--w:140"><img src="assets/nav/studio.webp"   alt="My studio"><img fetchpriority="low" class="h" src="assets/nav/studio-hover.webp"   alt=""><img fetchpriority="low" class="p" src="assets/nav/studio-pressed.webp"   alt=""></a>
+        <a class="nav__item btn" href="index.html#contact" style="--x:1026;--y:19;--w:140"><img src="assets/nav/contact.webp"  alt="Contact"><img fetchpriority="low" class="h" src="assets/nav/contact-hover.webp"  alt=""><img fetchpriority="low" class="p" src="assets/nav/contact-pressed.webp"  alt=""></a>
       </nav>
 
       <img class="nav__item nimbu" src="assets/nav/nimbu-2.webp" alt="" style="--x:614;--y:-10;--w:65" aria-hidden="true">
       <img class="nav__item nimbu" src="assets/nav/nimbu-1.webp" alt="" style="--x:761;--y:-10;--w:65" aria-hidden="true">
 
       <a class="nav__item tv" href="index.html#top" style="--x:676;--y:1;--w:88" aria-label="Home">
-        <img src="assets/nav/tv.webp" alt=""><img class="h" src="assets/nav/tv-hover.webp" alt=""><img class="p" src="assets/nav/tv-pressed.webp" alt="">
+        <img src="assets/nav/tv.webp" alt=""><img fetchpriority="low" class="h" src="assets/nav/tv-hover.webp" alt=""><img fetchpriority="low" class="p" src="assets/nav/tv-pressed.webp" alt="">
       </a>
 
       <div class="nav__item mirror" style="--x:1186;--y:1;--w:233" tabindex="0" role="img" aria-label="You don't need this, you look amazing!">
@@ -252,10 +256,10 @@
     </section>
   </main>
   <div class="endbar endbar--page" aria-label="End of page">
-  <img class="endbar__shade" src="assets/end/shade.webp" alt="" aria-hidden="true" width="2880" height="78">
-  <img class="endbar__l" src="assets/end/made-with-intent.webp" alt="Made with intent. Love follows my brother!" width="664" height="24">
-  <img class="endbar__c" src="assets/end/end-of-scroll.webp" alt="End of scroll" width="294" height="23">
-  <span class="endbar__r"><img src="assets/end/copy.webp" alt="©" width="29" height="27"><img src="assets/end/year.webp" alt="2026" width="75" height="19"><img src="assets/end/name.webp" alt="Ashfaque Salahudeen" width="337" height="24"></span>
+  <img fetchpriority="low" class="endbar__shade" src="assets/end/shade.webp" alt="" aria-hidden="true" width="2880" height="78">
+  <img fetchpriority="low" class="endbar__l" src="assets/end/made-with-intent.webp" alt="Made with intent. Love follows my brother!" width="664" height="24">
+  <img fetchpriority="low" class="endbar__c" src="assets/end/end-of-scroll.webp" alt="End of scroll" width="294" height="23">
+  <span class="endbar__r"><img fetchpriority="low" src="assets/end/copy.webp" alt="©" width="29" height="27"><img fetchpriority="low" src="assets/end/year.webp" alt="2026" width="75" height="19"><img fetchpriority="low" src="assets/end/name.webp" alt="Ashfaque Salahudeen" width="337" height="24"></span>
 </div>
 
   <dialog class="vdlg" id="vdlg" aria-label="Video"><button type="button" class="vdlg__x" aria-label="Close">&times;</button><video controls playsinline></video></dialog>

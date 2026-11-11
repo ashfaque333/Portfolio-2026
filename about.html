@@ -8,6 +8,9 @@
   <meta name="theme-color" content="#1f56c4">
   <link rel="stylesheet" href="css/style.css">
   <script>document.documentElement.classList.add('js');</script>
+  <link rel="preload" as="image" href="assets/nav/bar-bg.webp">
+  <link rel="preload" as="script" href="js/sfx.js">
+  <link rel="preload" as="script" href="js/main.js">
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
@@ -37,24 +40,24 @@
 
       <a class="nav__item cv" href="assets/CV_Ashfaque_Salahudeen.pdf" target="_blank" rel="noopener" style="--x:28;--y:9;--w:196" aria-label="CV box — open my CV">
         <img class="cv__closed" src="assets/nav/cv-closed.webp" alt="" decoding="async">
-        <img class="cv__open" src="assets/nav/cv-open.webp" alt="" decoding="async">
-        <img class="cv__pressed" src="assets/nav/cv-pressed.webp" alt="" decoding="async">
+        <img fetchpriority="low" class="cv__open" src="assets/nav/cv-open.webp" alt="" decoding="async">
+        <img fetchpriority="low" class="cv__pressed" src="assets/nav/cv-pressed.webp" alt="" decoding="async">
       </a>
 
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="navlinks" aria-label="Menu"><span></span></button>
 
       <nav class="nav__links" id="navlinks" aria-label="Primary">
-        <a class="nav__item btn" href="about.html"    style="--x:275;--y:19;--w:140"><img src="assets/nav/about.webp"    alt="About me"><img class="h" src="assets/nav/about-hover.webp"    alt=""><img class="p" src="assets/nav/about-pressed.webp"    alt=""></a>
-        <a class="nav__item btn" href="index.html#projects-board" style="--x:466;--y:19;--w:140"><img src="assets/nav/projects.webp" alt="Projects"><img class="h" src="assets/nav/projects-hover.webp" alt=""><img class="p" src="assets/nav/projects-pressed.webp" alt=""></a>
-        <a class="nav__item btn" href="studio.html"  style="--x:836;--y:19;--w:140"><img src="assets/nav/studio.webp"   alt="My studio"><img class="h" src="assets/nav/studio-hover.webp"   alt=""><img class="p" src="assets/nav/studio-pressed.webp"   alt=""></a>
-        <a class="nav__item btn" href="index.html#contact" style="--x:1026;--y:19;--w:140"><img src="assets/nav/contact.webp"  alt="Contact"><img class="h" src="assets/nav/contact-hover.webp"  alt=""><img class="p" src="assets/nav/contact-pressed.webp"  alt=""></a>
+        <a class="nav__item btn" href="about.html"    style="--x:275;--y:19;--w:140"><img src="assets/nav/about.webp"    alt="About me"><img fetchpriority="low" class="h" src="assets/nav/about-hover.webp"    alt=""><img fetchpriority="low" class="p" src="assets/nav/about-pressed.webp"    alt=""></a>
+        <a class="nav__item btn" href="index.html#projects-board" style="--x:466;--y:19;--w:140"><img src="assets/nav/projects.webp" alt="Projects"><img fetchpriority="low" class="h" src="assets/nav/projects-hover.webp" alt=""><img fetchpriority="low" class="p" src="assets/nav/projects-pressed.webp" alt=""></a>
+        <a class="nav__item btn" href="studio.html"  style="--x:836;--y:19;--w:140"><img src="assets/nav/studio.webp"   alt="My studio"><img fetchpriority="low" class="h" src="assets/nav/studio-hover.webp"   alt=""><img fetchpriority="low" class="p" src="assets/nav/studio-pressed.webp"   alt=""></a>
+        <a class="nav__item btn" href="index.html#contact" style="--x:1026;--y:19;--w:140"><img src="assets/nav/contact.webp"  alt="Contact"><img fetchpriority="low" class="h" src="assets/nav/contact-hover.webp"  alt=""><img fetchpriority="low" class="p" src="assets/nav/contact-pressed.webp"  alt=""></a>
       </nav>
 
       <img class="nav__item nimbu" src="assets/nav/nimbu-2.webp" alt="" style="--x:614;--y:-10;--w:65" aria-hidden="true">
       <img class="nav__item nimbu" src="assets/nav/nimbu-1.webp" alt="" style="--x:761;--y:-10;--w:65" aria-hidden="true">
 
       <a class="nav__item tv" href="index.html#top" style="--x:676;--y:1;--w:88" aria-label="Home">
-        <img src="assets/nav/tv.webp" alt=""><img class="h" src="assets/nav/tv-hover.webp" alt=""><img class="p" src="assets/nav/tv-pressed.webp" alt="">
+        <img src="assets/nav/tv.webp" alt=""><img fetchpriority="low" class="h" src="assets/nav/tv-hover.webp" alt=""><img fetchpriority="low" class="p" src="assets/nav/tv-pressed.webp" alt="">
       </a>
 
       <div class="nav__item mirror" style="--x:1186;--y:1;--w:233" tabindex="0" role="img" aria-label="You don't need this, you look amazing!">
@@ -84,11 +87,11 @@
           </div>
           <div class="cboard__links" role="group" aria-label="Get in touch">
             <span class="cboard__t">Enough of scroll?<br>Let&rsquo;s roll!</span>
-            <a class="cb cb--w" href="mailto:ashfaquesalahudeen333@gmail.com" style="--l:14.2%;--cy:36.3%" aria-label="Email"><img src="assets/about/connect/email-normal.webp" alt=""><img class="h" src="assets/about/connect/email-hover.webp" alt=""></a>
-            <a class="cb cb--w" href="https://wa.me/9496625822" target="_blank" rel="noopener" style="--l:51.4%;--cy:36.3%" aria-label="WhatsApp"><img src="assets/about/connect/whatsapp-normal.webp" alt=""><img class="h" src="assets/about/connect/whatsapp-hover.webp" alt=""></a>
-            <a class="cb" href="https://www.instagram.com/faque.it" target="_blank" rel="noopener" style="--l:14.2%;--cy:51%" aria-label="Instagram"><img src="assets/about/connect/insta-normal.webp" alt=""><img class="h" src="assets/about/connect/insta-hover.webp" alt=""></a>
-            <a class="cb" href="https://www.behance.net/ashfaqusalahud" target="_blank" rel="noopener" style="--l:39%;--cy:51%" aria-label="Behance"><img src="assets/about/connect/behance-normal.webp" alt=""><img class="h" src="assets/about/connect/behance-hover.webp" alt=""></a>
-            <a class="cb" href="https://www.linkedin.com/in/ashfaquesalahudeen" target="_blank" rel="noopener" style="--l:63.8%;--cy:51%" aria-label="LinkedIn"><img src="assets/about/connect/linkedin-normal.webp" alt=""><img class="h" src="assets/about/connect/linkedin-hover.webp" alt=""></a>
+            <a class="cb cb--w" href="mailto:ashfaquesalahudeen333@gmail.com" style="--l:14.2%;--cy:36.3%" aria-label="Email"><img src="assets/about/connect/email-normal.webp" alt=""><img fetchpriority="low" class="h" src="assets/about/connect/email-hover.webp" alt=""></a>
+            <a class="cb cb--w" href="https://wa.me/9496625822" target="_blank" rel="noopener" style="--l:51.4%;--cy:36.3%" aria-label="WhatsApp"><img src="assets/about/connect/whatsapp-normal.webp" alt=""><img fetchpriority="low" class="h" src="assets/about/connect/whatsapp-hover.webp" alt=""></a>
+            <a class="cb" href="https://www.instagram.com/faque.it" target="_blank" rel="noopener" style="--l:14.2%;--cy:51%" aria-label="Instagram"><img src="assets/about/connect/insta-normal.webp" alt=""><img fetchpriority="low" class="h" src="assets/about/connect/insta-hover.webp" alt=""></a>
+            <a class="cb" href="https://www.behance.net/ashfaqusalahud" target="_blank" rel="noopener" style="--l:39%;--cy:51%" aria-label="Behance"><img src="assets/about/connect/behance-normal.webp" alt=""><img fetchpriority="low" class="h" src="assets/about/connect/behance-hover.webp" alt=""></a>
+            <a class="cb" href="https://www.linkedin.com/in/ashfaquesalahudeen" target="_blank" rel="noopener" style="--l:63.8%;--cy:51%" aria-label="LinkedIn"><img src="assets/about/connect/linkedin-normal.webp" alt=""><img fetchpriority="low" class="h" src="assets/about/connect/linkedin-hover.webp" alt=""></a>
           </div>
         </div>
         <div class="about__road"><div class="about__truck"><div class="truckbox">
