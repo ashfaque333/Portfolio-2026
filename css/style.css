@@ -934,6 +934,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   .bumper img { top: calc(var(--vw, 100vw) * -23 / 2880); height: calc(var(--vw, 100vw) * 242 / 2880); }
   /* projects: zoomed in so the road and the truck fill the screen (the grass verges go off the sides) */
   .drive { --pu: calc(var(--vw, 100vw) / 1060); }
+  .clouds { top: calc(-180 * var(--pu)); }   /* phones: clouds sit a little lower so the FM screen on the dashboard stays clear (still covers the cab's bottom edge) */
   .clouds__txt { left: 50%; width: calc(var(--vw, 100vw) * .92); translate: -50% 0; }
   /* footer: zoomed in a little so the truck's back is bigger, still all on screen */
   .foot { --pu: calc(var(--vw, 100vw) / 980); }
