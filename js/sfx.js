@@ -39,10 +39,13 @@
      Asking for the "playback" channel makes them behave like the site's music player (Safari 16.4+). */
   try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
   const ready = () => !!ctx && ctx.state === 'running';
-  let unlocked = null;
+  let unlocked = null, fresh = false, paused = false;
   function unlock() {
     try {
-      init();
+      /* Firefox (and Chrome for a first-time visitor) keeps a sound context made before any click blocked; a new one
+         made inside the click itself always starts. The old one is just left idle — decoded sounds work in either. */
+      if (ctx && ctx.state === 'suspended' && !fresh && !paused) ctx = null;
+      if (!ctx) { init(); fresh = true; }
       // Safari wants a sound started inside the tap itself: play one silent sample, then resume
       const b = ctx.createBuffer(1, 1, ctx.sampleRate), s = ctx.createBufferSource();
       s.buffer = b; s.connect(ctx.destination); s.start(0);
@@ -52,7 +55,6 @@
   }
   /* leaving the tab, switching apps or locking the phone: all site sound stops at once (the page's own timers
      are frozen in the background, so the engine can't wind itself down), and picks up again on return */
-  let paused = false;
   const away = () => { if (ctx && ctx.state === 'running') { paused = true; ctx.suspend().catch(() => {}); } };
   const back = () => { if (paused && ctx && !document.hidden) { paused = false; ctx.resume().catch(() => {}); } };
   document.addEventListener('visibilitychange', () => document.hidden ? away() : back());

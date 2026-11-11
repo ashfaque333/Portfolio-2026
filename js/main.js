@@ -680,6 +680,15 @@
         }
         /* if the browser didn't let it start on its own, show the "tap play" pulse */
         setTimeout(() => { if (!isPlaying()) { mini.classList.add('is-blocked'); if (source === 'yt') updateYTTitle(); } }, 3500);
+        /* Firefox / Safari only let sound start on a new page after a click or key press there: the first one anywhere
+           on the page carries the music on (clicks on the player itself are left to its own buttons) */
+        const carryOn = e => {
+          ['pointerup', 'click', 'touchend', 'keydown'].forEach(ev => removeEventListener(ev, carryOn, true));
+          if (isPlaying() || wrap.contains(e.target)) return;
+          if (source === 'local' && resumeAt && audio.currentTime < 1) audio.currentTime = resumeAt;   // pick up where it was
+          play();
+        };
+        ['pointerup', 'click', 'touchend', 'keydown'].forEach(ev => addEventListener(ev, carryOn, true));
       } else if (source === 'yt') { resumeAt = saved.t || 0; createYTPlayer(); }
     }
   })();
