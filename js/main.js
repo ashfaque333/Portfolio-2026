@@ -270,8 +270,8 @@
   const foot = document.querySelector('.foot');
   if (foot) {
     const fit = () => {
-      const pu = Math.max(Math.min(root.clientWidth, 1920), 720) / 1440;
-      const navH = 118 * Math.min(root.clientWidth, 1920) / 1440;
+      const pu = Math.max(Math.min(root.clientWidth, 5120), 720) / 1440;
+      const navH = 118 * Math.min(root.clientWidth, 5120) / 1440;
       const room = innerHeight - navH - 16 - 14 * pu;             // space between the nav bar and the bottom of the screen
       const k = Math.max(.5, Math.min(.9, room / (672 * pu)));
       foot.style.setProperty('--fk', k.toFixed(3));

@@ -11,7 +11,7 @@
   --cream: #f6e7c1;
 
   /* nav unit: 1 design px, capped so ultra-wide screens don't balloon */
-  --u: calc(min(var(--vw, 100vw), 1920px) / 1440);
+  --u: calc(min(var(--vw, 100vw), 5120px) / 1440);
 
   /* hero height: full-width scale on desktop; on narrow screens it stays
      at least 560px tall and the scene is cropped from the sides (truck stays centred) */
@@ -321,7 +321,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 /* ============================ SCENES BELOW THE HERO ============================
    Same idea as the hero: everything is laid out in "design pixels" (Figma 1440-wide frame)
    and scaled by --pu. Below ~720px wide the scene stops shrinking and crops from the sides instead. */
-.journey { --pu: calc(max(min(var(--vw, 100vw), 1920px), 720px) / 1440); position: relative; overflow-x: clip; background: #14408f; }
+.journey { --pu: calc(max(min(var(--vw, 100vw), 5120px), 720px) / 1440); position: relative; overflow-x: clip; background: #14408f; }
 .sec { position: relative; }
 .stage { position: relative; width: calc(1440 * var(--pu)); left: 50%; transform: translateX(-50%); }
 .stage img { display: block; max-width: none; }
@@ -446,7 +446,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .about__road { position: relative; z-index: 1; pointer-events: none; width: 100%; padding-bottom: 11svh; padding-top: calc(var(--nav-h) + 20px); overflow: hidden; }
 /* truck: starts with just its cab on the right edge, drives left to its final spot (Figma start/end frames).
    --tw = truck width; final left edge = -0.155 tw; start left edge = 70vw */
-.about__road { --tw: min(94vw, 2200px, calc((100svh - var(--nav-h) - 1svh) * 2.477)); --ml: calc(98.5vw - 0.974 * var(--tw)); padding-bottom: 2.5svh; }   /* truck is ~12% bigger; its tail stays just inside the right edge */
+.about__road { --tw: min(94vw, 4800px, calc((100svh - var(--nav-h) - 1svh) * 2.477)); --ml: calc(98.5vw - 0.974 * var(--tw)); padding-bottom: 2.5svh; }   /* truck is ~12% bigger; its tail stays just inside the right edge */
 .about__truck { width: var(--tw); margin-left: var(--ml); translate: calc((1 - var(--ap)) * (70vw - var(--ml)) - var(--ep) * (var(--tw) + var(--ml) + 4vw)) 0; will-change: translate; }   /* rolls in from the right, parks, then drives on out of the left edge */
 .truckbox { --k: calc(var(--tw) / 2400); position: relative; }
 .truckbox__body { width: 100%; height: auto; display: block; }
@@ -483,7 +483,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
    Laid out in design pixels from the Figma "Frame 2" (1440 wide). --pu scales everything; each section has its own
    top (--y0 is baked into each item's --y). On phones the gallery sections restack into a column, and the two
    interactive scenes (desk + room) shrink as whole pictures so their hotspots stay aligned. */
-.page-studio { background: #ecd9b6; color: #4a2f12; --pu: calc(min(var(--vw, 100vw), 1920px) / 1440); }
+.page-studio { background: #ecd9b6; color: #4a2f12; --pu: calc(min(var(--vw, 100vw), 5120px) / 1440); }
 .studio2 { position: relative; overflow-x: clip; }
 .ss { position: relative; height: calc(var(--h) * var(--pu)); background: #ecd9b6 url(../assets/studio/paper-bg.webp) center top / 100% auto repeat-y; }
 .ss--room { background: #3a2113 linear-gradient(90deg, #2b170c, #4a2b18 50%, #2b170c); }
@@ -713,7 +713,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 /* ---- barricade hiding the seam between the road and the footer backdrop ---- */
 .barri { position: relative; height: 0; z-index: 6; pointer-events: none; }
-.barri img { position: absolute; left: 50%; top: 0; width: min(var(--vw,100vw),1920px); max-width: none; height: auto; transform: translate(-50%,-50%); filter: drop-shadow(0 calc(9*var(--pu)) calc(8*var(--pu)) rgba(0,0,0,.5)); }
+.barri img { position: absolute; left: 50%; top: 0; width: min(var(--vw,100vw),5120px); max-width: none; height: auto; transform: translate(-50%,-50%); filter: drop-shadow(0 calc(9*var(--pu)) calc(8*var(--pu)) rgba(0,0,0,.5)); }
 
 
 
@@ -949,7 +949,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
    desktop bar (all buttons, mirror and charms on the bar, no menu button), scaled to the screen width */
 @media (hover: none) and (pointer: coarse) and (min-width: 601px) and (max-width: 900px) {
   :root { --nav-h: calc(118 * var(--u)); }
-  .nav { --u: calc(min(var(--vw, 100vw), 1920px) / 1440); }
+  .nav { --u: calc(min(var(--vw, 100vw), 5120px) / 1440); }
   .nav__canvas { width: calc(1440 * var(--u)); display: block; padding: 0; background: none; overflow-x: visible; }
   .nav__bg, .mirror, .nimbu { display: block; }
   .nav__item, .nav__links .nav__item { position: absolute; left: calc(var(--x) * var(--u)); top: calc(var(--y) * var(--u)); width: calc(var(--w) * var(--u)); }
