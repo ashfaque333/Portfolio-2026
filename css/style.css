@@ -419,16 +419,21 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   transform-origin: 50% 100%; translate: 0 0; scale: var(--fk, .9); }   /* a little smaller and lower; js/main.js shrinks it further on short screens so the whole back shows at once */
 .foot__truck > img { width: 100%; height: 100%; }
 .fi { position: absolute; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); display: block; }
-.fi img { width: 100%; height: auto; transition: opacity .15s; }
-.fi .h { position: absolute; inset: 0; opacity: 0; transition: opacity .15s; }
+.fi img { width: 100%; height: auto; }
+.fi .h { position: absolute; inset: 0; opacity: 0; }   /* instant swap: a fade here made the browser redraw the whole truck soft for a moment */
 .fi:hover .h, .fi:focus-visible .h { opacity: 1; }
 .fi:hover > img:not(.h), .fi:focus-visible > img:not(.h) { opacity: 0; }   /* the resting artwork must not show through behind the hover artwork */
 .fi:hover, .fi:focus-visible { outline: none; }
 /* ABOUT ME / MY STUDIO signs over the two grilles on the truck's back: grow a little on hover, settle back to normal size while pressed */
-.fs { position: absolute; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); display: block; transition: transform .18s cubic-bezier(.2,.8,.2,1); -webkit-tap-highlight-color: transparent; }
+.fs { --a: .3963; position: absolute; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); display: block; transition: left .18s cubic-bezier(.2,.8,.2,1), top .18s cubic-bezier(.2,.8,.2,1), width .18s cubic-bezier(.2,.8,.2,1); -webkit-tap-highlight-color: transparent; }
 .fs img { display: block; width: 100%; height: auto; }
-.fs:hover, .fs:focus-visible { transform: scale(1.07); outline: none; }
-.fs:active { transform: scale(1); transition-duration: .08s; }
+/* grows 7% about its centre by size, not transform: a transform animation made the whole truck blur for a moment */
+.fs:hover, .fs:focus-visible { left: calc((var(--x) - var(--w) * .035) * var(--pu)); top: calc((var(--y) - var(--w) * var(--a) * .035) * var(--pu)); width: calc(var(--w) * 1.07 * var(--pu)); outline: none; }
+.fs:active { left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); transition-duration: .08s; }
+/* phone number + email plates: click copies them. Hover is an instant outline (no fades/transforms, so the truck never blurs) */
+.fc { position: absolute; left: calc(var(--x) * var(--pu)); top: calc(var(--y) * var(--pu)); width: calc(var(--w) * var(--pu)); height: calc(var(--h) * var(--pu)); padding: 0; margin: 0; border: 0; background: none; border-radius: calc(7 * var(--pu)); cursor: copy; -webkit-tap-highlight-color: transparent; }
+.fc:hover, .fc:focus-visible { outline: none; box-shadow: 0 0 0 calc(2 * var(--pu)) #fff6d8, 0 0 calc(12 * var(--pu)) calc(2 * var(--pu)) rgba(255, 214, 90, .85); }
+.fc__tip { position: absolute; left: 50%; bottom: calc(100% + 8 * var(--pu)); translate: -50% 0; padding: calc(5 * var(--pu)) calc(11 * var(--pu)); border-radius: 999px; background: #10204d; color: #ffd84a; font: 700 max(11px, calc(13 * var(--pu)))/1.2 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; letter-spacing: .02em; white-space: nowrap; pointer-events: none; box-shadow: 0 2px 8px rgba(0,0,0,.35); }
 
 /* showreel dialog */
 .reel { border: 0; padding: 0; background: #000; width: min(92vw, 1100px); aspect-ratio: 16/9; overflow: visible; }
@@ -622,7 +627,8 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 /* ---- projects nav link lands on the PROJECTS board ---- */
 .board-anchor { position: absolute; left: 0; width: 100%; top: calc(780 * var(--pu)); height: calc(420 * var(--pu)); pointer-events: none; scroll-margin-top: calc(var(--nav-h) + 12px); }
 
-.fs[style*="--hh"] img { height: calc(var(--hh) * var(--pu)); }   /* studio plate stretched a little so it fills its frame and hides the grill */
+.fs[style*="--hh"] { --a: calc(var(--hh) / var(--w)); }
+.fs[style*="--hh"] img { aspect-ratio: var(--w) / var(--hh); height: auto; }   /* studio plate stretched a little so it fills its frame and hides the grill */
 
 /* about: roadside board. "Stop name: About me" until the truck has driven over it, then the contact board with the social buttons */
 .cboard { position: absolute; z-index: 0; left: 50%; bottom: 29svh; width: min(34vw, 52svh); translate: -50% 0; container-type: inline-size; pointer-events: none; filter: drop-shadow(0 1.2cqw 1.2cqw rgba(0,0,0,.28)); }
@@ -681,7 +687,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .endbar--page { margin-top: 0; height: calc(58 * var(--pu)); background: #ecd9b6; }
 .endbar__shade { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; mix-blend-mode: multiply; pointer-events: none; }
 .endbar > img:not(.endbar__shade), .endbar__r { position: relative; }
-.endbar__l { width: calc(336.5 * var(--pu)); height: auto; }
+.endbar__l { width: calc(208.3 * var(--pu)); height: auto; }   /* 411px image at the same letter size as before */
 .endbar__c { position: absolute !important; left: 50%; top: 50%; translate: -50% -50%; width: calc(152.5 * var(--pu)); height: auto; }
 /* all three groups sit on one baseline (the line under the capitals of END OF SCROLL).
    The right group is top-aligned so ©, 2026 and the name share one cap line; the © is a touch taller, so it's nudged up to centre on the caps */
@@ -694,7 +700,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   .endbar, .endbar--page { height: auto; flex-direction: column; gap: 10px; padding: 16px 12px 18px; margin-top: 0; background: #0e2a12; }
   .journey > .endbar { margin-top: 0; }
   .endbar__shade { display: none; }
-  .endbar__l { width: min(336px, 92vw); } .endbar__c { position: relative !important; left: auto; top: auto; translate: none; width: 152px; }
+  .endbar__l { width: min(208px, 92vw); } .endbar__c { position: relative !important; left: auto; top: auto; translate: none; width: 152px; }
   .endbar__r img:nth-child(1) { width: 15px; } .endbar__r img:nth-child(2) { width: 38px; } .endbar__r img:nth-child(3) { width: 168px; } .endbar__r { gap: 9px; }
   .endbar__l, .endbar__r { translate: none; } .endbar__r img:nth-child(1) { margin-top: -2.3px; }
 }

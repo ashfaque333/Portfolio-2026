@@ -692,3 +692,29 @@
       } else if (source === 'yt') { resumeAt = saved.t || 0; createYTPlayer(); }
     }
   })();
+
+  /* ---------- footer truck: the phone-number and email plates copy themselves when clicked ---------- */
+  (() => {
+    const oldCopy = t => new Promise((ok, no) => {          // backup for browsers that refuse the clipboard API
+      const ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0'; document.body.appendChild(ta);
+      ta.select(); ta.setSelectionRange(0, t.length);
+      try { document.execCommand('copy') ? ok() : no(); } catch (e) { no(e); } ta.remove();
+    });
+    const copyText = t => (navigator.clipboard && window.isSecureContext)
+      ? navigator.clipboard.writeText(t).catch(() => oldCopy(t))
+      : oldCopy(t);
+    document.querySelectorAll('.fc[data-copy]').forEach(btn => {
+      let timer;
+      btn.addEventListener('click', () => {
+        // on phones the number opens the dialer instead
+        if (btn.dataset.tel && matchMedia('(hover: none) and (pointer: coarse)').matches) { location.href = 'tel:' + btn.dataset.tel; return; }
+        copyText(btn.dataset.copy).then(() => btn.dataset.done, () => 'Copy failed').then(msg => {
+          let tip = btn.querySelector('.fc__tip');
+          if (!tip) { tip = document.createElement('span'); tip.className = 'fc__tip'; tip.setAttribute('role', 'status'); btn.appendChild(tip); }
+          tip.textContent = msg; tip.hidden = false;
+          clearTimeout(timer); timer = setTimeout(() => { tip.hidden = true; }, 1600);
+        });
+      });
+    });
+  })();
