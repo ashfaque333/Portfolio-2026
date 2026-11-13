@@ -330,7 +330,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .showreel { height: calc(1110 * var(--pu)); }
 .showreel__bg { width: 100%; height: auto; }
 /* the interfaith picture above the dashboard: a sharp copy laid exactly over the one painted into the background */
-.faith { position: absolute; left: calc(672 * var(--pu)); top: calc(102 * var(--pu)); width: calc(128 * var(--pu)); height: calc(84 * var(--pu)); object-fit: cover; border-radius: calc(2.5 * var(--pu)); outline: max(1px, calc(1 * var(--pu))) solid rgba(25,18,0,.85); outline-offset: calc(-1 * var(--pu)); pointer-events: none; }
+.faith { position: absolute; left: calc(670 * var(--pu)); top: calc(100 * var(--pu)); width: calc(132 * var(--pu)); height: calc(88 * var(--pu)); pointer-events: none; }   /* soft edges are in the image itself */
 /* ---- the TV: one framed box on the glass (screensaver GIF -> reel), 4:3 like the reel ---- */
 .tvbox {
   position: absolute; left: calc(577 * var(--pu)); top: calc(421 * var(--pu)); width: calc(302 * var(--pu)); height: calc(228 * var(--pu));
