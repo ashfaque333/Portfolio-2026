@@ -691,7 +691,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 .endbar--page { margin-top: 0; height: calc(58 * var(--pu)); background: #ecd9b6; }
 .endbar__shade { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; mix-blend-mode: multiply; pointer-events: none; }
 .endbar > img:not(.endbar__shade), .endbar__r { position: relative; }
-.endbar__l { width: calc(208.3 * var(--pu)); height: auto; }   /* 411px image at the same letter size as before */
+.endbar__l { width: calc(211.8 * var(--pu)); height: auto; }   /* 418px image at the same letter size as before */
 .endbar__c { position: absolute !important; left: 50%; top: 50%; translate: -50% -50%; width: calc(152.5 * var(--pu)); height: auto; }
 /* all three groups sit on one baseline (the line under the capitals of END OF SCROLL).
    The right group is top-aligned so ©, 2026 and the name share one cap line; the © is a touch taller, so it's nudged up to centre on the caps */
@@ -704,7 +704,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   .endbar, .endbar--page { height: auto; flex-direction: column; gap: 10px; padding: 16px 12px 18px; margin-top: 0; background: #0e2a12; }
   .journey > .endbar { margin-top: 0; }
   .endbar__shade { display: none; }
-  .endbar__l { width: min(208px, 92vw); } .endbar__c { position: relative !important; left: auto; top: auto; translate: none; width: 152px; }
+  .endbar__l { width: min(211.5px, 92vw); } .endbar__c { position: relative !important; left: auto; top: auto; translate: none; width: 152px; }
   .endbar__r img:nth-child(1) { width: 15px; } .endbar__r img:nth-child(2) { width: 38px; } .endbar__r img:nth-child(3) { width: 168px; } .endbar__r { gap: 9px; }
   .endbar__l, .endbar__r { translate: none; } .endbar__r img:nth-child(1) { margin-top: -2.3px; }
 }
