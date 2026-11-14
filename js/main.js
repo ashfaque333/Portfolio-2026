@@ -257,6 +257,47 @@
     });
   }
 
+  /* ---- 6c. mouse-wheel scrolling glides instead of stepping. Only a real mouse wheel is smoothed — trackpads and
+     touch screens already scroll smoothly and stay native, as does anything inside its own scrolling box ---- */
+  if (!reduce && matchMedia('(pointer: fine)').matches) {
+    const TAU = 105;                                   // ms; higher = floatier
+    let target = scrollY, pos = scrollY, raf3 = 0, last = 0, padUntil = 0;
+    const maxY = () => document.documentElement.scrollHeight - innerHeight;
+    const halt = () => { if (raf3) { cancelAnimationFrame(raf3); raf3 = 0; } };
+    const ownScroller = (el, dy) => {                    // a box inside the page that can still scroll that way
+      for (; el && el !== document.body && el !== document.documentElement; el = el.parentElement) {
+        if (el.scrollHeight <= el.clientHeight) continue;
+        const oy = getComputedStyle(el).overflowY;
+        if ((oy === 'auto' || oy === 'scroll') && (dy > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 1 : el.scrollTop > 0)) return true;
+      }
+      return false;
+    };
+    const tick = t => {
+      const dt = Math.min(64, t - (last || t)); last = t;
+      pos += (target - pos) * (1 - Math.exp(-dt / TAU));
+      if (Math.abs(target - pos) < 0.5) pos = target;
+      scrollTo(0, pos);
+      raf3 = pos !== target ? requestAnimationFrame(tick) : 0;
+    };
+    addEventListener('wheel', e => {
+      if (e.defaultPrevented || e.ctrlKey || document.documentElement.classList.contains('intro-on')) return;
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      // trackpads send lots of small, often fractional steps; a wheel sends whole notches (or lines)
+      const notch = e.deltaMode === 1 || (Math.abs(e.deltaY) >= 50 && Math.abs(e.deltaY - Math.round(e.deltaY)) < 0.01);
+      if (!notch) { padUntil = e.timeStamp + 400; halt(); return; }
+      if (e.timeStamp < padUntil || ownScroller(e.target, e.deltaY)) return;
+      if (document.fullscreenElement || document.querySelector('dialog[open]')) return;
+      e.preventDefault();
+      if (!raf3) { pos = target = scrollY; last = 0; }
+      const dy = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
+      target = Math.max(0, Math.min(maxY(), target + dy));
+      if (!raf3) raf3 = requestAnimationFrame(tick);
+    }, { passive: false });
+    // anything else that moves the page (keys, scrollbar drag, in-page links) takes over at once
+    ['keydown', 'mousedown', 'touchstart'].forEach(ev => addEventListener(ev, halt, { passive: true }));
+    document.addEventListener('click', e => { if (e.target.closest && e.target.closest('a[href*="#"]')) halt(); }, true);
+  }
+
   /* ---- 7. showreel: the horn on the steering wheel ---- */
   const horn = document.getElementById('horn');
   if (horn) {
