@@ -95,11 +95,12 @@
           </div>
         </div>
         <div class="about__road"><div class="about__truck"><div class="truckbox">
-          <img class="truckbox__body" src="assets/about/truck.webp" alt="Ashfaque waving from the cab of a painted truck whose load carries his education, experience, positions of responsibility and achievements, with a toolbox of design apps on the side" width="2400" height="967" decoding="async">
+          <img class="truckbox__body" fetchpriority="high" src="assets/about/truck.webp" alt="Ashfaque waving from the cab of a painted truck whose load carries his education, experience, positions of responsibility and achievements, with a toolbox of design apps on the side" width="2400" height="967" decoding="async">
           <img class="wheel wheel--tf" src="assets/about/tyre-f-even.webp" alt="" aria-hidden="true" decoding="async">
           <img class="wheel-light wheel--tf" src="assets/about/tyre-f-light.webp" alt="" aria-hidden="true" decoding="async">
           <img class="wheel wheel--tr" src="assets/about/tyre-r-even.webp" alt="" aria-hidden="true" decoding="async">
           <img class="wheel-light wheel--tr" src="assets/about/tyre-r-light.webp" alt="" aria-hidden="true" decoding="async">
+          <script>/* the tyres wait for the truck body, so they never show up on their own while it loads */(function(){var b=document.currentScript.parentNode,t=b.querySelector('.truckbox__body'),go=function(){b.classList.add('has-body')};if(t.complete&&t.naturalWidth)go();else{t.addEventListener('load',go);t.addEventListener('error',go);setTimeout(go,8000)}})();</script>
           <div class="tools" id="tools">
             <button class="tb" type="button" aria-expanded="false" aria-controls="ticons" aria-label="Toolbox: the software I work with"><img src="assets/about/toolbox-hover.webp" alt="" decoding="async"></button>
             <ul class="ticons" id="ticons" aria-label="Software I work with">
