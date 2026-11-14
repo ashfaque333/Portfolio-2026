@@ -261,6 +261,7 @@
      touch screens already scroll smoothly and stay native, as does anything inside its own scrolling box ---- */
   if (!reduce && matchMedia('(pointer: fine)').matches) {
     const TAU = 105;                                   // ms; higher = floatier
+    const aboutSec = document.querySelector('.about');
     let target = scrollY, pos = scrollY, raf3 = 0, last = 0, padUntil = 0;
     const maxY = () => document.documentElement.scrollHeight - innerHeight;
     const halt = () => { if (raf3) { cancelAnimationFrame(raf3); raf3 = 0; } };
@@ -287,6 +288,8 @@
       if (!notch) { padUntil = e.timeStamp + 400; halt(); return; }
       if (e.timeStamp < padUntil || ownScroller(e.target, e.deltaY)) return;
       if (document.fullscreenElement || document.querySelector('dialog[open]')) return;
+      // the About truck has its own feel: while its section is on screen the wheel scrolls natively, as before
+      if (aboutSec) { const r = aboutSec.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) { halt(); return; } }
       e.preventDefault();
       if (!raf3) { pos = target = scrollY; last = 0; }
       const dy = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
